@@ -9,18 +9,109 @@
         tools:context=".LoginActivity">
 
     <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="Login"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="@dimen/_50sdp"
             android:id="@+id/button"
-            tools:layout_editor_absoluteY="404dp"
-            tools:layout_editor_absoluteX="215dp" />
+            android:textColor="@color/black"
+            android:background="@drawable/button"
+            app:layout_constraintTop_toBottomOf="@+id/password_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="44dp"
+            app:layout_constraintHorizontal_bias="0.497" />
 
     <ImageView
-            android:src="@drawable/EMLOGO"
-            android:layout_width="222dp"
-            android:layout_height="199dp"
+            android:src="@drawable/logos"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_90sdp"
             android:id="@+id/imageView"
-            tools:layout_editor_absoluteY="43dp"
-            tools:layout_editor_absoluteX="94dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="24dp" />
+
+    <TextView
+            android:text="Sign in"
+            android:textSize="@dimen/_20sdp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:layout_marginTop="24dp"
+            app:layout_constraintHorizontal_bias="0.498" />
+
+    <TextView
+            android:text="Dont have an account? register here"
+            android:textSize="@dimen/_20sdp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textbutton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button"
+            android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.627" />
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_layout"
+            android:layout_width="@dimen/_235sdp"
+            android:layout_height="@dimen/_52sdp"
+            app:endIconMode="password_toggle"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:background="@drawable/textfield"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+            android:layout_marginTop="44dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+                android:id="@+id/password"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="@dimen/_10sdp"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPassword"
+                android:background="@null"
+                android:hint="Password" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="@dimen/_235sdp"
+            android:layout_height="@dimen/_52sdp"
+            android:background="@drawable/textfield"
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:id="@+id/textInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:layout_marginTop="28dp"
+            app:layout_constraintHorizontal_bias="0.495">
+
+        <EditText
+                android:layout_width="@dimen/_235sdp"
+                android:layout_height="@dimen/_52sdp"
+                android:inputType="text"
+                android:padding="@dimen/_10sdp"
+                android:textColorHint="@color/black"
+                android:hint="Name"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:ems="10"
+                android:background="@null"
+                android:id="@+id/editTextText" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

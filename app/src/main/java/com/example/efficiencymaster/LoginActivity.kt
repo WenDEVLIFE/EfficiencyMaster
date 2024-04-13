@@ -1,10 +1,18 @@
 package com.example.efficiencymaster
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +27,33 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        // Our password layout
+        val passwordLayout = findViewById<TextInputLayout>(R.id.password_layout)
+        val color = ContextCompat.getColor(this, R.color.black)
+        passwordLayout.endIconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+
+
+        val usernameLayout = findViewById<EditText>(R.id.editTextText)
+        val passwordEditText = findViewById<EditText>(R.id.password)
+
+        // find the button id of our login button and set the onclick listeners
+        val loginButton = findViewById<Button>(R.id.button)
+        loginButton.setOnClickListener {
+
+            // Get the username and password
+            val username = usernameLayout.text.toString()
+            val password = passwordEditText.text.toString()
+
+
+            // Alert Dialog
+            val builder =AlertDialog.Builder(this)
+            builder.setTitle("Login")
+            builder.setMessage("Login Successful" + username)
+            builder.setPositiveButton("OK"){dialog, which ->
+                dialog.dismiss()
+            }
+            builder.show()
+        }
 
     }
 }
