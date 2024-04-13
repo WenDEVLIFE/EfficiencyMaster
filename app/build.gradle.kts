@@ -45,4 +45,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation ("com.intuit.sdp:sdp-android:1.1.0")
+    implementation ("at.favre.lib:bcrypt:0.9.0")
+    implementation ("com.google.android.material:material:1.7.0")
 }

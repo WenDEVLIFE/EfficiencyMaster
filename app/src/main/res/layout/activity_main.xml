@@ -15,4 +15,12 @@
             android:id="@+id/button"
             tools:layout_editor_absoluteY="404dp"
             tools:layout_editor_absoluteX="215dp" />
+
+    <ImageView
+            android:src="@drawable/EMLOGO"
+            android:layout_width="222dp"
+            android:layout_height="199dp"
+            android:id="@+id/imageView"
+            tools:layout_editor_absoluteY="43dp"
+            tools:layout_editor_absoluteX="94dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
