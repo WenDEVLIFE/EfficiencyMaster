@@ -1,10 +1,12 @@
 package com.example.efficiencymaster
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         passwordLayout.endIconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
 
 
+        // This is  your editText
         val usernameLayout = findViewById<EditText>(R.id.editTextText)
         val passwordEditText = findViewById<EditText>(R.id.password)
 
@@ -48,11 +51,20 @@ class LoginActivity : AppCompatActivity() {
             // Alert Dialog
             val builder =AlertDialog.Builder(this)
             builder.setTitle("Login")
-            builder.setMessage("Login Successful" + username)
+            builder.setMessage("Login Successful $username $password")
             builder.setPositiveButton("OK"){dialog, which ->
                 dialog.dismiss()
             }
             builder.show()
+        }
+
+        val registerText  = findViewById<TextView>(R.id.textbutton)
+        registerText.setOnClickListener {
+
+            // Go to registration activity
+            val Intent = Intent(this, Registration::class.java)
+            startActivity(Intent)
+            finish()
         }
 
     }
