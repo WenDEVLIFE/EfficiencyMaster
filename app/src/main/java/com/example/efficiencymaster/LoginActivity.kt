@@ -58,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
             builder.show()
         }
 
+        // Go to registration activity
         val registerText  = findViewById<TextView>(R.id.textbutton)
         registerText.setOnClickListener {
 

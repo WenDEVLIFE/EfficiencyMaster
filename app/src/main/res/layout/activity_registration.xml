@@ -33,7 +33,7 @@
                         android:layout_width="@dimen/_235sdp"
                         android:layout_height="@dimen/_52sdp"
                         android:inputType="text"
-                        android:padding="@dimen/_10sdp"
+                        android:padding="@dimen/_20sdp"
                         android:textColorHint="@color/black"
                         android:hint="Code"
                         android:fontFamily="sans-serif-condensed"
@@ -63,7 +63,7 @@
                         android:layout_width="@dimen/_235sdp"
                         android:layout_height="@dimen/_52sdp"
                         android:inputType="text"
-                        android:padding="@dimen/_10sdp"
+                        android:padding="@dimen/_20sdp"
                         android:textColorHint="@color/black"
                         android:hint="Email"
                         android:fontFamily="sans-serif-condensed"
@@ -91,7 +91,7 @@
                         android:layout_width="@dimen/_235sdp"
                         android:layout_height="@dimen/_52sdp"
                         android:inputType="text"
-                        android:padding="@dimen/_10sdp"
+                        android:padding="@dimen/_20sdp"
                         android:textColorHint="@color/black"
                         android:hint="Full Name"
                         android:fontFamily="sans-serif-condensed"
@@ -118,7 +118,7 @@
                 <EditText
                         android:id="@+id/comfirmpassword"
                         android:fontFamily="sans-serif-condensed"
-                        android:padding="@dimen/_10sdp"
+                        android:padding="@dimen/_20sdp"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:layout_width="match_parent"
@@ -167,7 +167,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="24dp" />
+                    android:layout_marginTop="56dp"
+                    app:layout_constraintHorizontal_bias="0.517" />
 
             <TextView
                     android:text="Registration"
@@ -185,8 +186,8 @@
 
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/password_layout"
-                    android:layout_width="300dp"
-                    android:layout_height="65dp"
+                    android:layout_width="@dimen/_235sdp"
+                    android:layout_height="@dimen/_52sdp"
                     app:endIconMode="password_toggle"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
@@ -194,13 +195,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-                    android:layout_marginTop="28dp"
-                    app:layout_constraintHorizontal_bias="0.522">
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintHorizontal_bias="0.495">
 
                 <EditText
                         android:id="@+id/password"
                         android:fontFamily="sans-serif-condensed"
-                        android:padding="@dimen/_10sdp"
+                        android:padding="@dimen/_20sdp"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:layout_width="match_parent"
@@ -228,7 +229,7 @@
                         android:layout_width="@dimen/_235sdp"
                         android:layout_height="@dimen/_52sdp"
                         android:inputType="text"
-                        android:padding="@dimen/_10sdp"
+                        android:padding="@dimen/_20sdp"
                         android:textColorHint="@color/black"
                         android:hint="Username"
                         android:fontFamily="sans-serif-condensed"
