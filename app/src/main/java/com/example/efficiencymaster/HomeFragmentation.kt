@@ -1,10 +1,12 @@
 package com.example.efficiencymaster
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +42,39 @@ class HomeFragmentation : Fragment() {
         // Inflate the layout for this fragment
     val view = inflater.inflate(R.layout.fragment_home_fragmentation, container, false)
 
+        val circularProgressBar = view.findViewById<CircularProgressBar>(R.id.circularProgressBar)
+        circularProgressBar.apply {
+            // Set Progress
+            progress = 100f
+            // or with animation
+            setProgressWithAnimation(100f, 1000) // =1s
+
+            // Set Progress Max
+            progressMax = 200f
+
+            // Set ProgressBar Color
+            progressBarColor = Color.BLACK
+            // or with gradient
+            progressBarColorStart = Color.GRAY
+            progressBarColorEnd = Color.RED
+            progressBarColorDirection = CircularProgressBar.GradientDirection.TOP_TO_BOTTOM
+
+            // Set background ProgressBar Color
+            backgroundProgressBarColor = Color.GRAY
+            // or with gradient
+            backgroundProgressBarColorStart = Color.WHITE
+            backgroundProgressBarColorEnd = Color.WHITE
+            backgroundProgressBarColorDirection = CircularProgressBar.GradientDirection.TOP_TO_BOTTOM
+
+            // Set Width
+            progressBarWidth = 7f // in DP
+            backgroundProgressBarWidth = 3f // in DP
+
+            // Other
+            roundBorder = true
+            startAngle = 180f
+            progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
+        }
         return view
     }
 

@@ -18,6 +18,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+            <TextView
+                    android:text="Dashboard"
+                    android:textSize="@dimen/_20sdp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/titlestext"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintHorizontal_bias="0.333"
+                    app:layout_constraintStart_toEndOf="@+id/imageButton" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="@dimen/_290sdp"
                     android:layout_height="@dimen/_250sdp"
@@ -112,8 +126,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"
-                        android:layout_marginTop="8dp"
-                        app:layout_constraintHorizontal_bias="0.502" />
+                        android:layout_marginTop="8dp" />
 
                 <TextView
                         android:text="TextView"
@@ -137,7 +150,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="24dp"
                     app:layout_constraintHorizontal_bias="0.352">
 
                 <TextView
@@ -164,7 +177,8 @@
                         android:layout_marginStart="24dp">
 
                     <ImageButton
-                            android:src="@drawable/home__2_"
+                            android:src="@drawable/list"
+                            android:background="@android:color/transparent"
                             android:layout_width="match_parent"
                             android:layout_height="73dp"
                             android:id="@+id/imageButton1" />
@@ -182,20 +196,22 @@
                 <FrameLayout
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="@dimen/_70sdp"
-                        android:background="#4895ef"
-                        tools:layout_editor_absoluteX="143dp"
+                        android:background="#ffb703"
                         android:id="@+id/frameLayout"
                         app:layout_constraintTop_toBottomOf="@+id/titletext"
-                        android:layout_marginTop="44dp">
+                        android:layout_marginTop="40dp"
+                        app:layout_constraintStart_toEndOf="@+id/frameLayout2"
+                        android:layout_marginStart="28dp">
 
                     <ImageButton
-                            android:src="@drawable/home__2_"
+                            android:src="@drawable/task"
+                            android:background="@android:color/transparent"
                             android:layout_width="match_parent"
                             android:layout_height="73dp"
                             android:id="@+id/imageButton2" />
 
                     <TextView
-                            android:text="Your task"
+                            android:text="Pending task"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView8"
@@ -207,7 +223,7 @@
                 <FrameLayout
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="@dimen/_70sdp"
-                        android:background="#4895ef"
+                        android:background="#9e2a2b"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/frameLayout"
                         app:layout_constraintTop_toBottomOf="@+id/titletext"
@@ -215,13 +231,14 @@
                         android:layout_marginTop="44dp">
 
                     <ImageButton
-                            android:src="@drawable/home__2_"
+                            android:src="@drawable/done"
+                            android:background="@android:color/transparent"
                             android:layout_width="match_parent"
                             android:layout_height="73dp"
                             android:id="@+id/imageButton3" />
 
                     <TextView
-                            android:text="Your task"
+                            android:text="Done task"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView9"
@@ -230,6 +247,18 @@
 
                 </FrameLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageButton
+                    android:src="@drawable/option"
+                    android:background="#3a5a40"
+                    android:layout_width="@dimen/_45sdp"
+                    android:layout_height="@dimen/_45sdp"
+                    android:id="@+id/imageButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintVertical_bias="0.333" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

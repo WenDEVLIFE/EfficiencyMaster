@@ -69,6 +69,17 @@ class MainActivity : AppCompatActivity() {
         usernametext = navigationView.getHeaderView(0).findViewById(R.id.username)
         emailtext = navigationView.getHeaderView(0).findViewById(R.id.email)
 
+
+        loadHome()
+    }
+
+    private fun loadHome() {
+        val homeFragmentation = HomeFragmentation()
+        val bundle = Bundle()
+        bundle.putString("username", usernametext.text.toString())
+        bundle.putString("email", emailtext.text.toString())
+        homeFragmentation.arguments = bundle
+        replaceFragment(homeFragmentation)
     }
 
     private fun replaceFragment(fragment: Fragment){
