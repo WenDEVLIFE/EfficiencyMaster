@@ -7,4 +7,9 @@
         <item name="colorControlNormal">@color/black</item>
         <item name="colorControlActivated">@color/black</item>
     </style>
+
+    <style name="AppTheme.NavView" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+
 </resources>

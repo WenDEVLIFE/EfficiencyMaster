@@ -76,7 +76,7 @@
         <EditText
                 android:id="@+id/password"
                 android:fontFamily="sans-serif-condensed"
-                android:padding="@dimen/_10sdp"
+                android:padding="@dimen/_20sdp"
                 android:textColorHint="@color/black"
                 android:textColor="@color/black"
                 android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                 android:layout_width="@dimen/_235sdp"
                 android:layout_height="@dimen/_52sdp"
                 android:inputType="text"
-                android:padding="@dimen/_10sdp"
+                android:padding="@dimen/_20sdp"
                 android:textColorHint="@color/black"
                 android:hint="Name"
                 android:fontFamily="sans-serif-condensed"
