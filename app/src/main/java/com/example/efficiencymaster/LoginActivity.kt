@@ -56,6 +56,11 @@ class LoginActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             builder.show()
+
+            // This will go to home fragment
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         // Go to registration activity
