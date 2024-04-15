@@ -136,7 +136,9 @@
                     android:background="@drawable/pane_layout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintHorizontal_bias="0.352">
 
                 <TextView
                         android:text="Menu"
