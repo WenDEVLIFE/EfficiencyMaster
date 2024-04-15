@@ -19,15 +19,46 @@
                 android:layout_height="wrap_content">
 
             <Button
-                    android:text="click"
+                    android:text="Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/button2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="44dp"
-                    app:layout_constraintHorizontal_bias="0.498" />
+                    android:id="@+id/button3"
+                    tools:layout_editor_absoluteY="266dp"
+                    tools:layout_editor_absoluteX="38dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="340dp"
+                    android:layout_height="188dp"
+                    android:background="@drawable/pane_layout"
+                    tools:layout_editor_absoluteY="63dp"
+                    tools:layout_editor_absoluteX="32dp">
+
+                <TextView
+                        android:text="Pending Task"
+                        android:textSize="@dimen/_20sdp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView3"
+                        tools:layout_editor_absoluteY="29dp"
+                        tools:layout_editor_absoluteX="29dp" />
+
+                <RelativeLayout
+                        android:layout_width="123dp"
+                        android:id="@+id/progresslayout"
+                        android:layout_height="107dp"
+                        tools:layout_editor_absoluteY="56dp"
+                        tools:layout_editor_absoluteX="201dp">
+
+                    <ProgressBar
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="84dp"
+                            android:layout_height="77dp"
+                            
+                            android:id="@+id/progressBar2" />
+                </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </FrameLayout>
