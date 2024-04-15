@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,6 +44,17 @@ class HomeFragmentation : Fragment() {
         // Inflate the layout for this fragment
     val view = inflater.inflate(R.layout.fragment_home_fragmentation, container, false)
 
+       val percentage = view.findViewById<TextView>(R.id.textView5)
+
+        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        ImageButton.setOnClickListener {
+
+            // Open the drawer when the ImageButton is clicked
+            val activity = activity as MainActivity
+            activity.OpenDrawer()
+
+        }
+
         val circularProgressBar = view.findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
             // Set Progress
@@ -74,7 +87,10 @@ class HomeFragmentation : Fragment() {
             roundBorder = true
             startAngle = 180f
             progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
+            percentage.setText("$progress %")
         }
+
+
         return view
     }
 
