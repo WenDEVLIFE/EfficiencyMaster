@@ -18,47 +18,217 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <Button
-                    android:text="Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button3"
-                    tools:layout_editor_absoluteY="266dp"
-                    tools:layout_editor_absoluteX="38dp" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="340dp"
-                    android:layout_height="188dp"
+                    android:layout_width="@dimen/_290sdp"
+                    android:layout_height="@dimen/_250sdp"
                     android:background="@drawable/pane_layout"
-                    tools:layout_editor_absoluteY="63dp"
-                    tools:layout_editor_absoluteX="32dp">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="80dp"
+                    app:layout_constraintHorizontal_bias="0.34"
+                    android:id="@+id/constraintLayout">
 
                 <TextView
-                        android:text="Pending Task"
+                        android:text="Pending tasks"
+                        android:textSize="@dimen/_15sdp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/text4"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginStart="48dp"
+                        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar"
+                        app:layout_constraintEnd_toStartOf="@+id/textView6"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintHorizontal_bias="0.0" />
+
+                <TextView
+                        android:text="null"
+                        android:textSize="@dimen/_15sdp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/task_count"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView5"
+                        app:layout_constraintVertical_bias="0.833"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginStart="92dp" />
+
+                <TextView
+                        android:text="null"
+                        android:textSize="@dimen/_15sdp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/done_task_count"
+                        app:layout_constraintTop_toBottomOf="@+id/textView6"
+                        app:layout_constraintStart_toEndOf="@+id/task_count"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="136dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.1" />
+
+                <TextView
+                        android:text="Done tasks"
+                        android:textSize="@dimen/_15sdp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/circularProgressBar"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="48dp" />
+
+                <TextView
+                        android:text="Task"
                         android:textSize="@dimen/_20sdp"
                         android:fontFamily="sans-serif-condensed"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/textView3"
-                        tools:layout_editor_absoluteY="29dp"
-                        tools:layout_editor_absoluteX="29dp" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginTop="16dp" />
 
-                <RelativeLayout
-                        android:layout_width="123dp"
-                        android:id="@+id/progresslayout"
-                        android:layout_height="107dp"
-                        tools:layout_editor_absoluteY="56dp"
-                        tools:layout_editor_absoluteX="201dp">
+                <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                        android:id="@+id/circularProgressBar"
+                        android:layout_width="@dimen/_125sdp"
+                        android:layout_height="@dimen/_125sdp"
+                        app:cpb_background_progressbar_color="#8cb369"
+                        app:cpb_background_progressbar_width="5dp"
+                        app:cpb_progress_direction="to_right"
+                        app:cpb_progressbar_color="#edf6f9"
+                        app:cpb_progressbar_width="10dp"
+                        app:cpb_round_border="false"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintHorizontal_bias="0.502" />
 
-                    <ProgressBar
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="84dp"
-                            android:layout_height="77dp"
-                            
-                            android:id="@+id/progressBar2" />
-                </RelativeLayout>
+                <TextView
+                        android:text="TextView"
+                        android:textSize="@dimen/_20sdp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView5"
+                        app:layout_constraintStart_toStartOf="@+id/circularProgressBar"
+                        app:layout_constraintEnd_toEndOf="@+id/circularProgressBar"
+                        app:layout_constraintTop_toTopOf="@+id/circularProgressBar"
+                        android:layout_marginTop="60dp" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/_290sdp"
+                    android:layout_height="@dimen/_250sdp"
+                    android:background="@drawable/pane_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                <TextView
+                        android:text="Menu"
+                        android:textSize="@dimen/_20sdp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/titletext"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginTop="16dp" />
+
+                <FrameLayout
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:background="#4895ef"
+                        android:id="@+id/frameLayout2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/titletext"
+                        android:layout_marginTop="44dp"
+                        android:layout_marginStart="24dp">
+
+                    <ImageButton
+                            android:src="@drawable/home__2_"
+                            android:layout_width="match_parent"
+                            android:layout_height="73dp"
+                            android:id="@+id/imageButton1" />
+
+                    <TextView
+                            android:text="Your task"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView7"
+                            android:textColor="@color/white"
+                            android:layout_gravity="bottom" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:background="#4895ef"
+                        tools:layout_editor_absoluteX="143dp"
+                        android:id="@+id/frameLayout"
+                        app:layout_constraintTop_toBottomOf="@+id/titletext"
+                        android:layout_marginTop="44dp">
+
+                    <ImageButton
+                            android:src="@drawable/home__2_"
+                            android:layout_width="match_parent"
+                            android:layout_height="73dp"
+                            android:id="@+id/imageButton2" />
+
+                    <TextView
+                            android:text="Your task"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView8"
+                            android:textColor="@color/white"
+                            android:layout_gravity="bottom" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:background="#4895ef"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/frameLayout"
+                        app:layout_constraintTop_toBottomOf="@+id/titletext"
+                        app:layout_constraintHorizontal_bias="0.553"
+                        android:layout_marginTop="44dp">
+
+                    <ImageButton
+                            android:src="@drawable/home__2_"
+                            android:layout_width="match_parent"
+                            android:layout_height="73dp"
+                            android:id="@+id/imageButton3" />
+
+                    <TextView
+                            android:text="Your task"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView9"
+                            android:textColor="@color/white"
+                            android:layout_gravity="bottom" />
+
+                </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </FrameLayout>

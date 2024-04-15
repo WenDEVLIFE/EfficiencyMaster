@@ -48,4 +48,5 @@ dependencies {
     implementation ("com.intuit.sdp:sdp-android:1.1.0")
     implementation ("at.favre.lib:bcrypt:0.9.0")
     implementation ("com.google.android.material:material:1.7.0")
+    implementation ("com.mikhaellopez:circularprogressbar:3.1.0")
 }
