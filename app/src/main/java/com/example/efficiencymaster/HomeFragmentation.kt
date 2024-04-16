@@ -8,6 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 // TODO: Rename parameter arguments, choose names that match
@@ -54,6 +59,43 @@ class HomeFragmentation : Fragment() {
             activity.OpenDrawer()
 
         }
+
+        val entries = ArrayList<BarEntry>()
+        entries.add(BarEntry(1f, 2f))
+        entries.add(BarEntry(2f, 4f))
+        entries.add(BarEntry(3f, 6f))
+        entries.add(BarEntry(4f, 8f))
+        entries.add(BarEntry(5f, 10f))
+        entries.add(BarEntry(6f, 12f))
+        entries.add(BarEntry(7f, 14f))
+        entries.add(BarEntry(8f, 16f))
+        entries.add(BarEntry(9f, 18f))
+        entries.add(BarEntry(10f, 20f))
+
+        val barDataSet = BarDataSet(entries, "Tasks")
+        val barData = BarData(barDataSet)
+
+
+        val barChart = view.findViewById<BarChart>(R.id.bargraph)
+
+        // Set the legend
+        val legend = barChart.legend
+        legend.isEnabled = true
+        legend.form = Legend.LegendForm.LINE
+        legend.textSize = 14f
+        legend.textColor = Color.BLACK
+        legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        legend.setDrawInside(false)
+
+        barChart.data = barData
+        barDataSet.setColor(Color.GREEN) // Set the color of the bars
+        barChart.invalidate() // refreshes the chart
+
+
+
+
 
         val circularProgressBar = view.findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
