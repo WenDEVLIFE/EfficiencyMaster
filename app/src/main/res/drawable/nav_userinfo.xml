@@ -22,19 +22,19 @@
             android:textSize="14sp"
             android:textColor="@color/white" />
     <TextView
-            android:id="@+id/email"
+            android:id="@+id/name"
             android:fontFamily="sans-serif-condensed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email:"
+            android:text="Name"
             android:textSize="14sp"
             android:textColor="@color/white" />
     <TextView
-            android:id="@+id/status"
+            android:id="@+id/progress_id"
             android:fontFamily="sans-serif-condensed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Status:"
+            android:text="Progress Xp:"
             android:textSize="14sp"
             android:textColor="@color/white" />
 </LinearLayout>

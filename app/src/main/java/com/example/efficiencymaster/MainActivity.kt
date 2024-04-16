@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var usernametext: TextView
 
-    lateinit var emailtext: TextView
+    lateinit var nametext: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                     val homeFragmentation = HomeFragmentation()
                     val bundle = Bundle()
                     bundle.putString("username", usernametext.text.toString())
-                    bundle.putString("email", emailtext.text.toString())
+                    bundle.putString("name", nametext.text.toString())
                     homeFragmentation.arguments = bundle
                     replaceFragment(homeFragmentation)
 
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
             }
         usernametext = navigationView.getHeaderView(0).findViewById(R.id.username)
-        emailtext = navigationView.getHeaderView(0).findViewById(R.id.email)
+        nametext = navigationView.getHeaderView(0).findViewById(R.id.name)
 
 
         loadHome()
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         val homeFragmentation = HomeFragmentation()
         val bundle = Bundle()
         bundle.putString("username", usernametext.text.toString())
-        bundle.putString("email", emailtext.text.toString())
+        bundle.putString("name", nametext.text.toString())
         homeFragmentation.arguments = bundle
         replaceFragment(homeFragmentation)
     }
