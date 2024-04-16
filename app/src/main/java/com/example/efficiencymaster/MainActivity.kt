@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
+
+                // This will go to home
                 R.id.home -> {
                    val builder = AlertDialog.Builder(this)
                     builder.setTitle("Home")
@@ -50,6 +52,38 @@ class MainActivity : AppCompatActivity() {
 
                     true
                 }
+
+                // This will go to create task
+                R.id.create ->{
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Create")
+                    builder.setMessage("Welcome to Create")
+                    builder.setPositiveButton("OK"){dialog, which ->}
+                    builder.show()
+                    true
+                }
+
+                // This will go to achievements
+                R.id.achievements ->{
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Achievements")
+                    builder.setMessage("Welcome to Achievements")
+                    builder.setPositiveButton("OK"){dialog, which ->}
+                    builder.show()
+                    true
+                }
+
+                // This will go to profile
+                R.id.user ->{
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("User")
+                    builder.setMessage("Welcome to User")
+                    builder.setPositiveButton("OK"){dialog, which ->}
+                    builder.show()
+                    true
+                }
+
+                // This will go to logout and go back to login
                 R.id.logout -> {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("Logout")

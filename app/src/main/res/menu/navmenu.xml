@@ -16,7 +16,7 @@
             />
 
     <item android:title="Achievements"
-            android:icon="@drawable/home__2_"
+            android:icon="@drawable/sport"
             android:id="@+id/achievements"
             android:textColor="@color/black"
             />
@@ -26,9 +26,6 @@
             android:id="@+id/user"
             android:textColor="@color/black"
             />
-
-
-
 
     <item android:title="Logout"
             android:icon="@drawable/logout"
