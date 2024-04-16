@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         loadHome()
     }
 
+    // This will load the home fragment
     private fun loadHome() {
         val homeFragmentation = HomeFragmentation()
         val bundle = Bundle()
@@ -84,6 +85,8 @@ class MainActivity : AppCompatActivity() {
         replaceFragment(homeFragmentation)
     }
 
+
+    // Replace the fragment
     private fun replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()

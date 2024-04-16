@@ -66,14 +66,14 @@ class HomeFragmentation : Fragment() {
             progressMax = 200f
 
             // Set ProgressBar Color
-            progressBarColor = Color.BLACK
+            progressBarColor = Color.GREEN
             // or with gradient
-            progressBarColorStart = Color.GRAY
-            progressBarColorEnd = Color.RED
+            progressBarColorStart = Color.GREEN
+            progressBarColorEnd = Color.GREEN
             progressBarColorDirection = CircularProgressBar.GradientDirection.TOP_TO_BOTTOM
 
             // Set background ProgressBar Color
-            backgroundProgressBarColor = Color.GRAY
+            backgroundProgressBarColor = Color.GREEN
             // or with gradient
             backgroundProgressBarColorStart = Color.WHITE
             backgroundProgressBarColorEnd = Color.WHITE

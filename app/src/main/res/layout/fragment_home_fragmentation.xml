@@ -147,11 +147,10 @@
                     android:layout_width="@dimen/_290sdp"
                     android:layout_height="@dimen/_250sdp"
                     android:background="@drawable/pane_layout"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintHorizontal_bias="0.352">
+                    android:layout_marginTop="60dp"
+                    app:layout_constraintEnd_toEndOf="parent">
 
                 <TextView
                         android:text="Menu"
@@ -211,7 +210,7 @@
                             android:id="@+id/imageButton2" />
 
                     <TextView
-                            android:text="  Pending task"
+                            android:text=" Pending task"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView8"
@@ -258,6 +257,32 @@
                     app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
                     android:layout_marginStart="16dp"
                     app:layout_constraintVertical_bias="0.333" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/_290sdp"
+                    android:layout_height="@dimen/_250sdp"
+                    android:background="@drawable/pane_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                    android:id="@+id/constraintLayout2"
+                    android:layout_marginTop="48dp"
+                    app:layout_constraintHorizontal_bias="0.529">
+
+                <com.github.mikephil.charting.charts.BarChart
+                        android:layout_width="@dimen/_280sdp"
+                        android:layout_height="@dimen/_245sdp"
+                        android:id="@+id/bargraph"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                </com.github.mikephil.charting.charts.BarChart>
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
