@@ -55,11 +55,14 @@ class MainActivity : AppCompatActivity() {
 
                 // This will go to create task
                 R.id.create ->{
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle("Create")
-                    builder.setMessage("Welcome to Create")
-                    builder.setPositiveButton("OK"){dialog, which ->}
-                    builder.show()
+
+                    // This will go to create task
+                    val createtaskFragment = CreateTask_Fragment()
+                    val bundle = Bundle()
+                    bundle.putString("username", usernametext.text.toString())
+                    bundle.putString("name", nametext.text.toString())
+                    createtaskFragment.arguments = bundle
+                    replaceFragment(createtaskFragment)
                     true
                 }
 
