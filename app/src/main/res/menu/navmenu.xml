@@ -21,6 +21,19 @@
             android:textColor="@color/black"
             />
 
+
+    <item android:title="Group Task"
+            android:icon="@drawable/people"
+            android:id="@+id/group"
+            android:textColor="@color/black"
+            />
+
+    <item android:title="Create a Group Task"
+            android:icon="@drawable/add_group"
+            android:id="@+id/groutask"
+            android:textColor="@color/black"
+            />
+
     <item android:title="User settings"
             android:icon="@drawable/info_14722546"
             android:id="@+id/user"

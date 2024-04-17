@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +35,18 @@ class CreateTask_Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_task_, container, false)
+        val view = inflater.inflate(R.layout.fragment_create_task_, container, false)
+
+        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        ImageButton.setOnClickListener {
+
+            // Open the drawer when the ImageButton is clicked
+            val activity = activity as MainActivity
+            activity.OpenDrawer()
+
+        }
+
+        return view
     }
 
     companion object {
