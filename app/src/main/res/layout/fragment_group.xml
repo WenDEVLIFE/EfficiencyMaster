@@ -40,7 +40,7 @@
         <androidx.appcompat.widget.SearchView
                 android:layout_width="@dimen/_300sdp"
                 android:layout_height="@dimen/_55sdp"
-                android:id="@+id/searchallsubs"
+                android:id="@+id/search_group"
                 app:searchHintIcon="@drawable/find"
                 app:searchIcon="@drawable/find"
                 app:closeIcon="@drawable/close"
@@ -51,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titlestext"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="36dp"
                 app:layout_constraintHorizontal_bias="0.476">
 
         </androidx.appcompat.widget.SearchView>
@@ -59,8 +59,9 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="409dp"
                 android:layout_height="558dp"
+                android:id="@+id/recycler_view"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchallsubs"
+                app:layout_constraintTop_toBottomOf="@+id/search_group"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
