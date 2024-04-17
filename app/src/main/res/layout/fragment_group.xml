@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#2b9348"
+        tools:context=".CreateTask_Fragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:text="Group"
+                android:textSize="@dimen/_20sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/titlestext"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="24dp"
+                app:layout_constraintHorizontal_bias="0.328"
+                app:layout_constraintStart_toEndOf="@+id/imageButton" />
+
+        <ImageButton
+                android:src="@drawable/option"
+                android:background="#3a5a40"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:id="@+id/imageButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="32dp"
+                app:layout_constraintVertical_bias="0.333"
+                android:layout_marginTop="16dp" />
+
+        <androidx.appcompat.widget.SearchView
+                android:layout_width="@dimen/_300sdp"
+                android:layout_height="@dimen/_55sdp"
+                android:id="@+id/searchallsubs"
+                app:searchHintIcon="@drawable/find"
+                app:searchIcon="@drawable/find"
+                app:closeIcon="@drawable/close"
+                android:background="@drawable/searchbar"
+                app:queryHint="Search subjects...."
+                app:iconifiedByDefault="false"
+                android:theme="@style/ThemeOverlay.SearchView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titlestext"
+                android:layout_marginTop="40dp"
+                app:layout_constraintHorizontal_bias="0.476">
+
+        </androidx.appcompat.widget.SearchView>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="409dp"
+                android:layout_height="558dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchallsubs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
