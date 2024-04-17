@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +39,29 @@ class CreateTask_Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_create_task_, container, false)
+
+        val TaskName = view.findViewById<EditText>(R.id.editTextText2)
+        val TaskDescription = view.findViewById<EditText>(R.id.desscripts)
+
+        val create_Task_btn = view.findViewById<Button>(R.id.button2)
+        create_Task_btn.setOnClickListener {
+            val taskname = TaskName.text.toString()
+            val taskdescription = TaskDescription.text.toString()
+
+           if(taskname.isEmpty()) {
+              TaskName.error = "Please Enter Task Name"
+           }else{
+               if(taskdescription.isEmpty()) {
+                   TaskDescription.error = "Please Enter Task Description"
+               }else{
+                   val builder = AlertDialog.Builder(requireContext())
+                   builder.setTitle("Task Created")
+                   builder.setMessage("Task Name: $taskname\nTask Description: $taskdescription")
+                   builder.setPositiveButton("OK"){dialog, which ->}
+                   builder.show()
+               }
+           }
+        }
 
         val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
         ImageButton.setOnClickListener {
