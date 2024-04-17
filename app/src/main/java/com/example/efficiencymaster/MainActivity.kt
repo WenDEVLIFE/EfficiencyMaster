@@ -75,6 +75,15 @@ class MainActivity : AppCompatActivity() {
                     builder.show()
                     true
                 }
+                R.id.groutask ->{
+
+                    true
+                }
+
+                R.id.group ->{
+
+                    true
+                }
 
                 // This will go to profile
                 R.id.user ->{

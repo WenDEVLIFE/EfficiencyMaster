@@ -94,9 +94,6 @@ class HomeFragmentation : Fragment() {
         barChart.invalidate() // refreshes the chart
 
 
-
-
-
         val circularProgressBar = view.findViewById<CircularProgressBar>(R.id.circularProgressBar)
         circularProgressBar.apply {
             // Set Progress

@@ -29,8 +29,14 @@
             />
 
     <item android:title="Create a Group Task"
-            android:icon="@drawable/add_group"
-            android:id="@+id/groutask"
+        android:icon="@drawable/add_group"
+        android:id="@+id/groutask"
+        android:textColor="@color/black"
+        />
+
+    <item android:title="Leaderboard"
+            android:icon="@drawable/trophyline"
+            android:id="@+id/leadeboards"
             android:textColor="@color/black"
             />
 
