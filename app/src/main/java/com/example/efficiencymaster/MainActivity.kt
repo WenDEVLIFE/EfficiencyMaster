@@ -75,11 +75,21 @@ class MainActivity : AppCompatActivity() {
                     builder.show()
                     true
                 }
+
+                // This will go to group task
                 R.id.groutask ->{
+                    // This will go to group fragment
+                    val groupFragment = GroupFragment()
+                    val bundle = Bundle()
+                    bundle.putString("username", usernametext.text.toString())
+                    bundle.putString("name", nametext.text.toString())
+                    groupFragment.arguments = bundle
+                    replaceFragment(groupFragment)
 
                     true
                 }
 
+                // This will go to create group
                 R.id.group ->{
 
                     true
