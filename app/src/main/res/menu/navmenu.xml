@@ -36,6 +36,19 @@
             android:textColor="@color/black"
             />
 
+    <item android:title="Profile"
+            android:icon="@drawable/add_group"
+            android:id="@+id/profile"
+            android:textColor="@color/black"
+            />
+
+    <item android:title="Task Feed"
+            android:icon="@drawable/add_group"
+            android:id="@+id/Feed"
+            android:textColor="@color/black"
+            />
+
+
     <item android:title="Create a Group"
         android:icon="@drawable/add_group"
         android:id="@+id/groutask"
