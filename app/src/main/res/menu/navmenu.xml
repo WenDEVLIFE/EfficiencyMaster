@@ -9,11 +9,19 @@
             />
 
 
-    <item android:title="Create Task"
+    <item android:title="Create Own Task"
             android:icon="@drawable/note"
             android:id="@+id/create"
             android:textColor="@color/black"
             />
+
+
+    <item android:title="Individual Task"
+            android:icon="@drawable/note"
+            android:id="@+id/IndividualTask"
+            android:textColor="@color/black"
+            />
+
 
     <item android:title="Achievements"
             android:icon="@drawable/sport"
