@@ -113,7 +113,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/password_layout"
                     android:layout_marginTop="20dp"
-                    app:layout_constraintHorizontal_bias="0.552">
+                    app:layout_constraintHorizontal_bias="0.504">
 
                 <EditText
                         android:id="@+id/comfirmpassword"
@@ -143,7 +143,8 @@
                     android:layout_marginTop="28dp"
                     app:layout_constraintEnd_toStartOf="@+id/Backbutton"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toTopOf="@+id/space" />
 
             <Button
                     android:text="Go back"
@@ -153,11 +154,11 @@
                     android:id="@+id/Backbutton"
                     android:textColor="@color/black"
                     android:background="@drawable/button"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/sendbutton"
                     android:layout_marginEnd="16dp"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintVertical_bias="1.0"
+                    app:layout_constraintBottom_toTopOf="@+id/space" />
 
             <ImageView
                     android:src="@drawable/logos"
@@ -266,6 +267,14 @@
                     app:layout_constraintTop_toBottomOf="@+id/timertext"
                     android:layout_marginTop="16dp"
                     app:layout_constraintHorizontal_bias="0.497" />
+
+            <Space
+                    android:layout_width="30dp"
+                    android:layout_height="23dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="188dp"
+                    android:id="@+id/space"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
