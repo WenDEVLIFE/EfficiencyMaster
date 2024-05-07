@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
 
                 // This will go to group task
                 R.id.groutask ->{
+
                     // This will go to group fragment
                     val groupFragment = GroupFragment()
                     val bundle = Bundle()
@@ -85,12 +86,23 @@ class MainActivity : AppCompatActivity() {
                     bundle.putString("name", nametext.text.toString())
                     groupFragment.arguments = bundle
                     replaceFragment(groupFragment)
-
                     true
                 }
 
                 // This will go to create group
                 R.id.group ->{
+
+                    true
+                }
+                R.id.profile ->{
+
+                    true
+                }
+                R.id.Feed ->{
+
+                    true
+                }
+                R.id.leadeboards  ->{
 
                     true
                 }

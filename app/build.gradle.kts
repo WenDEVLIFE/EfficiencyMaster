@@ -50,5 +50,5 @@ dependencies {
     implementation ("com.google.android.material:material:1.7.0")
     implementation ("com.mikhaellopez:circularprogressbar:3.1.0")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
+    implementation ("io.supabase:supabase-java:0.1.0")
 }
