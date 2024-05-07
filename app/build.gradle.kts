@@ -50,4 +50,9 @@ dependencies {
     implementation ("com.google.android.material:material:1.7.0")
     implementation ("com.mikhaellopez:circularprogressbar:3.1.0")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    //Add those line in dependencies
+    implementation(files("libs/activation.jar"))
+    implementation(files("libs/additionnal.jar"))
+    implementation(files("libs/mail.jar"))
 }
