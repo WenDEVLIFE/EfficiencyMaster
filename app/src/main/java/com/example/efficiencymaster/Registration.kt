@@ -61,6 +61,7 @@ class Registration : AppCompatActivity() {
         sendcodeButton.setOnClickListener {
             val email = EditEmail.text.toString()
 
+        if(isValidEmail(email)) {
             if (time==0){
                 code_sent = generateCode()
                 startTimer()
@@ -69,6 +70,9 @@ class Registration : AppCompatActivity() {
                 Toast.makeText(this, "Please wait for 60 seconds", Toast.LENGTH_SHORT).show()
 
             }
+        }else{
+            EditEmail.error = "Invalid email"
+        }
 
         }
 
@@ -80,6 +84,7 @@ class Registration : AppCompatActivity() {
             val confirmpassword = EditConfirmPassword.text.toString()
             val name = EditName.text.toString()
             val code = CodeText.text.toString()
+            val email = EditEmail.text.toString()
 
             if (code==code_sent){
                 if (password.length<8  || password.length>=13){
@@ -98,10 +103,12 @@ class Registration : AppCompatActivity() {
                            }else{
                                if (HasUpperCase(password)){
                                    if (hasSpecialChar(password)){
-                                       //  Go to login activity
-                                       val intent = Intent(this, LoginActivity::class.java)
-                                       startActivity(intent)
-                                       finish()
+                                    if(isValidEmail(email)){
+                                        //  Go to login activity
+                                        val intent = Intent(this, LoginActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
                                    }else{
                                        EditPassword.error = "Password must contain special character"
                                        EditConfirmPassword.error = "Password must contain special character"
@@ -132,6 +139,9 @@ class Registration : AppCompatActivity() {
 
         }
     }
+    fun InsertUser(){
+
+    }
 
     fun startTimer() {
         time = 60
@@ -147,7 +157,9 @@ class Registration : AppCompatActivity() {
         }
         timer.start()
     }
-
+    fun isValidEmail(email: String): Boolean {
+        return email.contains("@")
+    }
     fun generateCode(): String {
         val code = (100000..999999).random()
         return code.toString()
