@@ -8,6 +8,19 @@
         android:background="#2b9348"
         tools:context=".LoginActivity">
 
+    <TextView
+            android:text="Dont have an account?"
+            android:textSize="@dimen/_20sdp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textbutton2"
+            app:layout_constraintTop_toBottomOf="@+id/button"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="36dp"
+            android:layout_marginStart="24dp" />
+
     <Button
             android:text="Login"
             android:fontFamily="sans-serif-condensed"
@@ -47,18 +60,18 @@
             app:layout_constraintHorizontal_bias="0.498" />
 
     <TextView
-            android:text="Dont have an account? register here"
+            android:text="Register here"
             android:textSize="@dimen/_20sdp"
             android:fontFamily="sans-serif-condensed"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textbutton"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button"
-            android:layout_marginTop="16dp"
-            app:layout_constraintHorizontal_bias="0.627" />
+            android:layout_marginTop="36dp"
+            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintStart_toEndOf="@+id/textbutton2" />
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password_layout"
