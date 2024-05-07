@@ -34,6 +34,7 @@ class Registration : AppCompatActivity() {
 
     var code_sent: String = "123456"
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
