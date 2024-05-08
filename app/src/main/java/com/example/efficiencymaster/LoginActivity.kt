@@ -53,13 +53,19 @@ class LoginActivity : AppCompatActivity() {
             val username = usernameLayout.text.toString()
             val password = passwordEditText.text.toString()
 
+            // This will check if the username is empty, error message.
             if(username.isEmpty()){
                 usernameLayout.error = "Please enter your username"
             }
             else{
+
+                // This will check if the password is empty, error message.
                 if(password.isEmpty()){
                     passwordEditText.error = "Please enter your password"
                 }else{
+
+                    // Else all the fields are not empty it will send the value
+                    // to the loginVerification method
                     LoginVerification(username, password)
                 }
             }
@@ -78,22 +84,33 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+
+    // This method used for login verifications
     fun LoginVerification(username: String, password: String) {
+
+        // Declare the ProgressLoading value
         ProgressLoading = ProgressDialog(this)
         ProgressLoading.setTitle("Loading")
         ProgressLoading.setMessage("Please wait...")
         ProgressLoading.setCanceledOnTouchOutside(false)
         ProgressLoading.show()
 
+        // Check if the user exists before inserting
         db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
+          // If the user does not exist it will error
             if (it.isEmpty) {
                 Toast.makeText(this, "User does not exist", Toast.LENGTH_SHORT).show()
                  ProgressLoading.dismiss()
             }else{
+
+                // This will load the documents of user
                 for (document in it) {
+
+                    // Get the retrieve password and use bycrypt to verify the passwoord
                     val PASSWORD = document.getString("password")
                     val result = BCrypt.verifyer().verify(password.toCharArray(), PASSWORD)
 
+                    // If the result is verified, it will proceed to the main activity
                     if(result.verified){
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                         ProgressLoading.dismiss()
@@ -101,6 +118,8 @@ class LoginActivity : AppCompatActivity() {
                         Intent.putExtra("username", username)
                         startActivity(Intent)
                         finish()
+
+                        // Else it will show incorrect password
                     }else{
                         Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show()
                         ProgressLoading.dismiss()

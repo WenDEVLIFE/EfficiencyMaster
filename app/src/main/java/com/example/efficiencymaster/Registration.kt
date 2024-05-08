@@ -60,6 +60,7 @@ class Registration : AppCompatActivity() {
             insets
         }
 
+        // For our timer text
         timertext = findViewById<TextView>(R.id.timertext)
         timertext.setText("")
 
@@ -77,7 +78,10 @@ class Registration : AppCompatActivity() {
         sendcodeButton.setOnClickListener {
             val email = EditEmail.text.toString()
 
+            // This will check if the email contains @
         if(isValidEmail(email)) {
+
+            // It will check the time is 0, it will send the new code
             if (time==0){
                 code_sent = generateCode()
                 startTimer()
@@ -88,6 +92,8 @@ class Registration : AppCompatActivity() {
 
             }
         }else{
+
+            // else it is not valid, it will error!
             EditEmail.error = "Invalid email"
         }
 
@@ -96,6 +102,8 @@ class Registration : AppCompatActivity() {
         // This is for registration
         val registerButton = findViewById<Button>(R.id.Registerbutton)
         registerButton.setOnClickListener {
+
+            // constructors for the components info
             val username = UsernameText.text.toString()
             val password = EditPassword.text.toString()
             val confirmpassword = EditConfirmPassword.text.toString()
@@ -103,25 +111,39 @@ class Registration : AppCompatActivity() {
             val code = CodeText.text.toString()
             val email = EditEmail.text.toString()
 
+            // This will check if the code send is equal to the sent on the email.
             if (code==code_sent){
+
+                // This will check if password length less than 8 or greater than 13
                 if (password.length<8  || password.length>=13){
                     EditPassword.error = "Password must be 8-12 characters"
                     EditConfirmPassword.error = "Password must be 8-12 characters"
                 }else{
+
+                    // If name is empty error
                    if(name.isEmpty()){
                           EditName.error = "Name is required"
                    } else{
+
+                       // If username is empty error
                        if(username.isEmpty()){
                            UsernameText.error = "Username is required"
                        }else{
+
+
+                           // If password is not equal to confirm password, it will error
                            if (password!=confirmpassword){
                                EditPassword.error = "Password does not match"
                                EditConfirmPassword.error = "Password does not match"
                            }else{
+
+                               // This will check if password has Uppercase and Special Chracters
                                if (HasUpperCase(password)){
                                    if (hasSpecialChar(password)){
+
+                                       // This will check if email is valid
                                     if(isValidEmail(email)){
-                                        //  Go to login activity
+                                        // Insert to the database method
                                         val User_Data = arrayOf(username,password,name,email)
                                         Database(User_Data)
                                     }
@@ -157,8 +179,10 @@ class Registration : AppCompatActivity() {
         }
     }
 
-    // Insert the user
+    // Insert the user from the database
     private fun Database(User_Data: Array<String>) {
+
+        // Declare the ProgressDialog Value
         ProgressLoading = ProgressDialog(this)
         ProgressLoading.setTitle("Adding the User ")
         ProgressLoading.setMessage("Please wait...")
@@ -238,8 +262,13 @@ class Registration : AppCompatActivity() {
         }
     }
 
+    // This method used to start the timer 60 seconds.
     fun startTimer() {
+
+        // Set the time to 60 seconds.
         time = 60
+
+        // Start the timer
         val timer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timertext.text = "Resend code in: " + time.toString() + "s"
@@ -252,28 +281,40 @@ class Registration : AppCompatActivity() {
         }
         timer.start()
     }
+
+    // Method used to check the email contains @ or not
     fun isValidEmail(email: String): Boolean {
         return email.contains("@")
     }
+
+    // This is used to generate code 6 digits
     fun generateCode(): String {
         val code = (100000..999999).random()
         return code.toString()
     }
-
+// This method is used for checking password has a special character
     fun hasSpecialChar(password: String): Boolean {
         val regex = Regex("[^A-Za-z0-9 ]")
         return regex.containsMatchIn(password)
     }
 
+    // This method is used for checking if password has a UpperCase
     fun HasUpperCase(password: String): Boolean {
         val regex = Regex("[A-Z]")
         return regex.containsMatchIn(password)
 
     }
 
+    // Method used for sending email and code
     fun SendMail(email: String, code: String) {
+
+        // Set the subject of the email
         val subject = "EfficiencyMaster Registration Verification Code"
+
+        // Set the message of the email together with the code
         val message = "Your verification code is: $code"
+
+        // Call the YahooMailAPI Class to send the email and execute.
         YahooMailAPI(this, email, subject, message, code).execute()
     }
 }
