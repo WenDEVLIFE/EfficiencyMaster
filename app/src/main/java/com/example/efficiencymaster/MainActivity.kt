@@ -46,13 +46,17 @@ class MainActivity : AppCompatActivity() {
         username = Intent.getStringExtra("username").toString()
 
 
+        // Find the id of naview
         val navigationView = findViewById<NavigationView>(R.id.navView)
+
+        //Get the id's of the navheader components
         usernametext = navigationView.getHeaderView(0).findViewById(R.id.username)
         nametext = navigationView.getHeaderView(0).findViewById(R.id.name)
         userImage = navigationView.getHeaderView(0).findViewById(R.id.user_icon)
         progresstext = navigationView.getHeaderView(0).findViewById(R.id.progress_id)
         LoadUserStats()
 
+        // This is the navigation view listener.
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
@@ -187,30 +191,42 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
+    // This is used to open the navbar menu
      fun OpenDrawer(){
          val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
          drawerLayout.openDrawer(GravityCompat.START)
      }
 
+    // This method used for loading the user stats.
     fun LoadUserStats(){
+
+        // Check if the user exists before load it
         db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
             if (it.isEmpty) {
                 usernametext.text = "User does not exist"
             }else{
                 for (document in it){
+
+                    // Retrieve the variables from the document
                     val username = document.data["username"].toString()
                     val ID = document.data["UserID"].toString()
 
+                    // This will load the user details and check if the user has any progress
                     db.collection("UserDetails").whereEqualTo("UserID", ID).get().addOnSuccessListener {
                         for (document in it){
+
+                            // Retrieve the variables from the document
                             val image = document.data["imageurl"].toString()
                             val name = document.data["name"].toString()
 
+                            // insert the retrieve value to the TextView.
                             usernametext.text = "Username:$username"
                             nametext.text = "Name:$name"
 
+                            // Set the retrieve Imageurl to image
                             Glide.with(this).load(image).into(userImage)
 
+                            // Check if user has any progress
                             db.collection("Progress").whereEqualTo("UserID", ID).get().addOnSuccessListener {
                                 if (it.isEmpty){
                                     progresstext.text = "Progress:0%"
