@@ -1,6 +1,8 @@
 package com.example.efficiencymaster
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
@@ -11,6 +13,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
+import java.util.UUID
+
 
 class Registration : AppCompatActivity() {
 
@@ -139,8 +148,33 @@ class Registration : AppCompatActivity() {
 
         }
     }
-    fun InsertUser(){
+    private fun Database() {
+        // Create a storage reference
+        val storageRef = Firebase.storage.reference
 
+        // Get the image from the drawable directory
+        val drawable = resources.getDrawable(R.drawable.user_ico, this.theme)
+        val bitmap = (drawable as BitmapDrawable).bitmap
+
+        // Convert the Bitmap into a ByteArray
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+
+        // Generate a random name for the file
+        val fileName = UUID.randomUUID().toString()
+        val fileReference = storageRef.child("uploads/$fileName.png")
+
+        // Upload the ByteArray to Firebase Storage
+        fileReference.putBytes(data).addOnSuccessListener { taskSnapshot ->
+            // Get the download URL of the uploaded file
+            fileReference.downloadUrl.addOnSuccessListener { uri ->
+                // ... rest of your code
+            }
+        }.addOnFailureListener { e ->
+            Toast.makeText(this, "Upload failed", Toast.LENGTH_SHORT).show()
+            // Hide the ProgressDialog
+        }
     }
 
     fun startTimer() {
