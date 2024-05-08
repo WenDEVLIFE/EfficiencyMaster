@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var usernametext: TextView
 
     lateinit var nametext: TextView
+
+    var username = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,6 +29,11 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
+        // get the intent
+        val Intent = intent
+        username = Intent.getStringExtra("username").toString()
 
         val navigationView = findViewById<NavigationView>(R.id.navView)
         navigationView.setNavigationItemSelectedListener { menuItem ->

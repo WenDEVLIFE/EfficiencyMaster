@@ -1,21 +1,20 @@
 package com.example.efficiencymaster
 
-import android.content.ContentValues.TAG
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.button.MaterialButton
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -23,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 class LoginActivity : AppCompatActivity() {
 
     val db = Firebase.firestore
+    lateinit var  ProgressLoading: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,37 +53,17 @@ class LoginActivity : AppCompatActivity() {
             val username = usernameLayout.text.toString()
             val password = passwordEditText.text.toString()
 
-
-            // Alert Dialog
-            val builder =AlertDialog.Builder(this)
-            builder.setTitle("Login")
-            builder.setMessage("Login Successful $username $password")
-            builder.setPositiveButton("OK"){dialog, which ->
-                dialog.dismiss()
+            if(username.isEmpty()){
+                usernameLayout.error = "Please enter your username"
             }
-            builder.show()
-
-            // This will go to home fragment
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-
-            // Create a new user with a first and last name
-            val user = hashMapOf(
-                "first" to "Ada",
-                "last" to "Lovelace",
-                "born" to 1815
-            )
-
-// Add a new document with a generated ID
-            db.collection("users")
-                .add(user)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            else{
+                if(password.isEmpty()){
+                    passwordEditText.error = "Please enter your password"
+                }else{
+                    LoginVerification(username, password)
                 }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error adding document", e)
-                }
+            }
+
         }
 
         // Go to registration activity
@@ -94,6 +74,39 @@ class LoginActivity : AppCompatActivity() {
             val Intent = Intent(this, Registration::class.java)
             startActivity(Intent)
             finish()
+        }
+
+    }
+
+    fun LoginVerification(username: String, password: String) {
+        ProgressLoading = ProgressDialog(this)
+        ProgressLoading.setTitle("Loading")
+        ProgressLoading.setMessage("Please wait...")
+        ProgressLoading.setCanceledOnTouchOutside(false)
+        ProgressLoading.show()
+
+        db.collection("Users").whereEqualTo("username", username).get().addOnSuccessListener {
+            if (it.isEmpty) {
+                Toast.makeText(this, "User does not exist", Toast.LENGTH_SHORT).show()
+                 ProgressLoading.dismiss()
+            }else{
+                for (document in it) {
+                    val PASSWORD = document.getString("password")
+                    val result = BCrypt.verifyer().verify(password.toCharArray(), PASSWORD)
+
+                    if(result.verified){
+                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                        ProgressLoading.dismiss()
+                        val Intent = Intent(this, MainActivity::class.java)
+                        Intent.putExtra("username", username)
+                        startActivity(Intent)
+                        finish()
+                    }else{
+
+                    }
+
+                }
+            }
         }
 
     }

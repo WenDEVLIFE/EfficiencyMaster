@@ -153,6 +153,8 @@ class Registration : AppCompatActivity() {
 
         }
     }
+
+    // Insert the user
     private fun Database(User_Data: Array<String>) {
         ProgressLoading = ProgressDialog(this)
         ProgressLoading.setTitle("Adding the User ")
@@ -203,6 +205,7 @@ class Registration : AppCompatActivity() {
                             "imageurl" to imageUrl
                         )
 
+                        // Add the user to the database
                         db.collection("User").add(userinfo)
                         db.collection("UserDetails").add(userdata)
                         Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
