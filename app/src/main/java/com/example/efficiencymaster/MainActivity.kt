@@ -2,6 +2,7 @@ package com.example.efficiencymaster
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -11,7 +12,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +23,13 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var nametext: TextView
 
+    lateinit var progresstext: TextView
+
+    lateinit var userImage: ImageView
+
     var username = ""
+
+    val db = Firebase.firestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,7 +45,14 @@ class MainActivity : AppCompatActivity() {
         val Intent = intent
         username = Intent.getStringExtra("username").toString()
 
+
         val navigationView = findViewById<NavigationView>(R.id.navView)
+        usernametext = navigationView.getHeaderView(0).findViewById(R.id.username)
+        nametext = navigationView.getHeaderView(0).findViewById(R.id.name)
+        userImage = navigationView.getHeaderView(0).findViewById(R.id.user_icon)
+        progresstext = navigationView.getHeaderView(0).findViewById(R.id.progress_id)
+        LoadUserStats()
+
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
@@ -174,4 +191,40 @@ class MainActivity : AppCompatActivity() {
          val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
          drawerLayout.openDrawer(GravityCompat.START)
      }
+
+    fun LoadUserStats(){
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
+            if (it.isEmpty) {
+                usernametext.text = "User does not exist"
+            }else{
+                for (document in it){
+                    val username = document.data["username"].toString()
+                    val ID = document.data["UserID"].toString()
+
+                    db.collection("UserDetails").whereEqualTo("UserID", ID).get().addOnSuccessListener {
+                        for (document in it){
+                            val image = document.data["imageurl"].toString()
+                            val name = document.data["name"].toString()
+
+                            usernametext.text = "Username:$username"
+                            nametext.text = "Name:$name"
+
+                            Glide.with(this).load(image).into(userImage)
+
+                            db.collection("Progress").whereEqualTo("UserID", ID).get().addOnSuccessListener {
+                                if (it.isEmpty){
+                                    progresstext.text = "Progress:0%"
+                                }else{
+                                    for (document in it){
+                                        val progress = document.data["progress"].toString()
+                                        progresstext.text = "Progress: $progress%"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -14,6 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -39,6 +40,7 @@ class Registration : AppCompatActivity() {
 
     lateinit var EditName: EditText
 
+
     var time: Int = 0
 
     var code_sent: String = "123456"
@@ -59,6 +61,7 @@ class Registration : AppCompatActivity() {
         }
 
         timertext = findViewById<TextView>(R.id.timertext)
+        timertext.setText("")
 
         // This is for initializing the components  and  getting the id of the components
         EditEmail = findViewById<EditText>(R.id.emailtext)
@@ -190,10 +193,11 @@ class Registration : AppCompatActivity() {
                         val UserID = UUID.randomUUID().toString()
 
                         // User
+                        val passwordHashed = BCrypt.withDefaults().hashToString(12, User_Data[1].toCharArray())
                         val userinfo = hashMapOf(
                             "UserID" to UserID,
                             "username" to User_Data[0],
-                            "password" to User_Data[1],
+                            "password" to passwordHashed,
                         )
 
                         //  User Details

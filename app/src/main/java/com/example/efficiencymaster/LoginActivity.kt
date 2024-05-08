@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
         ProgressLoading.setCanceledOnTouchOutside(false)
         ProgressLoading.show()
 
-        db.collection("Users").whereEqualTo("username", username).get().addOnSuccessListener {
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
             if (it.isEmpty) {
                 Toast.makeText(this, "User does not exist", Toast.LENGTH_SHORT).show()
                  ProgressLoading.dismiss()
@@ -102,6 +102,8 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(Intent)
                         finish()
                     }else{
+                        Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show()
+                        ProgressLoading.dismiss()
 
                     }
 
