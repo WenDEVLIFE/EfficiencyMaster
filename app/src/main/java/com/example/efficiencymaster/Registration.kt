@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -13,9 +14,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import java.util.UUID
@@ -42,6 +42,10 @@ class Registration : AppCompatActivity() {
     var time: Int = 0
 
     var code_sent: String = "123456"
+
+    val db = Firebase.firestore
+
+    lateinit var ProgressLoading: ProgressDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +78,7 @@ class Registration : AppCompatActivity() {
             if (time==0){
                 code_sent = generateCode()
                 startTimer()
+                SendMail(email, code_sent)
 
             } else{
                 Toast.makeText(this, "Please wait for 60 seconds", Toast.LENGTH_SHORT).show()
@@ -114,9 +119,8 @@ class Registration : AppCompatActivity() {
                                    if (hasSpecialChar(password)){
                                     if(isValidEmail(email)){
                                         //  Go to login activity
-                                        val intent = Intent(this, LoginActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
+                                        val User_Data = arrayOf(username,password,name,email)
+                                        Database(User_Data)
                                     }
                                    }else{
                                        EditPassword.error = "Password must contain special character"
@@ -132,6 +136,7 @@ class Registration : AppCompatActivity() {
                 }
 
             } else{
+                CodeText.error = "Invalid code"
 
             }
 
@@ -148,7 +153,13 @@ class Registration : AppCompatActivity() {
 
         }
     }
-    private fun Database() {
+    private fun Database(User_Data: Array<String>) {
+        ProgressLoading = ProgressDialog(this)
+        ProgressLoading.setTitle("Adding the User ")
+        ProgressLoading.setMessage("Please wait...")
+        ProgressLoading.setCancelable(false)
+        ProgressLoading.show()
+
         // Create a storage reference
         val storageRef = Firebase.storage.reference
 
@@ -165,15 +176,58 @@ class Registration : AppCompatActivity() {
         val fileName = UUID.randomUUID().toString()
         val fileReference = storageRef.child("uploads/$fileName.png")
 
-        // Upload the ByteArray to Firebase Storage
-        fileReference.putBytes(data).addOnSuccessListener { taskSnapshot ->
-            // Get the download URL of the uploaded file
-            fileReference.downloadUrl.addOnSuccessListener { uri ->
-                // ... rest of your code
+        db.collection("User").whereEqualTo("username",User_Data[0]).get().addOnSuccessListener {
+            if(it.isEmpty){
+                // Upload the ByteArray to Firebase Storage
+                fileReference.putBytes(data).addOnSuccessListener { taskSnapshot ->
+                    // Get the download URL of the uploaded file
+                    fileReference.downloadUrl.addOnSuccessListener { uri ->
+                        val imageUrl = uri.toString()
+
+                        // User id
+                        val UserID = UUID.randomUUID().toString()
+
+                        // User
+                        val userinfo = hashMapOf(
+                            "UserID" to UserID,
+                            "username" to User_Data[0],
+                            "password" to User_Data[1],
+                        )
+
+                        //  User Details
+                        val userdata = hashMapOf(
+                            "UserID" to UserID,
+                            "name" to User_Data[2],
+                            "email" to User_Data[3],
+                            "image" to fileName,
+                            "imageurl" to imageUrl
+                        )
+
+                        db.collection("User").add(userinfo)
+                        db.collection("UserDetails").add(userdata)
+                        Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
+                        ProgressLoading.dismiss()
+                        UsernameText.setText("")
+                        EditPassword.setText("")
+                        EditConfirmPassword.setText("")
+                        EditName.setText("")
+                        CodeText.setText("")
+                        EditEmail.setText("")
+                        timertext.text = ""
+                        time = 0
+
+
+                    }
+                }.addOnFailureListener { e ->
+                    Toast.makeText(this, "Upload failed", Toast.LENGTH_SHORT).show()
+                    // Hide the ProgressDialog
+                    ProgressLoading.dismiss()
+                }
+
+            }else{
+                Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show()
+                ProgressLoading.dismiss()
             }
-        }.addOnFailureListener { e ->
-            Toast.makeText(this, "Upload failed", Toast.LENGTH_SHORT).show()
-            // Hide the ProgressDialog
         }
     }
 
@@ -208,5 +262,11 @@ class Registration : AppCompatActivity() {
         val regex = Regex("[A-Z]")
         return regex.containsMatchIn(password)
 
+    }
+
+    fun SendMail(email: String, code: String) {
+        val subject = "EfficiencyMaster Registration Verification Code"
+        val message = "Your verification code is: $code"
+        YahooMailAPI(this, email, subject, message, code).execute()
     }
 }
