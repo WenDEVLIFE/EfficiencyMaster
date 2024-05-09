@@ -140,6 +140,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
+
+    // This method  will check if the user session exiist
     fun Load() {
         // Create an instance of SessionManager
         val sessionManager = SessionManager(this)
