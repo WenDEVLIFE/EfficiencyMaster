@@ -83,22 +83,22 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                // This will go to create task
+                // This will go to your task fragment
                 R.id.create ->{
 
                     // This will go to create task
-                    val createtaskFragment = CreateTask_Fragment()
+                    val groupFragment = InvidividualTask()
                     val bundle = Bundle()
                     bundle.putString("username", username)
-                    createtaskFragment.arguments = bundle
-                    replaceFragment(createtaskFragment)
+                    groupFragment.arguments = bundle
+                    replaceFragment(groupFragment)
                     true
                 }
 
                 R.id.group ->{
 
                     // This will go to group fragment
-                    val groupFragment = InvidividualTask()
+                    val groupFragment = GroupFragment()
                     val bundle = Bundle()
                     bundle.putString("username", username)
                     groupFragment.arguments = bundle
