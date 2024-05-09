@@ -3,8 +3,7 @@ package com.example.efficiencymaster
 import android.content.Context
 import android.content.SharedPreferences
 
-class SessionManager(context: Context) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+class SessionManager(context: Context) {   private val prefs: SharedPreferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
     // Store the user  value
     fun userLogin(usernname: String) {
@@ -19,7 +18,7 @@ class SessionManager(context: Context) {
     }
 
     // get the username
-   val getUser: String
+    val getUser: String
         get() = prefs.getString("username", null).toString()
 
 

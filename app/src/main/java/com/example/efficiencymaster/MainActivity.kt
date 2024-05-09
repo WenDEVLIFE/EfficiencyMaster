@@ -96,11 +96,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.group ->{
+
                     // This will go to group fragment
-                    val groupFragment = GroupFragment()
+                    val groupFragment = InvidividualTask()
                     val bundle = Bundle()
-                    bundle.putString("username", usernametext.text.toString())
-                    bundle.putString("name", nametext.text.toString())
+                    bundle.putString("username", username)
                     groupFragment.arguments = bundle
                     replaceFragment(groupFragment)
 
