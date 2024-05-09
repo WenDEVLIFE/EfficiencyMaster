@@ -9,16 +9,9 @@
             />
 
 
-    <item android:title="Create Own Task"
+    <item android:title="Task"
             android:icon="@drawable/note"
             android:id="@+id/create"
-            android:textColor="@color/black"
-            />
-
-
-    <item android:title="Individual Task"
-            android:icon="@drawable/note"
-            android:id="@+id/IndividualTask"
             android:textColor="@color/black"
             />
 
@@ -49,13 +42,6 @@
             />
 
 
-    <item android:title="Create a Group"
-        android:icon="@drawable/add_group"
-        android:id="@+id/groutask"
-        android:textColor="@color/black"
-        />
-
-
     <item android:title="Leaderboard"
             android:icon="@drawable/trophyline"
             android:id="@+id/leadeboards"
@@ -63,7 +49,7 @@
             />
 
     <item android:title="User settings"
-            android:icon="@drawable/info_14722546"
+            android:icon="@drawable/setting"
             android:id="@+id/user"
             android:textColor="@color/black"
             />

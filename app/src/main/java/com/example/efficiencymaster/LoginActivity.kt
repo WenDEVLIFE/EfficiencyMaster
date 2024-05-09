@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        Load()
         // Our password layout
         val passwordLayout = findViewById<TextInputLayout>(R.id.password_layout)
         val color = ContextCompat.getColor(this, R.color.black)
@@ -110,10 +111,18 @@ class LoginActivity : AppCompatActivity() {
                     val PASSWORD = document.getString("password")
                     val result = BCrypt.verifyer().verify(password.toCharArray(), PASSWORD)
 
+
                     // If the result is verified, it will proceed to the main activity
                     if(result.verified){
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                         ProgressLoading.dismiss()
+
+
+                        // Create an instance of SessionManager and log in the user
+                        val sessionManager = SessionManager(this)
+                        sessionManager.userLogin(username)
+
+
                         val Intent = Intent(this, MainActivity::class.java)
                         Intent.putExtra("username", username)
                         startActivity(Intent)
@@ -130,5 +139,19 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+    }
+    fun Load() {
+        // Create an instance of SessionManager
+        val sessionManager = SessionManager(this)
+
+        // Check if the user is logged in
+        if (sessionManager.isUserLoggedIn()) {
+            // If the user is logged in, redirect them to the main activity
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("username", sessionManager.getUser)
+            startActivity(intent)
+            finish()
+        }
+        // If the user is not logged in, do nothing and let them stay on the LoginActivity
     }
 }

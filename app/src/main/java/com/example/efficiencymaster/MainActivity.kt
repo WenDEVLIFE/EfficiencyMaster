@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // Create an instance of SessionManager
+        val sessionManager = SessionManager(this)
 
         // get the intent
         val Intent = intent
@@ -87,26 +89,13 @@ class MainActivity : AppCompatActivity() {
                     // This will go to create task
                     val createtaskFragment = CreateTask_Fragment()
                     val bundle = Bundle()
-                    bundle.putString("username", usernametext.text.toString())
-                    bundle.putString("name", nametext.text.toString())
+                    bundle.putString("username", username)
                     createtaskFragment.arguments = bundle
                     replaceFragment(createtaskFragment)
                     true
                 }
 
-                // This will go to achievements
-                R.id.achievements ->{
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle("Achievements")
-                    builder.setMessage("Welcome to Achievements")
-                    builder.setPositiveButton("OK"){dialog, which ->}
-                    builder.show()
-                    true
-                }
-
-                // This will go to group task
-                R.id.groutask ->{
-
+                R.id.group ->{
                     // This will go to group fragment
                     val groupFragment = GroupFragment()
                     val bundle = Bundle()
@@ -114,11 +103,6 @@ class MainActivity : AppCompatActivity() {
                     bundle.putString("name", nametext.text.toString())
                     groupFragment.arguments = bundle
                     replaceFragment(groupFragment)
-                    true
-                }
-
-                // This will go to create group
-                R.id.group ->{
 
                     true
                 }
@@ -132,6 +116,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.leadeboards  ->{
 
+                    true
+                }
+                    // This will go to achievements
+                R.id.achievements ->{
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Achievements")
+                    builder.setMessage("Welcome to Achievements")
+                    builder.setPositiveButton("OK"){dialog, which ->}
+                    builder.show()
                     true
                 }
 
@@ -154,6 +147,9 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
                         finish()
+
+                        // Log out the user
+                        sessionManager.logOut()
                     }
                     builder.setNegativeButton("No"){dialog, which ->}
                     builder.show()

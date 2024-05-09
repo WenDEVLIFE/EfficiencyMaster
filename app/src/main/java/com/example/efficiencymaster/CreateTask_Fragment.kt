@@ -1,5 +1,7 @@
 package com.example.efficiencymaster
 
+import android.app.ActivityManager.TaskDescription
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,12 +28,20 @@ class CreateTask_Fragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var TaskName:EditText
+    lateinit var TaskDescription: EditText
+    lateinit var ProgressLoading: ProgressDialog
+
+    val db = Firebase.firestore
+    var username =""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
         }
     }
 
@@ -40,8 +52,15 @@ class CreateTask_Fragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_create_task_, container, false)
 
-        val TaskName = view.findViewById<EditText>(R.id.editTextText2)
-        val TaskDescription = view.findViewById<EditText>(R.id.desscripts)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
+        }
+
+
+        TaskName = view.findViewById<EditText>(R.id.editTextText2)
+        TaskDescription = view.findViewById<EditText>(R.id.desscripts)
 
         val create_Task_btn = view.findViewById<Button>(R.id.button2)
         create_Task_btn.setOnClickListener {
@@ -54,11 +73,14 @@ class CreateTask_Fragment : Fragment() {
                if(taskdescription.isEmpty()) {
                    TaskDescription.error = "Please Enter Task Description"
                }else{
-                   val builder = AlertDialog.Builder(requireContext())
-                   builder.setTitle("Task Created")
-                   builder.setMessage("Task Name: $taskname\nTask Description: $taskdescription")
-                   builder.setPositiveButton("OK"){dialog, which ->}
-                   builder.show()
+
+                   InsertTask(taskname, taskdescription)
+
+                   ProgressLoading= ProgressDialog(context)
+                   ProgressLoading.setTitle("Inserting Task")
+                   ProgressLoading.setMessage("Inserting Task Please Wait..")
+                   ProgressLoading.setCanceledOnTouchOutside(false)
+                   ProgressLoading.show()
                }
            }
         }
@@ -73,6 +95,38 @@ class CreateTask_Fragment : Fragment() {
         }
 
         return view
+    }
+
+    fun InsertTask(taskname: String, taskDescription: String) {
+
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
+            for (document in it){
+                val ID = document.data["UserID"].toString()
+
+                // This will insert the task into the Firestore database
+                val task = hashMapOf(
+                    "UserID" to ID,
+                    "TaskName" to taskname,
+                    "TaskDescription" to taskDescription,
+                    "UserID" to ID
+                )
+
+                // Check if the task already exists in the database
+               db.collection("Task").whereEqualTo("Taskname", taskname).whereEqualTo("UserID",ID).get().addOnSuccessListener {
+                   if(it.isEmpty){
+                       db.collection("Task").add(task).addOnSuccessListener {
+                            TaskName.text.clear()
+                            TaskDescription.text.clear()
+                           ProgressLoading.dismiss()
+                           Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+                       }
+                   }else{
+                       TaskName.error = "Task Already Exists"
+                       ProgressLoading.dismiss()
+                   }
+               }
+            }
+        }
     }
 
     companion object {
