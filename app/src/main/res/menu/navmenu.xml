@@ -43,7 +43,7 @@
             />
 
     <item android:title="Task Feed"
-            android:icon="@drawable/add_group"
+            android:icon="@drawable/feed"
             android:id="@+id/Feed"
             android:textColor="@color/black"
             />
