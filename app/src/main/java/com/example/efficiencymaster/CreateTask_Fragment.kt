@@ -108,6 +108,7 @@ class CreateTask_Fragment : Fragment() {
                     "UserID" to ID,
                     "TaskName" to taskname,
                     "TaskDescription" to taskDescription,
+                    "Status" to "Pending",
                     "UserID" to ID
                 )
 
