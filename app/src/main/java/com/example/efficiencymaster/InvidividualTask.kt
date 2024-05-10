@@ -35,7 +35,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: TaskAdapter
     var taskList = mutableListOf<Task>()
-    var username =""
+    var username = ""
     val db = Firebase.firestore
 
 
@@ -95,7 +95,8 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         adapter.setOnCancelListener(::onCancel)
         LoadTask()
 
-        val FloatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        val FloatingActionButton =
+            view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         FloatingActionButton.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
             val createTask = CreateTask_Fragment()
@@ -105,10 +106,10 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
             ReplaceFragment(createTask)
         }
 
-    return view
+        return view
     }
 
-    fun ReplaceFragment(fragment:Fragment){
+    fun ReplaceFragment(fragment: Fragment) {
         val fragmentManager = parentFragmentManager
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
@@ -138,18 +139,18 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     }
 
     // This  will Load the task from the database
-    fun LoadTask(){
-        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
-            for (document in it){
+    fun LoadTask() {
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
+            for (document in it) {
                 val UserID = document.data["UserID"].toString()
 
-                db.collection("Task").whereEqualTo("UserID",UserID).get().addOnSuccessListener {
-                    for (document in it){
+                db.collection("Task").whereEqualTo("UserID", UserID).get().addOnSuccessListener {
+                    for (document in it) {
                         val Taksname = document.data["TaskName"].toString()
                         val TaskDescription = document.data["TaskDescription"].toString()
                         val Status = document.data["Status"].toString()
 
-                        if(Status.equals("Pending")) {
+                        if (Status.equals("Pending")) {
                             val task = Task(Taksname, TaskDescription)
                             taskList.add(task)
                         }
@@ -161,17 +162,19 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         }
 
 
-
     }
+
     override fun onCancel(position: Int) {
         val TaskName = taskList[position].taskname
         val TaskDescription = taskList[position].taskdescription
 
-        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
             for (document in it) {
                 val UserID = document.data["UserID"].toString()
 
-                db.collection("Task").whereEqualTo("TaskName", TaskName).whereEqualTo("TaskDescription", TaskDescription).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
+                db.collection("Task").whereEqualTo("TaskName", TaskName)
+                    .whereEqualTo("TaskDescription", TaskDescription).whereEqualTo("UserID", UserID)
+                    .get().addOnSuccessListener {
                     for (document in it) {
                         val docId = document.id
                         db.collection("Task").document(docId).update("Status", "Done")
@@ -179,17 +182,17 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                                 Log.d("Firestore", "DocumentSnapshot successfully updated!")
                                 Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
                                 taskList.removeAt(position)
+                                adapter.notifyDataSetChanged()
                             }
+
                             .addOnFailureListener { e ->
                                 Log.w("Firestore", "Error updating document", e)
-                                Toast.makeText(context, "Task Not Completed", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Task Not Completed", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                     }
-
-                    }
-
+                }
             }
         }
-
     }
 }

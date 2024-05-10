@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import classes.Task
 import com.example.efficiencymaster.R
-
+import kotlin.concurrent.thread
 
 
 class TaskAdapter(private var taskList: List<Task>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
@@ -60,6 +60,12 @@ class TaskAdapter(private var taskList: List<Task>) : RecyclerView.Adapter<TaskA
         init {
             DoneTask.setOnClickListener {
                 cancelListener?.invoke(adapterPosition)
+
+                // Add threat sleep to simulate the animation checking the checkbox
+                thread {
+                    Thread.sleep(1000)
+                    DoneTask.isChecked = false
+                }
             }
         }
 
