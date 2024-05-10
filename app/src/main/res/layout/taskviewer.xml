@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- item_complaint.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:background="#2b9348"
+        android:layout_height="wrap_content">
+
+    <TextView
+            android:text="  "
+            android:layout_width="403dp"
+            android:layout_height="450dp"
+            android:id="@+id/textView14" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_330sdp"
+            android:background="@drawable/pane_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.476"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp">
+
+        <TextView
+                android:text="Role:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/department"
+                app:layout_constraintTop_toBottomOf="@+id/staffid"
+                android:layout_marginEnd="36dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp" />
+
+        <TextView
+                android:text="Role:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/staffid"
+                app:layout_constraintTop_toBottomOf="@+id/position"
+                android:layout_marginEnd="36dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="12dp" />
+
+        <TextView
+                android:text="Staff ID:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_65sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/textView16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/staffid"
+                app:layout_constraintTop_toBottomOf="@+id/textView15"
+                app:layout_constraintHorizontal_bias="0.825"
+                android:layout_marginTop="12dp" />
+
+        <TextView
+                android:text="Role:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/position"
+                app:layout_constraintTop_toBottomOf="@+id/role"
+                android:layout_marginTop="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="36dp" />
+
+        <TextView
+                android:text="Position:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_65sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/textView15"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/position"
+                app:layout_constraintTop_toBottomOf="@+id/textView2412"
+                app:layout_constraintHorizontal_bias="0.89"
+                android:layout_marginTop="12dp" />
+
+        <TextView
+                android:text="Role:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/role"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp" />
+
+        <TextView
+                android:text="Name:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/username"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="40dp" />
+
+        <TextView
+                android:text="Username:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/username"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="40dp" />
+
+        <Button
+                android:text="Edit the STAFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit"
+                android:padding="@dimen/_10sdp"
+                android:textSize="@dimen/_10sdp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-condensed"
+                android:background="@drawable/button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/department"
+                android:layout_marginEnd="56dp"
+                android:layout_marginTop="24dp" />
+
+        <TextView
+                android:text="Role:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/textView2412"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/role"
+                app:layout_constraintTop_toBottomOf="@+id/textView2411"
+                android:layout_marginTop="16dp"
+                app:layout_constraintHorizontal_bias="0.923" />
+
+        <TextView
+                android:text="Name:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/textView2411"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/textView241"
+                android:layout_marginTop="12dp"
+                app:layout_constraintHorizontal_bias="0.927" />
+
+        <TextView
+                android:text="Username:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_73sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/textView241"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/username"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="32dp"
+                app:layout_constraintHorizontal_bias="0.886" />
+
+        <Button
+                android:text="Delete the Staff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button2"
+                android:padding="@dimen/_10sdp"
+                android:textSize="@dimen/_10sdp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-condensed"
+                android:background="@drawable/button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView17"
+                app:layout_constraintEnd_toStartOf="@+id/edit"
+                app:layout_constraintHorizontal_bias="0.35"
+                android:layout_marginTop="24dp" />
+
+        <TextView
+                android:text="Department:"
+                android:padding="@dimen/_5sdp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:layout_width="@dimen/_85sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/textView17"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/department"
+                app:layout_constraintTop_toBottomOf="@+id/textView16"
+                app:layout_constraintHorizontal_bias="0.714"
+                android:layout_marginTop="8dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
