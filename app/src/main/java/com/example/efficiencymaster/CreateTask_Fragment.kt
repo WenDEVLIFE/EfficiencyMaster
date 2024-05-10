@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -112,14 +113,44 @@ class CreateTask_Fragment : Fragment() {
                     "UserID" to ID
                 )
 
+                val XpData = Random.nextInt(100,  1000)
+                val progressXp = hashMapOf(
+                    "UserID" to ID,
+                    "ProgressXp" to XpData,
+
+                )
+
                 // Check if the task already exists in the database
-               db.collection("Task").whereEqualTo("Taskname", taskname).whereEqualTo("UserID",ID).get().addOnSuccessListener {
+               db.collection("Task").whereEqualTo("TaskName", taskname).whereEqualTo("UserID",ID).get().addOnSuccessListener {
                    if(it.isEmpty){
                        db.collection("Task").add(task).addOnSuccessListener {
                             TaskName.text.clear()
                             TaskDescription.text.clear()
                            ProgressLoading.dismiss()
                            Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+                       }
+
+                       db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
+                           if(it.isEmpty){
+                               db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
+                                   TaskName.text.clear()
+                                   TaskDescription.text.clear()
+                                   ProgressLoading.dismiss()
+                                   Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+                               }
+                           }   else{
+                               for (document in it){
+                                   val xp = document.get("ProgressXp").toString().toInt()
+
+                                   val UpdatedXP:Int = xp + XpData
+
+                                   db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
+                                   TaskName.text.clear()
+                                   TaskDescription.text.clear()
+                                   ProgressLoading.dismiss()
+                                   Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+                               }
+                           }
                        }
                    }else{
                        TaskName.error = "Task Already Exists"

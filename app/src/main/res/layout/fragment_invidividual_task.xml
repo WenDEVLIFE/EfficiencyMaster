@@ -71,14 +71,14 @@
         </androidx.appcompat.widget.SearchView>
 
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="409dp"
-                android:layout_height="558dp"
+                android:layout_width="@dimen/_310sdp"
+                android:layout_height="@dimen/_420sdp"
                 android:id="@+id/recycler_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_group"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

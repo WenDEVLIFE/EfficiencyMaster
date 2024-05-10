@@ -1,15 +1,21 @@
 package com.example.efficiencymaster
 
+import adapters.TaskAdapter
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import classes.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -22,12 +28,16 @@ private const val ARG_PARAM2 = "param2"
  * Use the [InvidividualTask.newInstance] factory method to
  * create an instance of this fragment.
  */
-class InvidividualTask : Fragment() {
+class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     lateinit var recyclerView: RecyclerView
+    lateinit var adapter: TaskAdapter
+    var taskList = mutableListOf<Task>()
     var username =""
+    val db = Firebase.firestore
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +89,11 @@ class InvidividualTask : Fragment() {
         // This will get the recycler view from the fragment_group.xml layout
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setLayoutManager(LinearLayoutManager(context))
+        taskList = ArrayList()
+        adapter = TaskAdapter(taskList)
+        recyclerView.adapter = adapter
+        adapter.setOnCancelListener(::onCancel)
+        LoadTask()
 
         val FloatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         FloatingActionButton.setOnClickListener {
@@ -120,5 +135,61 @@ class InvidividualTask : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    // This  will Load the task from the database
+    fun LoadTask(){
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
+            for (document in it){
+                val UserID = document.data["UserID"].toString()
+
+                db.collection("Task").whereEqualTo("UserID",UserID).get().addOnSuccessListener {
+                    for (document in it){
+                        val Taksname = document.data["TaskName"].toString()
+                        val TaskDescription = document.data["TaskDescription"].toString()
+                        val Status = document.data["Status"].toString()
+
+                        if(Status.equals("Pending")) {
+                            val task = Task(Taksname, TaskDescription)
+                            taskList.add(task)
+                        }
+
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+
+
+    }
+    override fun onCancel(position: Int) {
+        val TaskName = taskList[position].taskname
+        val TaskDescription = taskList[position].taskdescription
+
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
+            for (document in it) {
+                val UserID = document.data["UserID"].toString()
+
+                db.collection("Task").whereEqualTo("TaskName", TaskName).whereEqualTo("TaskDescription", TaskDescription).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
+                    for (document in it) {
+                        val docId = document.id
+                        db.collection("Task").document(docId).update("Status", "Done")
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "DocumentSnapshot successfully updated!")
+                                Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
+                                taskList.removeAt(position)
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w("Firestore", "Error updating document", e)
+                                Toast.makeText(context, "Task Not Completed", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+
+                    }
+
+            }
+        }
+
     }
 }
