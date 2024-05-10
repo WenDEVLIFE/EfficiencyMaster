@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.BarData
@@ -17,6 +19,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,29 +82,11 @@ class HomeFragmentation : Fragment() {
 
         }
 
-        val entries = ArrayList<BarEntry>()
-        val barDataSet = BarDataSet(entries, "Tasks in past 7  days")
-        val barData = BarData(barDataSet)
-
-
         barChart = view.findViewById(R.id.bargraph)
 
+        LoadDatas(barChart)
 
-        // Set the legend
-        val legend = barChart.legend
-        legend.isEnabled = true
-        legend.form = Legend.LegendForm.LINE
-        legend.textSize = 14f
-        legend.textColor = Color.BLACK
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-        legend.orientation = Legend.LegendOrientation.HORIZONTAL
-        legend.setDrawInside(false)
 
-        barChart.data = barData
-        barDataSet.setColor(Color.GREEN) // Set the color of the bars
-        barChart.invalidate() // refreshes the chart
-        LoadDatas(barChart, barData, barDataSet)
         TaskDone = view.findViewById(R.id.done_task_count)
 
         circularProgressBar = view.findViewById<CircularProgressBar>(R.id.circularProgressBar)
@@ -143,7 +128,6 @@ class HomeFragmentation : Fragment() {
             //progress = 100f
             // or with animation
             //setProgressWithAnimation(100f, 3000) // =1s
-
             // Set Progress Max
             progressMax = 100f
 
@@ -176,33 +160,90 @@ class HomeFragmentation : Fragment() {
         return view
     }
 
-    private fun LoadDatas(barChart: BarChart?, barData: BarData, barDataSet: BarDataSet) {
-        val sevenDaysAgo = LocalDate.now().minusDays(7)
-        val CollectionReference1 = db.collection("Task")
-        val query1 = CollectionReference1.whereEqualTo("Status", "Done").whereGreaterThanOrEqualTo("Date", sevenDaysAgo)
-        query1.get().addOnSuccessListener {
-            val pending = it.size()
+    // This will load the data from the database
+    private fun LoadDatas(barChart: BarChart?) {
+        val entries = ArrayList<BarEntry>()
 
-            for (i in 0 until pending) {
-                barDataSet.addEntry(BarEntry(i.toFloat(), pending.toFloat()))
-                barChart?.data = barData
-                barChart?.invalidate()
+        // get the data from the past 7 days
+        val sevenDaysAgo = LocalDate.now().minusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+        // Collection Reference
+        val CollectionReference1 = db.collection("Task")
+
+        // Get the query of the Done task and its completion date
+        val query1 = CollectionReference1.whereEqualTo("Status", "Done").whereGreaterThanOrEqualTo("CompletionDate", sevenDaysAgo)
+        query1.get().addOnSuccessListener { documents ->
+
+            // Print the documents
+            Toast.makeText(context, "Firestore query results $documents", Toast.LENGTH_SHORT).show()
+
+            // Group the tasks by date
+            val tasksByDate = documents.groupBy {
+                it.getString("CompletionDate")
             }
 
+            // Get the task counts
+            val taskCounts = tasksByDate.values.map {
+                it.size
+            }
 
+            // Create BarEntry objects and add them to the entries list
+            for (i in taskCounts.indices) {
+
+                // Print the entries
+                val entry = BarEntry(i.toFloat(), taskCounts[i].toFloat())
+
+                // add the entries.
+                entries.add(entry)
+                println("BarEntry: $entry") // Debug print
+            }
+
+            // Create BarDataSet and BarData objects
+            val barDataSet = BarDataSet(entries, "Tasks in past 7 days")
+            val barData = BarData(barDataSet)
+
+            // Set the legend
+            val legend = barChart?.legend
+
+            legend?.isEnabled = true
+            legend?.form = Legend.LegendForm.LINE
+            legend?.textSize = 14f
+            legend?.textColor = Color.BLACK
+
+            legend?.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+            legend?.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+
+            legend?.orientation = Legend.LegendOrientation.HORIZONTAL
+            legend?.setDrawInside(false)
+            barChart?.data = barData
+            barDataSet.setColor(Color.GREEN) // Set the color of the bars
+            barChart?.invalidate() // refreshes the chart
+
+        }.addOnFailureListener { exception ->
+            val AlertDialog = AlertDialog.Builder(context)
+            AlertDialog.setTitle("Error")
+            AlertDialog.setMessage("Error loading data: $exception")
+            AlertDialog.setPositiveButton("OK") { dialog, which ->
+                // Do nothing
+            }
+            AlertDialog.show()
         }
-
     }
 
     fun LoadStats(){
         var retriveCount1:Double = 0.00
         var retriveCount2:Double = 0.00
+
+        // Collection Reference
         val CollectionReference1 = db.collection("Task")
+
+        // Get the query of the Pending task
         val query1 = CollectionReference1.whereEqualTo("Status", "Pending")
         query1.get().addOnSuccessListener {
             val pending = it.size()
             retriveCount1 = pending.toDouble()
 
+            // Get the query of the  Done task
             val query2 = CollectionReference1.whereEqualTo("Status", "Done")
             query2.get().addOnSuccessListener {
                 val done = it.size()
@@ -212,24 +253,30 @@ class HomeFragmentation : Fragment() {
                 val percentages1 = retriveCount2 / total * 100
                 val percentages2 = retriveCount1 / total * 100
 
+                // set to substriing 0 to 5
                 val stringg1 = percentages1.toString()
                 val stringg2 = percentages2.toString()
-                val subStr = subString(stringg1)
-                val subStr2 = subString(stringg2)
+                val subStr = subString(stringg2)
+                val subStr2 = subString(stringg1)
+
+                // get the float value of the percentages
                 val FloatPercentages1 = percentages1.toFloat()
                 val FloatPercentages2 = percentages2.toFloat()
 
+                // set the text of the percentage
                 percentage.text = "$subStr %"
                 TaskDone.text = "$subStr2 %"
-                circularProgressBar.setProgressWithAnimation(FloatPercentages1, 3000)
-                circularProgressBar2.setProgressWithAnimation(FloatPercentages2, 3000)
+
+                // set the progress of the circular progress bar
+                circularProgressBar.setProgressWithAnimation(FloatPercentages2, 3000)
+                circularProgressBar2.setProgressWithAnimation(FloatPercentages1, 3000)
                 // Update the UI here with the calculated percentage
             }
         }
     }
 
     fun subString (string: String): String {
-        return string.substring(0, 5)
+        return if (string.length < 5) string else string.substring(0, 5)
     }
     companion object {
         /**
