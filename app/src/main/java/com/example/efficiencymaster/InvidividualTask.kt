@@ -16,6 +16,7 @@ import classes.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -177,7 +178,12 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                     .get().addOnSuccessListener {
                     for (document in it) {
                         val docId = document.id
-                        db.collection("Task").document(docId).update("Status", "Done")
+
+                        val Date  = LocalDate.now()
+                        db.collection("Task").document(docId).update(mapOf(
+                            "Status" to "Done",
+                            "CompletionDate" to Date.toString()
+                        ))
                             .addOnSuccessListener {
                                 Log.d("Firestore", "DocumentSnapshot successfully updated!")
                                 Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()

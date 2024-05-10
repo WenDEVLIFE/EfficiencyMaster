@@ -13,6 +13,8 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,12 +34,15 @@ class HomeFragmentation : Fragment() {
 
     private var username: String? = null
     private var email: String? = null
+    val db  = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username")
+            email = it.getString("email")
 
         }
     }
@@ -50,6 +55,14 @@ class HomeFragmentation : Fragment() {
     val view = inflater.inflate(R.layout.fragment_home_fragmentation, container, false)
 
        val percentage = view.findViewById<TextView>(R.id.textView5)
+
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username")
+            email = it.getString("email")
+
+        }
 
         val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
         ImageButton.setOnClickListener {
