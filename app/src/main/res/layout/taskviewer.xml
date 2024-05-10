@@ -31,7 +31,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView241"
                 android:layout_marginTop="4dp"
-                android:layout_marginStart="24dp" />
+                android:layout_marginStart="16dp" />
 
         <TextView
                 android:text="Task Name"
@@ -45,22 +45,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="20dp"
-                android:layout_marginStart="24dp"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton4"
-                app:layout_constraintHorizontal_bias="0.0" />
+                android:layout_marginStart="24dp" />
 
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/listing"
-                android:id="@+id/imageButton4"
-                android:background="@android:color/transparent"
-                android:layout_marginEnd="16dp"
+        <CheckBox
+                android:text=""
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginEnd="4dp"
+                android:button="@drawable/customize_checkbox"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/checkBox"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="48dp"
                 app:layout_constraintStart_toEndOf="@+id/textView2411"
-                app:layout_constraintHorizontal_bias="1.0" />
+                app:layout_constraintHorizontal_bias="0.7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
