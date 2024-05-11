@@ -9,17 +9,17 @@
         tools:context=".LoginActivity">
 
     <TextView
-            android:text="Dont have an account?"
-            android:textSize="@dimen/_20sdp"
-            android:fontFamily="sans-serif-condensed"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textbutton2"
-            app:layout_constraintTop_toBottomOf="@+id/button"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="36dp"
-            android:layout_marginStart="24dp" />
+        android:id="@+id/textbutton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Dont have an account?"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <Button
             android:text="Login"
@@ -60,18 +60,18 @@
             app:layout_constraintHorizontal_bias="0.498" />
 
     <TextView
-            android:text="Register here"
-            android:textSize="@dimen/_20sdp"
-            android:fontFamily="sans-serif-condensed"
-            android:textColor="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textbutton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button"
-            android:layout_marginTop="36dp"
-            app:layout_constraintHorizontal_bias="0.384"
-            app:layout_constraintStart_toEndOf="@+id/textbutton2" />
+        android:id="@+id/textbutton"
+        android:layout_width="@dimen/_110sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginTop="36dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Register here"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textbutton2"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password_layout"
