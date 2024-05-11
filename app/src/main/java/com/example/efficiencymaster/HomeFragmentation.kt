@@ -174,29 +174,6 @@ class HomeFragmentation : Fragment() {
         val query1 = CollectionReference1.whereEqualTo("Status", "Done").whereGreaterThanOrEqualTo("CompletionDate", sevenDaysAgo)
         query1.get().addOnSuccessListener { documents ->
 
-            // Print the documents
-            Toast.makeText(context, "Firestore query results $documents", Toast.LENGTH_SHORT).show()
-
-            // Group the tasks by date
-            val tasksByDate = documents.groupBy {
-                it.getString("CompletionDate")
-            }
-
-            // Get the task counts
-            val taskCounts = tasksByDate.values.map {
-                it.size
-            }
-
-            // Create BarEntry objects and add them to the entries list
-            for (i in taskCounts.indices) {
-
-                // Print the entries
-                val entry = BarEntry(i.toFloat(), taskCounts[i].toFloat())
-
-                // add the entries.
-                entries.add(entry)
-                println("BarEntry: $entry") // Debug print
-            }
 
             // Create BarDataSet and BarData objects
             val barDataSet = BarDataSet(entries, "Tasks in past 7 days")
@@ -218,6 +195,38 @@ class HomeFragmentation : Fragment() {
             barChart?.data = barData
             barDataSet.setColor(Color.GREEN) // Set the color of the bars
             barChart?.invalidate() // refreshes the chart
+
+            if (documents.isEmpty) {
+             for  (i in 1..7){
+                 val entry1 = BarEntry(i.toFloat(), 0f)
+                 entries.add(entry1)
+             }
+
+            }else{
+                // Print the documents
+                Toast.makeText(context, "Firestore query results $documents", Toast.LENGTH_SHORT).show()
+
+                // Group the tasks by date
+                val tasksByDate = documents.groupBy {
+                    it.getString("CompletionDate")
+                }
+
+                // Get the task counts
+                val taskCounts = tasksByDate.values.map {
+                    it.size
+                }
+
+                // Create BarEntry objects and add them to the entries list
+                for (i in taskCounts.indices) {
+
+                    // Print the entries
+                    val entry = BarEntry(i.toFloat(), taskCounts[i].toFloat())
+
+                    // add the entries.
+                    entries.add(entry)
+                    println("BarEntry: $entry") // Debug print
+                }
+            }
 
         }.addOnFailureListener { exception ->
             val AlertDialog = AlertDialog.Builder(context)
