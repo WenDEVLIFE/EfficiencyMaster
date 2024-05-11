@@ -4,16 +4,15 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:background="#f4f3ee"
+        android:background="#2b9348"
         android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="@dimen/_316sdp"
+            android:layout_width="@dimen/_310sdp"
             android:layout_height="@dimen/_100sdp"
-            android:background="#f4f3ee"
+            android:background="@drawable/pane_layout2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="4dp">
 
