@@ -71,7 +71,7 @@
         </androidx.appcompat.widget.SearchView>
 
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="@dimen/_310sdp"
+                android:layout_width="@dimen/_305sdp"
                 android:layout_height="@dimen/_420sdp"
                 android:id="@+id/recycler_view"
                 app:layout_constraintStart_toStartOf="parent"

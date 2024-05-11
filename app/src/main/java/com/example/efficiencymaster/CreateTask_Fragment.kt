@@ -1,6 +1,7 @@
 package com.example.efficiencymaster
 
 import android.app.ActivityManager.TaskDescription
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -133,6 +135,28 @@ class CreateTask_Fragment : Fragment() {
                        db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
                            if(it.isEmpty){
                                db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
+                                   val builder = AlertDialog.Builder(context)
+                                   val inflater = layoutInflater
+                                   val dialogLayout = inflater.inflate(R.layout.message_layout, null)
+
+                                   val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+                                   val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+                                   val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+                                   titleText.text = "You gain progress xp"
+                                   messageText.text = "You have gained $XpData xp for creating a task"
+
+                                   val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+                                   button.setOnClickListener {
+                                       // Handle button click here
+
+                                       dialog.dismiss()
+
+                                   }
+
+                                   builder.setView(dialogLayout)
+                                   builder.show()
+
                                    TaskName.text.clear()
                                    TaskDescription.text.clear()
                                    ProgressLoading.dismiss()
@@ -140,8 +164,27 @@ class CreateTask_Fragment : Fragment() {
                                }
                            }   else{
                                for (document in it){
-                                   val xp = document.get("ProgressXp").toString().toInt()
+                                   val builder = AlertDialog.Builder(context)
+                                   val inflater = layoutInflater
+                                   val dialogLayout = inflater.inflate(R.layout.message_layout, null)
 
+                                   val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+                                   val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+                                   val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+                                   titleText.text = "You gain progress xp"
+                                   messageText.text = "You have gained $XpData xp for creating a task"
+
+                                   val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+
+                                   button.setOnClickListener {
+                                       // Handle button click here
+                                       dialog.dismiss()
+                                   }
+
+                                   dialog.show() // Show the dialog
+
+                                   val xp = document.get("ProgressXp").toString().toInt()
                                    val UpdatedXP:Int = xp + XpData
 
                                    db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
@@ -160,6 +203,8 @@ class CreateTask_Fragment : Fragment() {
             }
         }
     }
+
+
 
     companion object {
         /**
