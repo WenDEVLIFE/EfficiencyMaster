@@ -1,5 +1,6 @@
 package adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +65,9 @@ class TaskAdapter(private var taskList: List<Task>) : RecyclerView.Adapter<TaskA
                 // Add threat sleep to simulate the animation checking the checkbox
                 thread {
                     Thread.sleep(1000)
-                    DoneTask.isChecked = false
+                    (itemView.context as Activity).runOnUiThread {
+                        DoneTask.isChecked = false
+                    }
                 }
             }
         }

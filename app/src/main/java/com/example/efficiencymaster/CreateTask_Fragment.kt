@@ -1,6 +1,5 @@
 package com.example.efficiencymaster
 
-import android.app.ActivityManager.TaskDescription
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
@@ -116,11 +115,6 @@ class CreateTask_Fragment : Fragment() {
                 )
 
                 val XpData = Random.nextInt(100,  1000)
-                val progressXp = hashMapOf(
-                    "UserID" to ID,
-                    "ProgressXp" to XpData,
-
-                )
 
                 // Check if the task already exists in the database
                db.collection("Task").whereEqualTo("TaskName", taskname).whereEqualTo("UserID",ID).get().addOnSuccessListener {
@@ -134,34 +128,7 @@ class CreateTask_Fragment : Fragment() {
 
                        db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
                            if(it.isEmpty){
-                               db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
-                                   val builder = AlertDialog.Builder(context)
-                                   val inflater = layoutInflater
-                                   val dialogLayout = inflater.inflate(R.layout.message_layout, null)
-
-                                   val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
-                                   val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
-                                   val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
-
-                                   titleText.text = "You gain progress xp"
-                                   messageText.text = "You have gained $XpData xp for creating a task"
-
-                                   val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
-                                   button.setOnClickListener {
-                                       // Handle button click here
-
-                                       dialog.dismiss()
-
-                                   }
-
-                                   builder.setView(dialogLayout)
-                                   builder.show()
-
-                                   TaskName.text.clear()
-                                   TaskDescription.text.clear()
-                                   ProgressLoading.dismiss()
-                                   Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
-                               }
+                              CreateXp(ID, XpData)
                            }   else{
                                for (document in it){
                                    val builder = AlertDialog.Builder(context)
@@ -172,7 +139,7 @@ class CreateTask_Fragment : Fragment() {
                                    val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
                                    val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
 
-                                   titleText.text = "You gain progress xp"
+                                   titleText.text = "Done Creating Task"
                                    messageText.text = "You have gained $XpData xp for creating a task"
 
                                    val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
@@ -201,6 +168,43 @@ class CreateTask_Fragment : Fragment() {
                    }
                }
             }
+        }
+    }
+
+    fun CreateXp (ID: String, XpData: Int) {
+        val progressXp = hashMapOf(
+            "UserID" to ID,
+            "ProgressXp" to XpData,
+
+            )
+
+        db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
+            val builder = AlertDialog.Builder(context)
+            val inflater = layoutInflater
+            val dialogLayout = inflater.inflate(R.layout.message_layout, null)
+
+            val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+            val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+            val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+            titleText.text = "Done Creating Task"
+            messageText.text = "You have gained $XpData xp for creating a task"
+
+            val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+            button.setOnClickListener {
+                // Handle button click here
+
+                dialog.dismiss()
+
+            }
+
+            builder.setView(dialogLayout)
+            builder.show()
+
+            TaskName.text.clear()
+            TaskDescription.text.clear()
+            ProgressLoading.dismiss()
+            Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
         }
     }
 

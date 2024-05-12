@@ -169,21 +169,14 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         val TaskName = taskList[position].taskname
         val TaskDescription = taskList[position].taskdescription
 
-        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
             for (document in it) {
                 val UserID = document.data["UserID"].toString()
 
-                db.collection("Task").whereEqualTo("TaskName", TaskName)
-                    .whereEqualTo("TaskDescription", TaskDescription).whereEqualTo("UserID", UserID)
-                    .get().addOnSuccessListener {
+                db.collection("Task").whereEqualTo("TaskName", TaskName).whereEqualTo("TaskDescription", TaskDescription).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
                     for (document in it) {
                         val docId = document.id
-
-                        val Date  = LocalDate.now()
-                        db.collection("Task").document(docId).update(mapOf(
-                            "Status" to "Done",
-                            "CompletionDate" to Date.toString()
-                        ))
+                        db.collection("Task").document(docId).update("Status", "Done")
                             .addOnSuccessListener {
                                 Log.d("Firestore", "DocumentSnapshot successfully updated!")
                                 Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
@@ -193,12 +186,14 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
 
                             .addOnFailureListener { e ->
                                 Log.w("Firestore", "Error updating document", e)
-                                Toast.makeText(context, "Task Not Completed", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(context, "Task Not Completed", Toast.LENGTH_SHORT).show()
                             }
                     }
+
                 }
+
             }
         }
+
     }
 }
