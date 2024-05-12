@@ -121,6 +121,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         adapter.setOnCancelListener(::onCancel)
         LoadTask()
 
+        // Floating  buton action for creation
         val FloatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         FloatingActionButton.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
@@ -134,6 +135,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         return view
     }
 
+    // Get the replace fragment
     fun ReplaceFragment(fragment: Fragment) {
         val fragmentManager = parentFragmentManager
         val transaction = fragmentManager.beginTransaction()

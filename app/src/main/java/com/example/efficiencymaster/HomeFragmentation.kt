@@ -156,6 +156,7 @@ class HomeFragmentation : Fragment() {
         }
         LoadStats()
 
+        // task buton and its ID
         val TaskButton = view.findViewById<ImageButton>(R.id.imageButton1)
         TaskButton.setOnClickListener{
             // This will go to create task
@@ -170,6 +171,8 @@ class HomeFragmentation : Fragment() {
         return view
     }
 
+
+    // replace fragment
     fun replaceFragment(fragment:Fragment){
         val fragmentManager = parentFragmentManager
         val transaction = fragmentManager.beginTransaction()
@@ -301,6 +304,7 @@ class HomeFragmentation : Fragment() {
         }
     }
 
+    // Limit the word from 0 to 5 letters only.
     fun subString (string: String): String {
         return if (string.length <= 5) string else string.substring(0, 5)
     }
