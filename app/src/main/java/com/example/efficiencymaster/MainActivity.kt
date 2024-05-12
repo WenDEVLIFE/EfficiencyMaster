@@ -170,8 +170,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadHome() {
         val homeFragmentation = HomeFragmentation()
         val bundle = Bundle()
-        bundle.putString("username", usernametext.text.toString())
-        bundle.putString("name", nametext.text.toString())
+        bundle.putString("username", username)
         homeFragmentation.arguments = bundle
         replaceFragment(homeFragmentation)
     }
@@ -221,16 +220,21 @@ class MainActivity : AppCompatActivity() {
                             // Set the retrieve Imageurl to image
                             Glide.with(this).load(image).into(userImage)
 
-                            // Check if user has any progress
-                            db.collection("Progress").whereEqualTo("UserID", ID).get().addOnSuccessListener {
-                                if (it.isEmpty){
-                                    progresstext.text = "Progress:0%"
-                                }else{
-                                    for (document in it){
-                                        val progress = document.data["progress"].toString()
-                                        progresstext.text = "Progress: $progress%"
-                                    }
-                                }
+                        }
+                    }
+                    // Check if user has any progress
+                    db.collection("ProgresssUser").whereEqualTo("UserID", ID).get().addOnSuccessListener {
+                        if (it.isEmpty){
+                            progresstext.text = "Progress:01%"
+                            AlertDialog.Builder(this)
+                                .setTitle("Progress")
+                                .setMessage("You have no progress")
+                                .setPositiveButton("OK"){dialog, which ->}
+                                .show()
+                        }else{
+                            for (document in it){
+                                val progress = document.getLong("ProgressXp") // Retrieve as Long
+                                progresstext.text = "Progress: ${progress.toString()} xp"
                             }
                         }
                     }
