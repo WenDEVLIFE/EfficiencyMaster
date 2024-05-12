@@ -1,13 +1,16 @@
 package com.example.efficiencymaster
 
 import adapters.TaskAdapter
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +21,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
 import java.util.Locale
+import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -188,6 +192,42 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                                 Log.w("Firestore", "Error updating document", e)
                                 Toast.makeText(context, "Task Not Completed", Toast.LENGTH_SHORT).show()
                             }
+
+
+                    }
+
+                    db.collection("ProgresssUser").whereEqualTo("UserID",UserID).get().addOnSuccessListener {
+                        val XpData = Random.nextInt(100,  1000)
+                        if(it.isEmpty){
+                            CreateXp(UserID, XpData)
+                        }   else{
+                            for (document in it){
+                                val builder = AlertDialog.Builder(context)
+                                val inflater = layoutInflater
+                                val dialogLayout = inflater.inflate(R.layout.message_layout, null)
+
+                                val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+                                val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+                                val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+                                titleText.text = "Done Creating Task"
+                                messageText.text = "You have gained $XpData xp for creating a task"
+
+                                val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+
+                                button.setOnClickListener {
+                                    // Handle button click here
+                                    dialog.dismiss()
+                                }
+
+                                dialog.show() // Show the dialog
+
+                                val xp = document.get("ProgressXp").toString().toInt()
+                                val UpdatedXP:Int = xp + XpData
+
+                                db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
+                            }
+                        }
                     }
 
                 }
@@ -196,4 +236,37 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         }
 
     }
+    fun CreateXp (ID: String, XpData: Int) {
+        val progressXp = hashMapOf(
+            "UserID" to ID,
+            "ProgressXp" to XpData,
+
+            )
+
+        db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
+            val builder = AlertDialog.Builder(context)
+            val inflater = layoutInflater
+            val dialogLayout = inflater.inflate(R.layout.message_layout, null)
+
+            val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+            val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+            val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+            titleText.text = "Done Creating Task"
+            messageText.text = "You have gained $XpData xp for creating a task"
+
+            val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+            button.setOnClickListener {
+                // Handle button click here
+
+                dialog.dismiss()
+
+            }
+
+            builder.setView(dialogLayout)
+            builder.show()
+            Toast.makeText(context, "Task Done", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }
