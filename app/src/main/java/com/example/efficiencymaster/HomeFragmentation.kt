@@ -40,6 +40,8 @@ class HomeFragmentation : Fragment() {
     lateinit var circularProgressBar : CircularProgressBar
     lateinit var circularProgressBar2 : CircularProgressBar
     lateinit var barChart : BarChart
+    lateinit var bundle:Bundle
+    lateinit var fragment:Fragment
 
     private var username: String? = null
     private var email: String? = null
@@ -161,11 +163,21 @@ class HomeFragmentation : Fragment() {
         val TaskButton = view.findViewById<ImageButton>(R.id.imageButton1)
         TaskButton.setOnClickListener{
             // This will go to create task
-            val groupFragment = InvidividualTask()
-            val bundle = Bundle()
+            fragment = InvidividualTask()
+            bundle = Bundle()
             bundle.putString("username", username)
-            groupFragment.arguments = bundle
-            replaceFragment(groupFragment)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
+        }
+
+        val DoneTaskButton = view.findViewById<ImageButton>(R.id.imageButton3)
+        DoneTaskButton.setOnClickListener {
+            // This will go to done task
+            fragment = DoneTaskFragment()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
         }
 
 
@@ -184,127 +196,157 @@ class HomeFragmentation : Fragment() {
 
     // This will load the data from the database
     private fun LoadDatas(barChart: BarChart?) {
-        val entries = ArrayList<BarEntry>()
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
+            if (it.isEmpty()){
+                Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
+            }else{
+                for (document in it){
+                    val ID = document.data["UserID"].toString()
+                    val entries = ArrayList<BarEntry>()
 
-        // get the data from the past 7 days
-        val sevenDaysAgo = LocalDate.now().minusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    // get the data from the past 7 days
+                    val sevenDaysAgo = LocalDate.now().minusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        // Collection Reference
-        val CollectionReference1 = db.collection("Task")
+                    // Collection Reference
+                    val CollectionReference1 = db.collection("Task")
 
-        // Get the query of the Done task and its completion date
-        val query1 = CollectionReference1.whereEqualTo("Status", "Done").whereGreaterThanOrEqualTo("CompletionDate", sevenDaysAgo)
-        query1.get().addOnSuccessListener { documents ->
+                    // Get the query of the Done task and its completion date
+                    val query1 = CollectionReference1.whereEqualTo("Status", "Done").whereEqualTo("UserID", ID).whereGreaterThanOrEqualTo("CompletionDate", sevenDaysAgo)
+                    query1.get().addOnSuccessListener { documents ->
 
-            // Print the documents
-            Toast.makeText(context, "Firestore query results $documents", Toast.LENGTH_SHORT).show()
+                        // Print the documents
+                        Toast.makeText(context, "Firestore query results $documents", Toast.LENGTH_SHORT).show()
 
-            // Group the tasks by date
-            val tasksByDate = documents.groupBy {
-                it.getString("CompletionDate")
-            }
+                        // Group the tasks by date
+                        val tasksByDate = documents.groupBy {
+                            it.getString("CompletionDate")
+                        }
 
-            // Get the task counts
-            val taskCounts = tasksByDate.values.map {
-                it.size
-            }
+                        // Get the task counts
+                        val taskCounts = tasksByDate.values.map {
+                            it.size
+                        }
 
-            if (documents.isEmpty) {
-                for  (i in 1..7){
-                    val entry1 = BarEntry(i.toFloat(), 0f)
-                    entries.add(entry1)
+
+
+                        if (documents.isEmpty) {
+                            for  (i in 1..7){
+                                val entry1 = BarEntry(i.toFloat(), 0f)
+                                entries.add(entry1)
+                            }
+                        } else{
+                            // Create BarEntry objects and add them to the entries list
+                            for (i in taskCounts.indices) {
+
+                                // Print the entries
+                                val entry = BarEntry(i.toFloat(), taskCounts[i].toFloat())
+
+                                // add the entries.
+                                entries.add(entry)
+                                println("BarEntry: $entry") // Debug print
+                            }
+                        }
+
+
+                        // Create BarDataSet and BarData objects
+                        val barDataSet = BarDataSet(entries, "Your tasks in past 7 days")
+                        val barData = BarData(barDataSet)
+
+                        // Set the legend
+                        val legend = barChart?.legend
+
+                        legend?.isEnabled = true
+                        legend?.form = Legend.LegendForm.LINE
+                        legend?.textSize = 14f
+                        legend?.textColor = Color.BLACK
+
+                        legend?.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+                        legend?.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+
+                        legend?.orientation = Legend.LegendOrientation.HORIZONTAL
+                        legend?.setDrawInside(false)
+                        barChart?.data = barData
+                        barDataSet.setColor(Color.GREEN) // Set the color of the bars
+                        barChart?.invalidate() // refreshes the chart
+
+                    }.addOnFailureListener { exception ->
+                        val AlertDialog = AlertDialog.Builder(context)
+                        AlertDialog.setTitle("Error")
+                        AlertDialog.setMessage("Error loading data: $exception")
+                        AlertDialog.setPositiveButton("OK") { dialog, which ->
+                            // Do nothing
+                        }
+                        AlertDialog.show()
+                    }
                 }
-            } else{
-                // Create BarEntry objects and add them to the entries list
-                for (i in taskCounts.indices) {
-
-                    // Print the entries
-                    val entry = BarEntry(i.toFloat(), taskCounts[i].toFloat())
-
-                    // add the entries.
-                    entries.add(entry)
-                    println("BarEntry: $entry") // Debug print
-                }
             }
-
-
-            // Create BarDataSet and BarData objects
-            val barDataSet = BarDataSet(entries, "Tasks in past 7 days")
-            val barData = BarData(barDataSet)
-
-            // Set the legend
-            val legend = barChart?.legend
-
-            legend?.isEnabled = true
-            legend?.form = Legend.LegendForm.LINE
-            legend?.textSize = 14f
-            legend?.textColor = Color.BLACK
-
-            legend?.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-            legend?.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-
-            legend?.orientation = Legend.LegendOrientation.HORIZONTAL
-            legend?.setDrawInside(false)
-            barChart?.data = barData
-            barDataSet.setColor(Color.GREEN) // Set the color of the bars
-            barChart?.invalidate() // refreshes the chart
-
-        }.addOnFailureListener { exception ->
-            val AlertDialog = AlertDialog.Builder(context)
-            AlertDialog.setTitle("Error")
-            AlertDialog.setMessage("Error loading data: $exception")
-            AlertDialog.setPositiveButton("OK") { dialog, which ->
-                // Do nothing
-            }
-            AlertDialog.show()
         }
+
     }
 
     fun LoadStats(){
-        var retriveCount1:Double = 0.00
-        var retriveCount2:Double = 0.00
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener{
+            if (it.isEmpty) {
+                percentage.text = "User does not exist"
+            }
+            else{
+                for (document in it){
+                    val ID = document.data["UserID"].toString()
+                    db.collection("ProgresssUser").whereEqualTo("UserID", ID).get().addOnSuccessListener {
+                        if (it.isEmpty){
+                            percentage.text = "Progress: 0%"
+                            TaskDone.text = "Task Done: 0"
+                        }else{
+                            for (document in it){
+                                var retriveCount1:Double = 0.00
+                                var retriveCount2:Double = 0.00
 
-        // Collection Reference
-        val CollectionReference1 = db.collection("Task")
+                                // Collection Reference
+                                val CollectionReference1 = db.collection("Task")
 
-        // Get the query of the Pending task
-        val query1 = CollectionReference1.whereEqualTo("Status", "Pending")
-        query1.get().addOnSuccessListener {
-            val pending = it.size()
-            retriveCount1 = pending.toDouble()
+                                // Get the query of the Pending task for the specific user
+                                val query1 = CollectionReference1.whereEqualTo("Status", "Pending").whereEqualTo("UserID", ID)
+                                query1.get().addOnSuccessListener {
+                                    val pending = it.size()
+                                    retriveCount1 = pending.toDouble()
 
-            // Get the query of the  Done task
-            val query2 = CollectionReference1.whereEqualTo("Status", "Done")
-            query2.get().addOnSuccessListener {
-                val done = it.size()
-                retriveCount2 = done.toDouble()
+                                    // Get the query of the Done task for the specific user
+                                    val query2 = CollectionReference1.whereEqualTo("Status", "Done").whereEqualTo("UserID", ID)
+                                    query2.get().addOnSuccessListener {
+                                        val done = it.size()
+                                        retriveCount2 = done.toDouble()
 
-                val total = retriveCount1 + retriveCount2
-                val percentages1 = retriveCount2 / total * 100
-                val percentages2 = retriveCount1 / total * 100
+                                        val total = retriveCount1 + retriveCount2
+                                        val percentages1 = retriveCount2 / total * 100
+                                        val percentages2 = retriveCount1 / total * 100
 
-                // set to substriing 0 to 5
-                val stringg1 = percentages1.toString()
-                val stringg2 = percentages2.toString()
-                val subStr = subString(stringg2)
-                val subStr2 = subString(stringg1)
+                                        // set to substring 0 to 5
+                                        val stringg1 = percentages1.toString()
+                                        val stringg2 = percentages2.toString()
+                                        val subStr = subString(stringg2)
+                                        val subStr2 = subString(stringg1)
 
-                // get the float value of the percentages
-                val FloatPercentages1 = percentages1.toFloat()
-                val FloatPercentages2 = percentages2.toFloat()
+                                        // get the float value of the percentages
+                                        val FloatPercentages1 = percentages1.toFloat()
+                                        val FloatPercentages2 = percentages2.toFloat()
 
-                // set the text of the percentage
-                percentage.text = "$subStr %"
-                TaskDone.text = "$subStr2 %"
+                                        // set the text of the percentage
+                                        percentage.text = "$subStr %"
+                                        TaskDone.text = "$subStr2 %"
 
-                // set the progress of the circular progress bar
-                circularProgressBar.setProgressWithAnimation(FloatPercentages2, 3000)
-                circularProgressBar2.setProgressWithAnimation(FloatPercentages1, 3000)
-                // Update the UI here with the calculated percentage
+                                        // set the progress of the circular progress bar
+                                        circularProgressBar.setProgressWithAnimation(FloatPercentages2, 3000)
+                                        circularProgressBar2.setProgressWithAnimation(FloatPercentages1, 3000)
+                                        // Update the UI here with the calculated percentage
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-
     // Limit the word from 0 to 5 letters only.
     fun subString (string: String): String {
         return if (string.length <= 5) string else string.substring(0, 5)
