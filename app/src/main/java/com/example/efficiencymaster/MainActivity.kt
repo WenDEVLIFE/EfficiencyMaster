@@ -74,8 +74,7 @@ class MainActivity : AppCompatActivity() {
                     // This will go to home fragment
                     val homeFragmentation = HomeFragmentation()
                     val bundle = Bundle()
-                    bundle.putString("username", usernametext.text.toString())
-                    bundle.putString("name", nametext.text.toString())
+                    bundle.putString("username", username)
                     homeFragmentation.arguments = bundle
                     replaceFragment(homeFragmentation)
 

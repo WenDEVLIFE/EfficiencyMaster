@@ -156,8 +156,26 @@ class HomeFragmentation : Fragment() {
         }
         LoadStats()
 
+        val TaskButton = view.findViewById<ImageButton>(R.id.imageButton1)
+        TaskButton.setOnClickListener{
+            // This will go to create task
+            val groupFragment = InvidividualTask()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            groupFragment.arguments = bundle
+            replaceFragment(groupFragment)
+        }
+
 
         return view
+    }
+
+    fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     // This will load the data from the database
