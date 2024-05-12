@@ -108,6 +108,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                     }
                 }
                 // Add your search logic here
+                adapter.updateList(temp)
                 return true
             }
         })

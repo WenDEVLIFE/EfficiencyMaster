@@ -73,6 +73,7 @@ class HomeFragmentation : Fragment() {
 
         }
 
+        // Image Button and its ID
         val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
         ImageButton.setOnClickListener {
 
