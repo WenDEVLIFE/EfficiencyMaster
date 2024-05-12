@@ -173,13 +173,19 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         val TaskName = taskList[position].taskname
         val TaskDescription = taskList[position].taskdescription
 
+        // get the user id
         db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
             for (document in it) {
+
+                // Get the user id
                 val UserID = document.data["UserID"].toString()
 
+                // get the task  name and its  description
                 db.collection("Task").whereEqualTo("TaskName", TaskName).whereEqualTo("TaskDescription", TaskDescription).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
                     for (document in it) {
                         val docId = document.id
+
+                        // Update the status to done
                         db.collection("Task").document(docId).update("Status", "Done")
                             .addOnSuccessListener {
                                 Log.d("Firestore", "DocumentSnapshot successfully updated!")
@@ -197,11 +203,17 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                     }
 
                     db.collection("ProgresssUser").whereEqualTo("UserID",UserID).get().addOnSuccessListener {
-                        val XpData = Random.nextInt(100,  1000)
+                        val XpData = Random.nextInt(100,  1000) //  Generate random xp
+
+                        // if the document is empty, it will create a new one.
                         if(it.isEmpty){
                             CreateXp(UserID, XpData)
+
+                            // else it will just update the xp
                         }   else{
                             for (document in it){
+
+                                //customize dialogs here below
                                 val builder = AlertDialog.Builder(context)
                                 val inflater = layoutInflater
                                 val dialogLayout = inflater.inflate(R.layout.message_layout, null)
@@ -222,7 +234,10 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
 
                                 dialog.show() // Show the dialog
 
+                                // get the current xp and update it
                                 val xp = document.get("ProgressXp").toString().toInt()
+
+                                // add
                                 val UpdatedXP:Int = xp + XpData
 
                                 db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
@@ -236,14 +251,23 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         }
 
     }
+
+     // Method used to create Xp for the user
     fun CreateXp (ID: String, XpData: Int) {
+
+
+        // This will create a hashmap of the progress
         val progressXp = hashMapOf(
             "UserID" to ID,
             "ProgressXp" to XpData,
 
             )
 
+        // This will add the progress to the database
         db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
+
+
+            // customize alertdialog below
             val builder = AlertDialog.Builder(context)
             val inflater = layoutInflater
             val dialogLayout = inflater.inflate(R.layout.message_layout, null)

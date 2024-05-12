@@ -119,6 +119,8 @@ class CreateTask_Fragment : Fragment() {
                 // Check if the task already exists in the database
                db.collection("Task").whereEqualTo("TaskName", taskname).whereEqualTo("UserID",ID).get().addOnSuccessListener {
                    if(it.isEmpty){
+
+                       // Insert the task into the database
                        db.collection("Task").add(task).addOnSuccessListener {
                             TaskName.text.clear()
                             TaskDescription.text.clear()
@@ -127,10 +129,20 @@ class CreateTask_Fragment : Fragment() {
                        }
 
                        db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
+                          // Check if the user has any progress
                            if(it.isEmpty){
+
+                               // Call the create xp method to create new progress for the user.
                               CreateXp(ID, XpData)
-                           }   else{
+                           }
+
+                           // If the user has progress
+                           else{
+
+                               // Update the user progress
                                for (document in it){
+
+                                   // Create a dialog to show the user the progress below
                                    val builder = AlertDialog.Builder(context)
                                    val inflater = layoutInflater
                                    val dialogLayout = inflater.inflate(R.layout.message_layout, null)
@@ -151,10 +163,14 @@ class CreateTask_Fragment : Fragment() {
 
                                    dialog.show() // Show the dialog
 
+                                   // Update the user progress in the database and add it to the existing progress
                                    val xp = document.get("ProgressXp").toString().toInt()
                                    val UpdatedXP:Int = xp + XpData
 
+                                   // Update the user progress
                                    db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
+
+                                  // clear the text fields
                                    TaskName.text.clear()
                                    TaskDescription.text.clear()
                                    ProgressLoading.dismiss()
@@ -171,14 +187,21 @@ class CreateTask_Fragment : Fragment() {
         }
     }
 
+
+    // This method is used to create a new progress for the user
     fun CreateXp (ID: String, XpData: Int) {
+
+        // Hashmap for progress
         val progressXp = hashMapOf(
             "UserID" to ID,
             "ProgressXp" to XpData,
 
             )
 
+        // Add the progress to the database
         db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
+
+            // Customize dialog below here
             val builder = AlertDialog.Builder(context)
             val inflater = layoutInflater
             val dialogLayout = inflater.inflate(R.layout.message_layout, null)
@@ -201,6 +224,7 @@ class CreateTask_Fragment : Fragment() {
             builder.setView(dialogLayout)
             builder.show()
 
+            // clear the text fields
             TaskName.text.clear()
             TaskDescription.text.clear()
             ProgressLoading.dismiss()
