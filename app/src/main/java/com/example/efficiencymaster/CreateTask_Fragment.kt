@@ -60,7 +60,7 @@ class CreateTask_Fragment : Fragment() {
             username = it.getString("username").toString()
         }
 
-
+        // Get the id of the text fields
         TaskName = view.findViewById<EditText>(R.id.editTextText2)
         TaskDescription = view.findViewById<EditText>(R.id.desscripts)
 
@@ -99,6 +99,7 @@ class CreateTask_Fragment : Fragment() {
         return view
     }
 
+    // This method is used to Insert the Task 👌
     fun InsertTask(taskname: String, taskDescription: String) {
 
         db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {

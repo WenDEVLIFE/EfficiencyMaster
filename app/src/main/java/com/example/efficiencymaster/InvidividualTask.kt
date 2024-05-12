@@ -80,12 +80,33 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Task>() // filtered list
+
+                // This will filter the task list
+                for (task in taskList) {
+
+                    // get the lowercase and uppercase
+                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(Locale.getDefault()).contains(search)) {
+                        temp.add(task)
+                    }
+                }
+                adapter.updateList(temp)
                 // Add your search logic here
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Task>() //  filter  list
+
+                // This will filter the task list
+                for (task in taskList){
+
+                    // get the lowercase and uppercase
+                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(Locale.getDefault()).contains(search)){
+                        temp.add(task)
+                    }
+                }
                 // Add your search logic here
                 return true
             }
@@ -100,8 +121,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         adapter.setOnCancelListener(::onCancel)
         LoadTask()
 
-        val FloatingActionButton =
-            view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        val FloatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         FloatingActionButton.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
             val createTask = CreateTask_Fragment()
