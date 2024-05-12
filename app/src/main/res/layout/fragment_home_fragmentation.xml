@@ -155,82 +155,55 @@
                         android:layout_marginTop="16dp" />
 
                 <FrameLayout
-                        android:layout_width="@dimen/_70sdp"
-                        android:layout_height="@dimen/_70sdp"
-                        android:background="#4895ef"
-                        android:id="@+id/frameLayout2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/titletext"
-                        android:layout_marginTop="40dp"
-                        android:layout_marginStart="24dp">
+                    android:id="@+id/frameLayout2"
+                    android:layout_width="86dp"
+                    android:layout_height="92dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    android:background="#4895ef"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titletext">
 
                     <ImageButton
-                            android:src="@drawable/list"
-                            android:background="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="73dp"
-                            android:id="@+id/imageButton1" />
+                        android:id="@+id/imageButton1"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/target" />
 
                     <TextView
-                            android:text="   Your task"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView7"
-                            android:textColor="@color/white"
-                            android:layout_gravity="bottom" />
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="   Your task"
+                        android:textColor="@color/white" />
 
                 </FrameLayout>
 
                 <FrameLayout
-                        android:layout_width="@dimen/_70sdp"
-                        android:layout_height="@dimen/_70sdp"
-                        android:background="#ffb703"
-                        android:id="@+id/frameLayout"
-                        app:layout_constraintTop_toBottomOf="@+id/titletext"
-                        android:layout_marginTop="40dp"
-                        app:layout_constraintStart_toEndOf="@+id/frameLayout2"
-                        android:layout_marginStart="28dp">
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_70sdp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="144dp"
+                    android:background="#9e2a2b"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titletext">
 
                     <ImageButton
-                            android:src="@drawable/task"
-                            android:background="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="73dp"
-                            android:id="@+id/imageButton2" />
+                        android:id="@+id/imageButton3"
+                        android:layout_width="match_parent"
+                        android:layout_height="73dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/done" />
 
                     <TextView
-                            android:text=" Pending task"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView8"
-                            android:textColor="@color/white"
-                            android:layout_gravity="bottom" />
-
-                </FrameLayout>
-
-                <FrameLayout
-                        android:layout_width="@dimen/_70sdp"
-                        android:layout_height="@dimen/_70sdp"
-                        android:background="#9e2a2b"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/frameLayout"
-                        app:layout_constraintTop_toBottomOf="@+id/titletext"
-                        android:layout_marginTop="40dp">
-
-                    <ImageButton
-                            android:src="@drawable/done"
-                            android:background="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="73dp"
-                            android:id="@+id/imageButton3" />
-
-                    <TextView
-                            android:text="    Done task"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView9"
-                            android:textColor="@color/white"
-                            android:layout_gravity="bottom" />
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="    Done task"
+                        android:textColor="@color/white" />
 
                 </FrameLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
