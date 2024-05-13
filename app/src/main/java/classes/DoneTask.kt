@@ -12,13 +12,13 @@ data class DoneTask(
     val taskdescription:String
         get() = _TaskDescription
 
-    val stauts:String
+    val status:String
         get() = _Status
 
     val completion:String
         get() = _Completion
 
     override fun toString(): String {
-        return "Taskname: $taskname, TaskDescription: $taskdescription"
+        return "Taskname: $taskname, TaskDescription: $taskdescription, Status: $status, Completion: $completion"
     }
 }
