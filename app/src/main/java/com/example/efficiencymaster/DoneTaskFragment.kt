@@ -1,12 +1,18 @@
 package com.example.efficiencymaster
 
 import adapters.DoneTaskAdapter
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +41,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
     lateinit var recycleviewer:RecyclerView
     var taskList = mutableListOf<DoneTask>()
     var username =""
+    lateinit var ProgressLoading: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,6 +177,96 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
     }
 
     override fun onCancel(position: Int) {
-        TODO("Not yet implemented")
+
+        //  Get the task name from the list
+        val taskName = taskList[position].taskname
+
+        // Customize alert dialog below
+        val builder = android.app.AlertDialog.Builder(context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
+
+        val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+        val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+        val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
+        val ImageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+        ImageView.setImageResource(R.drawable.question_mark)
+
+        titleText.text = "Delete the Task "
+        messageText.text = "Are you sure you want to delete the task $taskName?"
+
+        val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+
+        button.setOnClickListener {
+
+            // Load the ProgressDialog
+            ProgressLoading = ProgressDialog(context)
+            ProgressLoading.setMessage("Deleting Task...")
+            ProgressLoading.setMessage("This will take a while..")
+            ProgressLoading.setCanceledOnTouchOutside(false)
+            ProgressLoading.show()
+            // Handle button click here
+
+            // Find the username in the collections
+            db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
+                if (it.isEmpty) {
+                    Toast.makeText(context , "User does not exist", Toast.LENGTH_SHORT).show()
+                    ProgressLoading.dismiss()
+                    return@addOnSuccessListener
+                }
+                else{
+
+                    // Then load the UserID
+                    for (document in it){
+
+                        val UserID = document.data["UserID"].toString()
+                        db.collection("Task").whereEqualTo("TaskName", taskName).whereEqualTo("UserID" ,UserID).get().addOnSuccessListener {
+                            for (document in it) {
+                                val documentid = document.id
+                                db.collection("Task").document(documentid).delete()
+
+                                // dismis the dialog and update the list and the adapter.
+                                ProgressLoading.dismiss()
+                                taskList.removeAt(position)
+                                adapter.notifyDataSetChanged()
+                                dialog.dismiss()
+
+                                // Customize alert dialog below
+                                val builder1 = android.app.AlertDialog.Builder(context)
+                                val inflater1 = layoutInflater
+                                val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+
+                                val titleText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+                                val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+                                val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+                                val ImageView1 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+                                ImageView1.setImageResource(R.drawable.check)
+
+                                titleText1.text = "Task Delete Successfully "
+                                messageText1.text = "You successfully deleted the $taskName"
+
+                                val dialog1 = builder1.setView(dialogLayout1).create() // Create AlertDialog instance
+
+                                button1.setOnClickListener {
+                                    dialog1.dismiss()
+
+                                }
+
+                                dialog1.show()
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        button2.setOnClickListener {
+            dialog.dismiss()
+        }
+
+
+        dialog.show() // Show the dialog
     }
 }
