@@ -208,13 +208,19 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                     for (document in it) {
                         val docId = document.id
 
+                        val LocalDate =  LocalDate.now()
+                        val dateString = LocalDate.toString()
                         // Update the status to done
-                        db.collection("Task").document(docId).update("Status", "Done")
+                        db.collection("Task").document(docId).update(
+                            "Status", "Done",
+                            "CompletionDate", dateString
+                        )
                             .addOnSuccessListener {
                                 Log.d("Firestore", "DocumentSnapshot successfully updated!")
                                 Toast.makeText(context, "Task Completed", Toast.LENGTH_SHORT).show()
                                 taskList.removeAt(position)
                                 adapter.notifyDataSetChanged()
+
                             }
 
                             .addOnFailureListener { e ->
