@@ -11,6 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="@dimen/_305sdp"
+            android:layout_height="@dimen/_420sdp"
+            android:id="@+id/recycler_view"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_group"
+            app:layout_constraintVertical_bias="1.0" />
+
         <TextView
             android:text="Your Done Tasks"
             android:textSize="@dimen/_20sdp"
@@ -56,4 +66,5 @@
         </androidx.appcompat.widget.SearchView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

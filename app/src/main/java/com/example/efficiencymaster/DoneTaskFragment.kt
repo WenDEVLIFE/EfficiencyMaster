@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import adapters.DoneTaskAdapter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,7 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import classes.DoneTask
 import classes.Task
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -20,10 +26,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [DoneTaskFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DoneTaskFragment : Fragment() {
+class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    val db = Firebase.firestore
+    lateinit var adapter:DoneTaskAdapter
+    lateinit var recycleviewer:RecyclerView
+    var taskList = mutableListOf<DoneTask>()
     var username =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +73,7 @@ class DoneTaskFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 var search: String = query?.lowercase(Locale.getDefault()) ?: return false
 
-                /*
-                val temp = ArrayList<Task>() // filtered list
+                val temp = ArrayList<DoneTask>() // filtered list
 
                 // This will filter the task list
                 for (task in taskList) {
@@ -75,7 +84,7 @@ class DoneTaskFragment : Fragment() {
                         temp.add(task)
                     }
                 }
-                 adapter.updateList(temp) */
+                 adapter.updateList(temp)
                 // Add your search logic here
                 return true
             }
@@ -83,8 +92,7 @@ class DoneTaskFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
 
-                /*
-                val temp = ArrayList<Task>() //  filter  list
+                val temp = ArrayList<DoneTask>() //  filter  list
 
                 // This will filter the task list
                 for (task in taskList){
@@ -97,12 +105,48 @@ class DoneTaskFragment : Fragment() {
                 }
                 // Add your search logic here
                 adapter.updateList(temp)
-                 */
+
                 return true
             }
         })
 
+        recycleviewer = view.findViewById(R.id.recycler_view)
+        recycleviewer.setLayoutManager(LinearLayoutManager(context))
+        taskList = ArrayList()
+        adapter = DoneTaskAdapter(taskList)
+        recycleviewer.adapter=adapter
+        adapter.setOnCancelListener(::onCancel)
+        LoadTask()
+
+
         return view
+    }
+
+    // This  will Load the task from the database
+    fun LoadTask() {
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
+            for (document in it) {
+                val UserID = document.data["UserID"].toString()
+
+                db.collection("Task").whereEqualTo("UserID", UserID).get().addOnSuccessListener {
+                    for (document in it) {
+                        val Taksname = document.data["TaskName"].toString()
+                        val TaskDescription = document.data["TaskDescription"].toString()
+                        val Status = document.data["Status"].toString()
+                        val CompletionDate = document.data["CompletionDate"].toString()
+
+                        if (Status.equals("Done")) {
+                            val task = DoneTask(Taksname, TaskDescription,Status, CompletionDate)
+                            taskList.add(task)
+                        }
+
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+
     }
 
     companion object {
@@ -123,5 +167,9 @@ class DoneTaskFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onCancel(position: Int) {
+        TODO("Not yet implemented")
     }
 }
