@@ -12,7 +12,7 @@
             android:layout_height="match_parent">
 
         <TextView
-                android:text="Your Task"
+                android:text="Group Task"
                 android:textSize="@dimen/_20sdp"
                 android:fontFamily="sans-serif-condensed"
                 android:textColor="@color/black"

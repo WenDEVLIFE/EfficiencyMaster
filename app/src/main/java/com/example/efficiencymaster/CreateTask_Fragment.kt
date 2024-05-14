@@ -80,6 +80,7 @@ class CreateTask_Fragment : Fragment() {
 
                    InsertTask(taskname, taskdescription)
 
+                   // Load the progressdialog when the task is being inserted
                    ProgressLoading= ProgressDialog(context)
                    ProgressLoading.setTitle("Inserting Task")
                    ProgressLoading.setMessage("Inserting Task Please Wait..")
