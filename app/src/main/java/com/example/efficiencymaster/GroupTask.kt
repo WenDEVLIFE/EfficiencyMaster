@@ -5,6 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import classes.Task
+import com.github.clans.fab.FloatingActionButton
+import com.github.clans.fab.FloatingActionMenu
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +41,75 @@ class GroupTask : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_grouptask, container, false)
+        val view =  inflater.inflate(R.layout.fragment_grouptask, container, false)
+
+        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        ImageButton.setOnClickListener {
+
+            // Open the drawer when the ImageButton is clicked
+            val activity = activity as MainActivity
+            activity.OpenDrawer()
+
+        }
+
+
+        // This is for search functions
+        val searchView = view.findViewById<SearchView>(R.id.search_group)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+               /* val temp = ArrayList<Task>() // filtered list
+
+                // This will filter the task list
+                for (task in taskList) {
+
+                    // get the lowercase and uppercase
+                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
+                            Locale.getDefault()).contains(search)) {
+                        temp.add(task)
+                    }
+                }
+                adapter.updateList(temp) */
+                // Add your search logic here
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+              /*  val temp = ArrayList<Task>() //  filter  list
+
+                // This will filter the task list
+                for (task in taskList){
+
+                    // get the lowercase and uppercase
+                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
+                            Locale.getDefault()).contains(search)){
+                        temp.add(task)
+                    }
+                }
+                // Add your search logic here
+                adapter.updateList(temp) */
+                return true
+            }
+        })
+
+        // This is for floating action button
+        val fabMenu = view.findViewById<FloatingActionMenu>(R.id.fab_menu)
+        val fabOption1 = view.findViewById<FloatingActionButton>(R.id.fab_option1)
+        val fabOption2 = view.findViewById<FloatingActionButton>(R.id.fab_option2)
+
+        fabOption1.setOnClickListener {
+            // Handle option 1 click
+            fabMenu.close(true)
+            Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
+        }
+
+        fabOption2.setOnClickListener {
+            // Handle option 2 click
+            fabMenu.close(true)
+            Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
+        }
+        return view
     }
 
     companion object {

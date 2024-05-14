@@ -56,6 +56,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.0.0")
     implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
     implementation ("com.google.firebase:firebase-storage-ktx:19.2.2")
+    implementation ("com.github.clans:fab:1.6.4")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     //Add those line in dependencies

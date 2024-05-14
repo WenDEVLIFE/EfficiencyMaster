@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.group ->{
 
                     // This will go to group fragment
-                    val groupFragment = GroupFragment()
+                    val groupFragment = GroupTask()
                     val bundle = Bundle()
                     bundle.putString("username", username)
                     groupFragment.arguments = bundle

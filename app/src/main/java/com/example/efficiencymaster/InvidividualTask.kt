@@ -61,7 +61,6 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_invidividual_task, container, false)
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -69,6 +68,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
             username = it.getString("username").toString()
         }
 
+        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
         ImageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked

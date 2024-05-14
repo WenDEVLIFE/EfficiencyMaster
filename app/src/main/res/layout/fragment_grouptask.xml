@@ -11,6 +11,46 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/fab_menu"
+            android:src="@drawable/list"
+            app:backgroundTint="#e5e5e5"
+            app:tint="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.958"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.935"
+            app:menu_labels_ellipsize="end"
+            app:menu_labels_singleLine="true">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_option1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/list"
+                app:backgroundTint="#e5e5e5"
+                app:tint="@color/black"
+                app:fab_label="Option 1" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_option2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/list"
+                app:backgroundTint="#e5e5e5"
+                app:tint="@color/black"
+                app:fab_label="Option 2" />
+
+            <!-- Add more buttons as needed -->
+
+        </com.github.clans.fab.FloatingActionMenu>
+
         <TextView
                 android:text="Group Task"
                 android:textSize="@dimen/_20sdp"
@@ -66,4 +106,5 @@
                 app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>
