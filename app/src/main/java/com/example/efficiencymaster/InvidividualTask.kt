@@ -1,6 +1,7 @@
 package com.example.efficiencymaster
 
 import adapters.TaskAdapter
+import android.animation.AnimatorInflater
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -250,6 +252,12 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                                 val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
                                 val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
                                 val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+                                // added a animation when it pop up
+                                val floatingAnimation = AnimatorInflater.loadAnimator(context, R.animator.floatingxml)
+                                val imageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+                                floatingAnimation.setTarget(imageView)
+                                floatingAnimation.start()
 
                                 titleText.text = "Done Creating Task"
                                 messageText.text = "You have gained $XpData xp for creating a task"

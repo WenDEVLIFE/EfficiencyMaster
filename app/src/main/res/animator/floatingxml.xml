@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:propertyName="translationY"
+        android:valueType="floatType"
+        android:valueFrom="-10"
+        android:valueTo="10"
+        android:duration="1000"
+        android:repeatCount="infinite"
+        android:repeatMode="reverse"/>
+</set>
