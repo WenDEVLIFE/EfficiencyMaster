@@ -33,7 +33,7 @@
                 android:id="@+id/fab_option1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/list"
+                android:src="@drawable/writing"
                 app:backgroundTint="#e5e5e5"
                 app:tint="@color/black"
                 app:fab_label="Option 1" />
@@ -42,7 +42,7 @@
                 android:id="@+id/fab_option2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/list"
+                android:src="@drawable/group"
                 app:backgroundTint="#e5e5e5"
                 app:tint="@color/black"
                 app:fab_label="Option 2" />
