@@ -26,16 +26,15 @@
                 app:layout_constraintStart_toEndOf="@+id/imageButton" />
 
         <ImageButton
-                android:src="@drawable/option"
-                android:background="#3a5a40"
-                android:layout_width="@dimen/_45sdp"
-                android:layout_height="@dimen/_45sdp"
-                android:id="@+id/imageButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="32dp"
-                app:layout_constraintVertical_bias="0.333"
-                android:layout_marginTop="16dp" />
+            android:id="@+id/imageButton"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
                 android:layout_width="@dimen/_235sdp"

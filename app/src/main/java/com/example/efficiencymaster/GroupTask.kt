@@ -8,6 +8,8 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import classes.NonInterceptingLinearLayoutManager
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import java.util.Locale
@@ -26,6 +28,7 @@ class GroupTask : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +111,9 @@ class GroupTask : Fragment() {
             fabMenu.close(true)
             Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
         }
+
+        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView.layoutManager = NonInterceptingLinearLayoutManager(requireContext())
         return view
     }
 

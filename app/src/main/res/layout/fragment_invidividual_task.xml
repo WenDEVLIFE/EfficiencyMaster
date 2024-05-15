@@ -12,19 +12,19 @@
             android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:src="@drawable/note"
-                app:backgroundTint="#e5e5e5"
-                app:tint="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/floatingActionButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_bias="0.969"
-                app:layout_constraintVertical_bias="0.976" />
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/note"
+            app:backgroundTint="#e5e5e5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.969"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.976"
+            app:tint="@color/black" />
 
         <TextView
                 android:text="Your Tasks"
@@ -71,14 +71,14 @@
         </androidx.appcompat.widget.SearchView>
 
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="@dimen/_305sdp"
-                android:layout_height="@dimen/_420sdp"
-                android:id="@+id/recycler_view"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_group"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+            android:id="@+id/recycler_view"
+            android:layout_width="@dimen/_305sdp"
+            android:layout_height="@dimen/_420sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_group"
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

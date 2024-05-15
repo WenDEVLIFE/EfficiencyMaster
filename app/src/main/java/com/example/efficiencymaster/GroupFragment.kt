@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import classes.NonInterceptingLinearLayoutManager
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import java.util.Locale
@@ -81,33 +82,27 @@ class GroupFragment : Fragment() {
                 return true
             }
         })
-
+        // This is for floating action button
         val fabMenu = view.findViewById<FloatingActionMenu>(R.id.fab_menu)
         val fabOption1 = view.findViewById<FloatingActionButton>(R.id.fab_option1)
         val fabOption2 = view.findViewById<FloatingActionButton>(R.id.fab_option2)
 
         fabOption1.setOnClickListener {
             // Handle option 1 click
-            // This will go to create group
-            fragment = CreateGroupTask()
-            bundle = Bundle()
-            bundle.putString("username", username)
-            fragment.arguments = bundle
-            ReplaceFragment(fragment)
             fabMenu.close(true)
-
-
+            Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
         }
 
         fabOption2.setOnClickListener {
             // Handle option 2 click
             fabMenu.close(true)
-            // This below is for view joined group
             Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
         }
-        // This will get the recycler view from the fragment_group.xml layout
+
+
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.setLayoutManager(LinearLayoutManager(context))
+        recyclerView.layoutManager = NonInterceptingLinearLayoutManager(requireContext())
+
 
         return view
     }
