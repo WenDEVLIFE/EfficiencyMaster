@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.clans.fab.FloatingActionButton
+import com.github.clans.fab.FloatingActionMenu
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -69,11 +72,35 @@ class GroupFragment : Fragment() {
             }
         })
 
+        val fabMenu = view.findViewById<FloatingActionMenu>(R.id.fab_menu)
+        val fabOption1 = view.findViewById<FloatingActionButton>(R.id.fab_option1)
+        val fabOption2 = view.findViewById<FloatingActionButton>(R.id.fab_option2)
+
+        fabOption1.setOnClickListener {
+            // Handle option 1 click
+            fabMenu.close(true)
+            Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
+        }
+
+        fabOption2.setOnClickListener {
+            // Handle option 2 click
+            fabMenu.close(true)
+            Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
+        }
         // This will get the recycler view from the fragment_group.xml layout
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setLayoutManager(LinearLayoutManager(context))
 
         return view
+    }
+
+    fun ReplaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
 
     companion object {

@@ -38,7 +38,7 @@ class CreateGroupTask : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view  = inflater.inflate(R.layout.fragment_create_group_task, container, false)
+        val view  = inflater.inflate(R.layout.fragment_create_group, container, false)
 
         // Get the ImageButton from the view
         val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)

@@ -11,6 +11,45 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/fab_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            app:backgroundTint="#e5e5e5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.968"
+            app:menu_labels_ellipsize="end"
+            app:menu_labels_singleLine="true"
+            app:tint="@color/black">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_option1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add_group"
+                app:backgroundTint="#e5e5e5"
+                app:fab_label="Create Group"
+                app:tint="@color/black" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_option2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/group"
+                app:backgroundTint="#e5e5e5"
+                app:fab_label="Joined Groups"
+                app:tint="@color/black" />
+
+            <!-- Add more buttons as needed -->
+
+        </com.github.clans.fab.FloatingActionMenu>
+
         <TextView
                 android:text="Group"
                 android:textSize="@dimen/_20sdp"
@@ -56,14 +95,17 @@
         </androidx.appcompat.widget.SearchView>
 
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="409dp"
-                android:layout_height="558dp"
-                android:id="@+id/recycler_view"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_group"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+            android:id="@+id/recycler_view"
+            android:layout_width="@dimen/_305sdp"
+            android:layout_height="@dimen/_420sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.214"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_group"
+            app:layout_constraintVertical_bias="1.0">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
