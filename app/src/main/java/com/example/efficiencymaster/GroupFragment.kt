@@ -90,7 +90,11 @@ class GroupFragment : Fragment() {
         fabOption1.setOnClickListener {
             // Handle option 1 click
             fabMenu.close(true)
-            Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
+            fragment = CreateGroupTask()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            fragment.arguments = bundle
+            ReplaceFragment(fragment)
         }
 
         fabOption2.setOnClickListener {
