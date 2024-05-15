@@ -86,6 +86,7 @@ class GroupFragment : Fragment() {
         val fabMenu = view.findViewById<FloatingActionMenu>(R.id.fab_menu)
         val fabOption1 = view.findViewById<FloatingActionButton>(R.id.fab_option1)
         val fabOption2 = view.findViewById<FloatingActionButton>(R.id.fab_option2)
+        val fabOption3 = view.findViewById<FloatingActionButton>(R.id.fab_option3)
 
         fabOption1.setOnClickListener {
             // Handle option 1 click
@@ -101,6 +102,12 @@ class GroupFragment : Fragment() {
             // Handle option 2 click
             fabMenu.close(true)
             Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
+        }
+
+        fabOption3.setOnClickListener {
+            // Handle option 3 click
+            fabMenu.close(true)
+            Toast.makeText(context, "Your Created Groups", Toast.LENGTH_SHORT).show()
         }
 
 

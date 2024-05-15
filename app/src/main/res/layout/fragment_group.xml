@@ -47,6 +47,16 @@
                 app:fab_label="Vew Joined Groups"
                 app:tint="@color/black" />
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_option3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/group"
+                app:backgroundTint="#e5e5e5"
+                app:fab_label="Your Created Groups"
+                app:tint="@color/black" />
+
+
             <!-- Add more buttons as needed -->
 
         </com.github.clans.fab.FloatingActionMenu>
