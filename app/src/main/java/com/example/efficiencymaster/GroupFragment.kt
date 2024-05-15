@@ -105,7 +105,7 @@ class GroupFragment : Fragment() {
 
 
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = NonInterceptingLinearLayoutManager(requireContext())
+        recyclerView.setLayoutManager(LinearLayoutManager(context))
 
 
         return view

@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/group"
                 app:backgroundTint="#e5e5e5"
-                app:fab_label="Vew Joined members"
+                app:fab_label="Vew Joined Groups"
                 app:tint="@color/black" />
 
             <!-- Add more buttons as needed -->
