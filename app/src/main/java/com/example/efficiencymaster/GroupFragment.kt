@@ -30,12 +30,16 @@ class GroupFragment : Fragment() {
     private var param2: String? = null
 
     lateinit var recyclerView: RecyclerView
+    lateinit var bundle:Bundle
+    lateinit var fragment:Fragment
+    var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
         }
     }
 
@@ -45,6 +49,12 @@ class GroupFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_group, container, false)
+
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
+        }
 
         // Find the ImageButton in the fragment_group.xml layout
         val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
@@ -78,13 +88,20 @@ class GroupFragment : Fragment() {
 
         fabOption1.setOnClickListener {
             // Handle option 1 click
+            // This will go to create group
+            fragment = CreateGroupTask()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            fragment.arguments = bundle
+            ReplaceFragment(fragment)
             fabMenu.close(true)
-            Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
+
         }
 
         fabOption2.setOnClickListener {
             // Handle option 2 click
             fabMenu.close(true)
+            // This below is for view joined group
             Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
         }
         // This will get the recycler view from the fragment_group.xml layout

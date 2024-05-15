@@ -24,12 +24,14 @@ class CreateGroupTask : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    var username =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
         }
     }
 
@@ -39,6 +41,12 @@ class CreateGroupTask : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view  = inflater.inflate(R.layout.fragment_create_group, container, false)
+
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
+        }
 
         // Get the ImageButton from the view
         val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
