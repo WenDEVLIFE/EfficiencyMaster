@@ -8,8 +8,8 @@
         tools:context=".CreateTask_Fragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -27,46 +27,46 @@
             app:tint="@color/black" />
 
         <TextView
-                android:text="Your Tasks"
-                android:textSize="@dimen/_20sdp"
-                android:fontFamily="sans-serif-condensed"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/titlestext"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="24dp"
-                app:layout_constraintHorizontal_bias="0.328"
-                app:layout_constraintStart_toEndOf="@+id/imageButton" />
+            android:id="@+id/titlestext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Your Tasks"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.328"
+            app:layout_constraintStart_toEndOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-                android:src="@drawable/list"
-                android:background="@android:color/transparent"
-                android:layout_width="@dimen/_60sdp"
-                android:layout_height="@dimen/_60sdp"
-                android:id="@+id/imageButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="4dp" />
+            android:id="@+id/imageButton"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.SearchView
-                android:layout_width="@dimen/_300sdp"
-                android:layout_height="@dimen/_55sdp"
-                android:id="@+id/search_group"
-                app:searchHintIcon="@drawable/find"
-                app:searchIcon="@drawable/find"
-                app:closeIcon="@drawable/close"
-                android:background="@drawable/searchbar"
-                app:queryHint="Search Task...."
-                app:iconifiedByDefault="false"
-                android:theme="@style/ThemeOverlay.SearchView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titlestext"
-                android:layout_marginTop="36dp"
-                app:layout_constraintHorizontal_bias="0.476">
+            android:id="@+id/search_group"
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/searchbar"
+            android:theme="@style/ThemeOverlay.SearchView"
+            app:closeIcon="@drawable/close"
+            app:iconifiedByDefault="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.476"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titlestext"
+            app:queryHint="Search Task...."
+            app:searchHintIcon="@drawable/find"
+            app:searchIcon="@drawable/find">
 
         </androidx.appcompat.widget.SearchView>
 
@@ -74,11 +74,10 @@
             android:id="@+id/recycler_view"
             android:layout_width="@dimen/_305sdp"
             android:layout_height="@dimen/_420sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_group"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/search_group" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
