@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#2b9348"
-        tools:context=".CreateTask_Fragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2b9348"
+    tools:context=".CreateTask_Fragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/fab_menu"
@@ -32,9 +32,9 @@
                 android:id="@+id/fab_option1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add_group"
+                android:src="@drawable/create_group"
                 app:backgroundTint="#e5e5e5"
-                app:fab_label="Create Group"
+                app:fab_label="Add Group"
                 app:tint="@color/black" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/group"
                 app:backgroundTint="#e5e5e5"
-                app:fab_label="Joined Groups"
+                app:fab_label="Vew Joined Groups"
                 app:tint="@color/black" />
 
             <!-- Add more buttons as needed -->
@@ -51,46 +51,46 @@
         </com.github.clans.fab.FloatingActionMenu>
 
         <TextView
-                android:text="Group"
-                android:textSize="@dimen/_20sdp"
-                android:fontFamily="sans-serif-condensed"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/titlestext"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="24dp"
-                app:layout_constraintHorizontal_bias="0.328"
-                app:layout_constraintStart_toEndOf="@+id/imageButton" />
+            android:id="@+id/titlestext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Group"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.329"
+            app:layout_constraintStart_toEndOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-                android:src="@drawable/list"
-                android:background="@android:color/transparent"
-                android:layout_width="@dimen/_60sdp"
-                android:layout_height="@dimen/_60sdp"
-                android:id="@+id/imageButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="4dp" />
+            android:src="@drawable/list"
+            android:background="@android:color/transparent"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:id="@+id/imageButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="4dp" />
 
         <androidx.appcompat.widget.SearchView
-                android:layout_width="@dimen/_300sdp"
-                android:layout_height="@dimen/_55sdp"
-                android:id="@+id/search_group"
-                app:searchHintIcon="@drawable/find"
-                app:searchIcon="@drawable/find"
-                app:closeIcon="@drawable/close"
-                android:background="@drawable/searchbar"
-                app:queryHint="Search group...."
-                app:iconifiedByDefault="false"
-                android:theme="@style/ThemeOverlay.SearchView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titlestext"
-                android:layout_marginTop="36dp"
-                app:layout_constraintHorizontal_bias="0.476">
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_55sdp"
+            android:id="@+id/search_group"
+            app:searchHintIcon="@drawable/find"
+            app:searchIcon="@drawable/find"
+            app:closeIcon="@drawable/close"
+            android:background="@drawable/searchbar"
+            app:queryHint="Search Task Name...."
+            app:iconifiedByDefault="false"
+            android:theme="@style/ThemeOverlay.SearchView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titlestext"
+            android:layout_marginTop="36dp"
+            app:layout_constraintHorizontal_bias="0.476">
 
         </androidx.appcompat.widget.SearchView>
 
@@ -100,12 +100,10 @@
             android:layout_height="@dimen/_420sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.214"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_group"
-            app:layout_constraintVertical_bias="1.0">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

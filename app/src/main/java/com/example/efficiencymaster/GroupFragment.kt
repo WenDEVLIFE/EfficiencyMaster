@@ -96,6 +96,7 @@ class GroupFragment : Fragment() {
             ReplaceFragment(fragment)
             fabMenu.close(true)
 
+
         }
 
         fabOption2.setOnClickListener {

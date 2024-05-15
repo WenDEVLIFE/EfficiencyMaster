@@ -1,5 +1,8 @@
 package com.example.efficiencymaster
 
+import android.animation.AnimatorInflater
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +11,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import androidx.appcompat.app.AlertDialog
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +33,11 @@ class CreateGroupTask : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     var username =""
+    val db = Firebase.firestore
+    lateinit var ProgressLoading: ProgressDialog
+    lateinit var groupName:EditText
+    lateinit var groupDescription:EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +72,8 @@ class CreateGroupTask : Fragment() {
         }
 
         // Get the EditText from the view
-        val groupName = view.findViewById<EditText>(R.id.editTextText2)
-        val groupDescription = view.findViewById<EditText>(R.id.desscripts)
+        groupName = view.findViewById(R.id.editTextText2)
+        groupDescription = view.findViewById(R.id.desscripts)
 
         // Get the Button from the view
         val createGroupBtn = view.findViewById<Button>(R.id.button2)
@@ -74,11 +87,14 @@ class CreateGroupTask : Fragment() {
                 if(groupDescription1.isEmpty()) {
                     groupDescription.error = "Please Enter Task Description"
                 }else{
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Task Created")
-                    builder.setMessage("Task Name: $groupName1\nTask Description: $groupDescription1")
-                    builder.setPositiveButton("OK"){dialog, which ->}
-                    builder.show()
+
+                    InsertGroup(groupName1, groupDescription1)
+                    ProgressLoading = ProgressDialog(context)
+                    ProgressLoading.setTitle("Creating Group")
+                    ProgressLoading.setMessage("Please wait while we create the group")
+                    ProgressLoading.setCanceledOnTouchOutside(false)
+                    ProgressLoading.show()
+
                 }
             }
         }
@@ -86,6 +102,136 @@ class CreateGroupTask : Fragment() {
     return view
     }
 
+    fun InsertGroup(groupName1: String , groupDescription1: String) {
+
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
+            if (it.isEmpty) {
+                // If the user does not exist
+            }else{
+                for (document in it){
+                    val ID = document.data["UserID"].toString()
+
+                    val IDGroup = Random.nextInt(123568, 9999999)
+                    val group = hashMapOf(
+                        "GroupID" to IDGroup,
+                        "GroupName" to groupName1,
+                        "GroupDescription" to groupDescription1,
+                        "UserID" to ID
+                    )
+
+                   db.collection("Group").whereEqualTo("GroupName", groupName1).whereEqualTo("UserID",ID).get().addOnSuccessListener {
+                       if (it.isEmpty) {
+                           db.collection("Group").add(group)
+
+                           db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
+                               // Check if the user has any progress
+                               val XpData = Random.nextInt(100, 1000)
+                               if(it.isEmpty){
+
+                                   // Call the create xp method to create new progress for the user.
+                                   CreateXp(ID, XpData)
+                               }
+
+                               // If the user has progress
+                               else{
+
+                                   // Update the user progress
+                                   for (document in it){
+
+                                       // Create a dialog to show the user the progress below
+                                       val builder = AlertDialog.Builder(context)
+                                       val inflater = layoutInflater
+                                       val dialogLayout = inflater.inflate(R.layout.message_layout, null)
+
+                                       val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+                                       val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+                                       val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+                                       // added a animation when it pop up
+                                       val floatingAnimation = AnimatorInflater.loadAnimator(context, R.animator.floatingxml)
+                                       val imageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+                                       floatingAnimation.setTarget(imageView)
+                                       floatingAnimation.start()
+
+                                       titleText.text = "Done Creating Group"
+                                       messageText.text = "You have gained $XpData xp for creating a group"
+
+                                       val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+
+                                       button.setOnClickListener {
+                                           // Handle button click here
+                                           dialog.dismiss()
+                                       }
+
+                                       dialog.show() // Show the dialog
+
+                                       // Update the user progress in the database and add it to the existing progress
+                                       val xp = document.get("ProgressXp").toString().toInt()
+                                       val UpdatedXP:Int = xp + XpData
+
+                                       // Update the user progress
+                                       db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
+
+                                       // clear the text fields
+                                       groupName.text.clear()
+                                       groupDescription.text.clear()
+                                       ProgressLoading.dismiss()
+                                       Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+                                   }
+                               }
+                           }
+                       }else{
+                           // If the group already exists
+                            Toast.makeText(context, "Group Already Exists", Toast.LENGTH_SHORT).show()
+                            ProgressLoading.dismiss()
+                       }
+                   }
+                }
+            }
+        }
+
+    }
+    fun CreateXp (ID: String, XpData: Int) {
+
+        // Hashmap for progress
+        val progressXp = hashMapOf(
+            "UserID" to ID,
+            "ProgressXp" to XpData,
+
+            )
+
+        // Add the progress to the database
+        db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
+
+            // Customize dialog below here
+            val builder = AlertDialog.Builder(context)
+            val inflater = layoutInflater
+            val dialogLayout = inflater.inflate(R.layout.message_layout, null)
+
+            val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+            val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+            val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+            titleText.text = "Done Creating Group"
+            messageText.text = "You have gained $XpData xp for creating a group"
+
+            val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+            button.setOnClickListener {
+                // Handle button click here
+
+                dialog.dismiss()
+
+            }
+
+            builder.setView(dialogLayout)
+            builder.show()
+
+            Toast.makeText(context, "Group Inserted", Toast.LENGTH_SHORT).show()
+            groupName.text.clear()
+            groupDescription.text.clear()
+            ProgressLoading.dismiss()
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
