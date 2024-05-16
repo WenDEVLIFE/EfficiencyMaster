@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -244,6 +245,8 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
 
         val dialog = builder.setView(dialogLayout).create()
 
+        dialog.show()
+
         button.setOnClickListener{
             db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
                 for (document in it){
@@ -260,6 +263,7 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
                                     val GroupID_mem = documennt.data["GroupID"].toString()
                                     val GroupUserID = documennt.data["UserID"].toString()
 
+                                    // if the user is already a member then it wont add or send a request
                                     if (GroupID == GroupID_mem && UserID == GroupUserID) {
                                         Toast.makeText(
                                             context,
@@ -268,6 +272,8 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
                                         ).show()
                                         dialog.dismiss()
                                     }else{
+
+                                        // hashmap for creating a request for the user
                                         val LocalDate = LocalDate.now()
                                         val groupMember = hashMapOf(
                                             "GroupID" to GroupID,
@@ -278,17 +284,26 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
                                         )
 
 
+                                        // Insert the pending request for joining the group
                                         db.collection("PendingGroupMembers").whereEqualTo("GroupID",GroupID).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
                                             if (it.isEmpty()){
                                                 db.collection("PendingGroupMembers").add(groupMember)
                                                     .addOnSuccessListener {
-                                                        Toast.makeText(context, "Request sent", Toast.LENGTH_SHORT).show()
+
+                                                        // Load the success dialog
+                                                        dialog.dismiss()
+                                                       Success()
+
                                                     }
                                                     .addOnFailureListener {
                                                         Toast.makeText(context, "Error sending request", Toast.LENGTH_SHORT).show()
+                                                        dialog.dismiss()
                                                     }
                                             }else{
-                                                Toast.makeText(context, "Request already sent", Toast.LENGTH_SHORT).show()
+
+                                                // Load the warning dialog
+                                                dialog.dismiss()
+                                                Warning()
                                             }
                                         }
                                     }
@@ -306,6 +321,68 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         button2.setOnClickListener {
             dialog.dismiss()
         }
-        dialog.show()
+
+    }
+
+    fun Success(){
+        val builder1 = android.app.AlertDialog.Builder(context)
+        val inflater1 = layoutInflater
+        val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+        val titleText1= dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+        val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+        val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+        button1.setText("Ok")
+        val ImageView2 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.paper_plane)
+            .into(ImageView2)
+        ImageView2.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params1 = ImageView2.layoutParams
+        val scale1 = resources.displayMetrics.density
+        params1.width = (100 * scale1).toInt()
+        params1.height = (100 * scale1).toInt()
+        ImageView2.layoutParams = params1
+        titleText1.text = "Request Send "
+        messageText1.text = "Request sent successfully. Please wait for the group admin to approve your request."
+
+        val dialog1 = builder1.setView(dialogLayout1).create()
+
+        dialog1.show()
+        button1.setOnClickListener{
+            dialog1.dismiss()
+        }
+    }
+
+    fun Warning(){
+        val builder1 = android.app.AlertDialog.Builder(context)
+        val inflater1 = layoutInflater
+        val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+        val titleText1= dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+        val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+        val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+        button1.setText("Ok")
+        val ImageView2 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.alert)
+            .into(ImageView2)
+        ImageView2.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params1 = ImageView2.layoutParams
+        val scale1 = resources.displayMetrics.density
+        params1.width = (100 * scale1).toInt()
+        params1.height = (100 * scale1).toInt()
+        ImageView2.layoutParams = params1
+        titleText1.text = "Request Already Send "
+        messageText1.text = "Request already sent , Please wait for the approval."
+
+        val dialog1 = builder1.setView(dialogLayout1).create()
+
+        dialog1.show()
+        button1.setOnClickListener{
+            dialog1.dismiss()
+        }
     }
 }
