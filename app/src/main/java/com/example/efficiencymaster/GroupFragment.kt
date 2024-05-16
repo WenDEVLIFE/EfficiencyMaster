@@ -324,7 +324,11 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
 
     }
 
+
+    // This method used to pop up sucess functions
     fun Success(){
+
+        // below are the alert dialog components and etc.
         val builder1 = android.app.AlertDialog.Builder(context)
         val inflater1 = layoutInflater
         val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
@@ -355,7 +359,11 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         }
     }
 
+
+    // This method is used to pop up warning dialog
     fun Warning(){
+
+        // below are the customize alert dialgo components and etc.
         val builder1 = android.app.AlertDialog.Builder(context)
         val inflater1 = layoutInflater
         val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
