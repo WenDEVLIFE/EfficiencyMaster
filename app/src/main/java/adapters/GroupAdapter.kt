@@ -3,6 +3,7 @@ package adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +34,7 @@ class GroupAdapter(private var groupList: List<Group>) : RecyclerView.Adapter<Gr
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.done_taskview, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.groupview, parent, false)
         return TaskViewHolder(view)
     }
 
@@ -50,15 +51,14 @@ class GroupAdapter(private var groupList: List<Group>) : RecyclerView.Adapter<Gr
     }
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val TaskName: TextView = itemView.findViewById(R.id.textView241)
+        private val GroupName: TextView = itemView.findViewById(R.id.textView241)
         private val Details: TextView = itemView.findViewById(R.id.textView2411)
-        private val StatusText:TextView = itemView.findViewById(R.id.textView2)
-        private val CompletionText:TextView = itemView.findViewById(R.id.textView3)
-        private val DeleteTask: ImageButton =itemView.findViewById(R.id.imageButton2)
+        private val MemberSize:TextView = itemView.findViewById(R.id.textView2)
+        private val JoinButton: Button =itemView.findViewById(R.id.button3)
 
 
         init {
-            DeleteTask.setOnClickListener{
+            JoinButton.setOnClickListener{
                 cancelListener?.invoke(adapterPosition)
 
             }
@@ -66,6 +66,9 @@ class GroupAdapter(private var groupList: List<Group>) : RecyclerView.Adapter<Gr
         }
 
         fun bind(info: Group) {
+            GroupName.text = info.groupName
+            Details.text = info.groupDescription
+            MemberSize.text = info.memberSize
 
 
 
