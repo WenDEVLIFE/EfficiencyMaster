@@ -20,6 +20,7 @@ import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -217,14 +218,10 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
     }
 
     override fun onCancel(position: Int) {
-
         val GroupName = groupList[position].groupName
-
-        // Customize alert dialog below
         val builder = android.app.AlertDialog.Builder(context)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
-
         val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
         val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
         val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
@@ -232,58 +229,69 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
         val ImageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
 
-        // Load the gif image
         Glide.with(requireContext())
             .asGif()
             .load(R.drawable.confused)
             .into(ImageView1)
         ImageView1.scaleType = ImageView.ScaleType.FIT_CENTER
         val params = ImageView1.layoutParams
-
-        // Convert dp to pixels
         val scale = resources.displayMetrics.density
-        params.width = (100 * scale).toInt()  // 100dp in pixels
-        params.height = (100 * scale).toInt() // 100dp in pixels
-
+        params.width = (100 * scale).toInt()
+        params.height = (100 * scale).toInt()
         ImageView1.layoutParams = params
         titleText.text = "Join the group "
         messageText.text = "Are you sure you want to join the group $GroupName?"
 
-        val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+        val dialog = builder.setView(dialogLayout).create()
 
         button.setOnClickListener{
             db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
                 for (document in it){
                     val UserID = document.data["UserID"].toString()
-
                     db.collection("Group").whereEqualTo("GroupName", GroupName).get().addOnSuccessListener {
                         for (document in it){
+
                             val GroupID = document.data["GroupID"].toString()
 
-                            db.collection("GroupMembers").whereEqualTo("GroupID",GroupID).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
-                                if (it.isEmpty()){
-                                    val groupMember = hashMapOf(
-                                        "GroupID" to GroupID,
-                                        "UserID" to UserID,
-                                        "Role" to "Member",
-                                        "Status" to "Pending"
-                                    )
-                                    db.collection("PendingGroupMembers").whereEqualTo("GroupID",GroupID).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
-                                        if (it.isEmpty()){
-                                            db.collection("PendingGroupMembers").add(groupMember)
-                                                .addOnSuccessListener {
-                                                    Toast.makeText(context, "Request sent", Toast.LENGTH_SHORT).show()
-                                                }
-                                                .addOnFailureListener {
-                                                    Toast.makeText(context, "Error sending request", Toast.LENGTH_SHORT).show()
-                                                }
-                                        }else{
-                                            Toast.makeText(context, "Request already sent", Toast.LENGTH_SHORT).show()
+                            // It will check if the user is already a member of the group
+                            db.collection("GroupMembers").get().addOnSuccessListener {
+                                for (documennt in it){
+
+                                    val GroupID_mem = documennt.data["GroupID"].toString()
+                                    val GroupUserID = documennt.data["UserID"].toString()
+
+                                    if (GroupID == GroupID_mem && UserID == GroupUserID) {
+                                        Toast.makeText(
+                                            context,
+                                            "You are already a member of this group",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        dialog.dismiss()
+                                    }else{
+                                        val LocalDate = LocalDate.now()
+                                        val groupMember = hashMapOf(
+                                            "GroupID" to GroupID,
+                                            "UserID" to UserID,
+                                            "Role" to "Member",
+                                            "Status" to "Pending",
+                                            "Date Requested" to LocalDate.toString()
+                                        )
+
+
+                                        db.collection("PendingGroupMembers").whereEqualTo("GroupID",GroupID).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
+                                            if (it.isEmpty()){
+                                                db.collection("PendingGroupMembers").add(groupMember)
+                                                    .addOnSuccessListener {
+                                                        Toast.makeText(context, "Request sent", Toast.LENGTH_SHORT).show()
+                                                    }
+                                                    .addOnFailureListener {
+                                                        Toast.makeText(context, "Error sending request", Toast.LENGTH_SHORT).show()
+                                                    }
+                                            }else{
+                                                Toast.makeText(context, "Request already sent", Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                     }
-
-                                }else{
-                                    Toast.makeText(context, "You are already a member of this group", Toast.LENGTH_SHORT).show()
 
                                 }
                             }
