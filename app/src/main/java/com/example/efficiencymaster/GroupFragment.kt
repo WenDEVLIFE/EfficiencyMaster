@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import adapters.GroupAdapter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,9 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import classes.NonInterceptingLinearLayoutManager
+import classes.Group
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [GroupFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GroupFragment : Fragment() {
+class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -33,6 +36,9 @@ class GroupFragment : Fragment() {
     lateinit var recyclerView: RecyclerView
     lateinit var bundle:Bundle
     lateinit var fragment:Fragment
+    lateinit var adapter:GroupAdapter
+    val db = Firebase.firestore
+    var groupList = mutableListOf<Group>()
     var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,10 +119,15 @@ class GroupFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setLayoutManager(LinearLayoutManager(context))
-
+        groupList = ArrayList()
+        adapter = GroupAdapter(groupList)
+        recyclerView.adapter = adapter
+        adapter.setOnCancelListener(::onCancel)
+        LoadGroup()
 
         return view
     }
+
 
     fun ReplaceFragment(fragment:Fragment){
         val fragmentManager = parentFragmentManager
@@ -127,6 +138,59 @@ class GroupFragment : Fragment() {
 
     }
 
+    // This method will load the group
+    fun LoadGroup(){
+
+        // Get the username ID
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
+            if (it.isEmpty) {
+                Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
+            }else{
+                for (document in it){
+
+                    // Get the UserID retrieve
+
+                    // Then
+                    val ID = document.data["UserID"].toString()
+                    db.collection("Group").get().addOnSuccessListener { groupDocuments ->
+                        for (groupDocument in groupDocuments){
+                            // Get the group name
+                            val groupName = groupDocument.data["GroupName"].toString()
+
+                            // Get the group description
+                            val groupDescription = groupDocument.data["GroupDescription"].toString()
+
+                            // Get the group members collection
+                            val collectionReference = db.collection("GroupMembers")
+
+                            // Query the collection to get the group ID
+                            val query = collectionReference.whereEqualTo("GroupID", ID)
+
+                            // member size variable
+                            var membersize= 0
+
+                            // Get the group members size
+                            query.get().addOnSuccessListener { memberDocuments ->
+                                membersize = memberDocuments.size() +  1
+
+                                // Create a group object
+                                val group = Group(groupName, groupDescription, membersize.toString())
+
+                                // Add the group object in the grouplist.
+                                groupList.add(group)
+
+                                // Notify the adapter of the recycleviewer
+                                adapter.notifyDataSetChanged()
+                            }.addOnFailureListener {
+                                Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -145,5 +209,9 @@ class GroupFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onCancel(position: Int) {
+        TODO("Not yet implemented")
     }
 }
