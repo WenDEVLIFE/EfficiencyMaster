@@ -228,6 +228,7 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
         val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
         val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        button.setText("Join the group")
         val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
         val ImageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
 
@@ -245,14 +246,53 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         params.height = (100 * scale).toInt() // 100dp in pixels
 
         ImageView1.layoutParams = params
-        titleText.text = "Delete the Task "
+        titleText.text = "Join the group "
         messageText.text = "Are you sure you want to join the group $GroupName?"
 
         val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
 
         button.setOnClickListener{
+            db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
+                for (document in it){
+                    val UserID = document.data["UserID"].toString()
 
-            dialog.dismiss()
+                    db.collection("Group").whereEqualTo("GroupName", GroupName).get().addOnSuccessListener {
+                        for (document in it){
+                            val GroupID = document.data["GroupID"].toString()
+
+                            db.collection("GroupMembers").whereEqualTo("GroupID",GroupID).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
+                                if (it.isEmpty()){
+                                    val groupMember = hashMapOf(
+                                        "GroupID" to GroupID,
+                                        "UserID" to UserID,
+                                        "Role" to "Member",
+                                        "Status" to "Pending"
+                                    )
+                                    db.collection("PendingGroupMembers").whereEqualTo("GroupID",GroupID).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
+                                        if (it.isEmpty()){
+                                            db.collection("PendingGroupMembers").add(groupMember)
+                                                .addOnSuccessListener {
+                                                    Toast.makeText(context, "Request sent", Toast.LENGTH_SHORT).show()
+                                                }
+                                                .addOnFailureListener {
+                                                    Toast.makeText(context, "Error sending request", Toast.LENGTH_SHORT).show()
+                                                }
+                                        }else{
+                                            Toast.makeText(context, "Request already sent", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                }else{
+                                    Toast.makeText(context, "You are already a member of this group", Toast.LENGTH_SHORT).show()
+
+                                }
+                            }
+                        }
+                    }.addOnFailureListener {
+                        Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
         button2.setOnClickListener {
