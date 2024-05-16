@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
 import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
@@ -121,8 +122,20 @@ class CreateGroupTask : Fragment() {
 
                    db.collection("Group").whereEqualTo("GroupName", groupName1).whereEqualTo("UserID",ID).get().addOnSuccessListener {
                        if (it.isEmpty) {
-                           db.collection("Group").add(group)
 
+
+                           val LocalDate = LocalDate.now()
+
+                           // Hashmap for the member
+                           val Memberstats = hashMapOf(
+                                 "GroupID" to IDGroup,
+                                 "UserID" to ID,
+                                 "Joined Date" to LocalDate.toString(),
+                                 "Role" to "Group_Admin",
+                           )
+                           // Add the Group and the member who created
+                           db.collection("Group").add(group)
+                           db.collection("GroupMembers").add(Memberstats)
                            db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
                                // Check if the user has any progress
                                val XpData = Random.nextInt(100, 1000)
