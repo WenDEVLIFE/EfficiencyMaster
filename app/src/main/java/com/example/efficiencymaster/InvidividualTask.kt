@@ -116,6 +116,8 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         })
 
         // This will get the recycler view from the fragment_group.xml layout
+        // and set the layout manager to linear layout manager and set the adapter
+        // to the task adapter
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setLayoutManager(LinearLayoutManager(context))
         taskList = ArrayList()

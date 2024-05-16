@@ -116,7 +116,8 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
             Toast.makeText(context, "Your Created Groups", Toast.LENGTH_SHORT).show()
         }
 
-
+       // Get the recycleviwer id, set layout, call the group list and set to array
+        // also set the recycleviewer to its adapter and call the Load Group Method
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setLayoutManager(LinearLayoutManager(context))
         groupList = ArrayList()
@@ -128,7 +129,7 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         return view
     }
 
-
+      // Method used to Replae the fragment
     fun ReplaceFragment(fragment:Fragment){
         val fragmentManager = parentFragmentManager
         val transaction = fragmentManager.beginTransaction()
