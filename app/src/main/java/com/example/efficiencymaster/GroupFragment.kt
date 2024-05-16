@@ -6,12 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.Group
+import com.bumptech.glide.Glide
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import com.google.firebase.firestore.ktx.firestore
@@ -213,6 +217,47 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
     }
 
     override fun onCancel(position: Int) {
-        TODO("Not yet implemented")
+
+        val GroupName = groupList[position].groupName
+
+        // Customize alert dialog below
+        val builder = android.app.AlertDialog.Builder(context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
+
+        val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+        val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+        val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
+        val ImageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+
+        // Load the gif image
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.confused)
+            .into(ImageView1)
+        ImageView1.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params = ImageView1.layoutParams
+
+        // Convert dp to pixels
+        val scale = resources.displayMetrics.density
+        params.width = (100 * scale).toInt()  // 100dp in pixels
+        params.height = (100 * scale).toInt() // 100dp in pixels
+
+        ImageView1.layoutParams = params
+        titleText.text = "Delete the Task "
+        messageText.text = "Are you sure you want to join the group $GroupName?"
+
+        val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+
+        button.setOnClickListener{
+
+            dialog.dismiss()
+        }
+
+        button2.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 }
