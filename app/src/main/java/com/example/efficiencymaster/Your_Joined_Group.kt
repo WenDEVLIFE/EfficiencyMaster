@@ -71,7 +71,7 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
 
         // This is for search functions
         val searchView = view.findViewById<SearchView>(R.id.search_group)
-        /* searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 // This is for searching  the group
@@ -105,7 +105,7 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
                 // Add your search logic here
                 return true
             }
-        })  */
+        })
 
 
         // This will get the recycler view from the fragment_group.xml layout
@@ -126,34 +126,44 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
 
     // This will load the join user groups
     private fun LoadJoinedGroup() {
+
+        // Find the username
         db.collection("User").whereEqualTo("username",username).get()
             .addOnSuccessListener {
                if (it.isEmpty()){
                      Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
                }else{
+
+                   // Load the retrieve username id
                    for (document in it){
                        val UserID = document.data["UserID"].toString()
 
+                       // Find the username id on the group members
                        db.collection("GroupMembers").whereEqualTo("UserID",UserID).get()
                            .addOnSuccessListener{
                                if(it.isEmpty()){
                                       Toast.makeText(context, "Group Member does not exist", Toast.LENGTH_SHORT).show()
                                }else{
+
+                                   // Retrieve the group member id
                                    for (groupdocument_members in it){
                                        val GroupID = groupdocument_members.data["GroupID"].toString()
 
-
+                                        // Load the group
                                        db.collection("Group").get()
                                            .addOnSuccessListener {
                                               if(it.isEmpty()){
                                                     Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
                                               }
                                                else{
+
+                                                   // Retrive the group name, description and id
                                                   for (group_document in it){
                                                       val groupName = group_document.data["GroupName"].toString()
                                                       val groupDescription = group_document.data["GroupDescription"].toString()
                                                       val GroupIDs = group_document.data["GroupID"].toString()
 
+                                                      // This will check if the group id member is equal to the group id of group.
                                                     if (GroupID == GroupIDs){
                                                         // Get the group members collection
                                                         val collectionReference = db.collection("GroupMembers")
