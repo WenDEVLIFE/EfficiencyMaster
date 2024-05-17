@@ -106,6 +106,8 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
                 return true
             }
         })  */
+
+
         // This will get the recycler view from the fragment_group.xml layout
         // and set the layout manager to linear layout manager and set the adapter
         // to the task adapter
@@ -122,54 +124,79 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
             return view;
     }
 
+    // This will load the join user groups
     private fun LoadJoinedGroup() {
         db.collection("User").whereEqualTo("username",username).get()
             .addOnSuccessListener {
-                for (document in it){
-                    val UserID = document.data["UserID"].toString()
+               if (it.isEmpty()){
+                     Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
+               }else{
+                   for (document in it){
+                       val UserID = document.data["UserID"].toString()
 
-                    db.collection("GroupMembers").whereEqualTo("UserID",UserID).get()
-                        .addOnSuccessListener {
-                            for (document in it){
-                                val GroupID = document.data["GroupID"].toString()
-                                db.collection("Group").whereEqualTo("GroupID",GroupID).get()
-                                    .addOnSuccessListener {
-                                        for (document in it){
-                                            val groupName = document.get("GroupName").toString()
-                                            val groupDescription = document.get("GroupDescription").toString()
-
-                                            // Get the group members collection
-                                            val collectionReference = db.collection("GroupMembers")
-
-                                            // Query the collection to get the group ID
-                                            val query = collectionReference.whereEqualTo("GroupID", GroupID)
-
-                                            // member size variable
-                                            var membersize= 0
-
-                                            query.get().addOnSuccessListener { memberDocuments ->
-                                                membersize = memberDocuments.size() +  1
-
-                                                // Create a group object
-                                                val group = Group(groupName, groupDescription, membersize.toString())
-
-                                                // Add the group object in the grouplist.
-                                                groupList.add(group)
-
-                                                // Notify the adapter of the recycleviewer
-                                                adapter.notifyDataSetChanged()
+                       db.collection("GroupMembers").whereEqualTo("UserID",UserID).get()
+                           .addOnSuccessListener{
+                               if(it.isEmpty()){
+                                      Toast.makeText(context, "Group Member does not exist", Toast.LENGTH_SHORT).show()
+                               }else{
+                                   for (groupdocument_members in it){
+                                       val GroupID = groupdocument_members.data["GroupID"].toString()
 
 
-                                            }.addOnFailureListener {
-                                                Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
-                                            }
+                                       db.collection("Group").get()
+                                           .addOnSuccessListener {
+                                              if(it.isEmpty()){
+                                                    Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+                                              }
+                                               else{
+                                                  for (group_document in it){
+                                                      val groupName = group_document.data["GroupName"].toString()
+                                                      val groupDescription = group_document.data["GroupDescription"].toString()
+                                                      val GroupIDs = group_document.data["GroupID"].toString()
+
+                                                    if (GroupID == GroupIDs){
+                                                        // Get the group members collection
+                                                        val collectionReference = db.collection("GroupMembers")
+
+                                                        // Query the collection to get the group ID
+                                                        val query = collectionReference.whereEqualTo("GroupID", GroupID)
+
+                                                        // member size variable
+                                                        var membersize= 0
+
+                                                        query.get().addOnSuccessListener { memberDocuments ->
+                                                            membersize = memberDocuments.size() +  1
+
+                                                            // Create a group object
+                                                            val group = Group(groupName, groupDescription, membersize.toString())
+
+                                                            // Add the group object in the grouplist.
+                                                            groupList.add(group)
+
+                                                            // Notify the adapter of the recycleviewer
+                                                            adapter.notifyDataSetChanged()
 
 
-                                        }
-                                    }
-                            }
-                        }
-                }
+                                                        }.addOnFailureListener {
+                                                            Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
+                                                        }
+                                                    }
+
+
+                                                  }
+                                              }
+                                           }.addOnFailureListener {
+                                               Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
+                                           }
+                                   }
+                               }
+                           }.addOnFailureListener {
+                               Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
+                           }
+                   }
+               }
+            }.addOnFailureListener{
+                Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
             }
     }
 

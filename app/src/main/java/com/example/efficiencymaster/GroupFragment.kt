@@ -186,7 +186,6 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
                 for (document in it){
 
                     // Get the UserID retrieve
-
                     // Then
                     val ID = document.data["UserID"].toString()
                     db.collection("Group").get().addOnSuccessListener { groupDocuments ->
