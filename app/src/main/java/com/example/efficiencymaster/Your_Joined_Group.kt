@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import adapters.GroupAdapter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.Group
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -21,12 +25,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Your_Joined_Group.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Your_Joined_Group : Fragment() {
+class Your_Joined_Group : Fragment(), GroupAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     lateinit var recycleviewer:RecyclerView
-
+    lateinit var adapter: GroupAdapter
+    val db = Firebase.firestore
+    var groupList = mutableListOf<Group>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -89,6 +95,15 @@ class Your_Joined_Group : Fragment() {
                 return true
             }
         })  */
+        // This will get the recycler view from the fragment_group.xml layout
+        // and set the layout manager to linear layout manager and set the adapter
+        // to the task adapter
+        recycleviewer = view.findViewById(R.id.recycler_view)
+        recycleviewer.setLayoutManager(LinearLayoutManager(context))
+        groupList = ArrayList()
+        adapter = GroupAdapter(groupList)
+        recycleviewer.adapter = adapter
+        adapter.setOnCancelListener(::onCancel)
 
 
 
@@ -113,5 +128,9 @@ class Your_Joined_Group : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onCancel(position: Int) {
+        TODO("Not yet implemented")
     }
 }

@@ -248,6 +248,7 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
             }
     }
 
+    // This is used to to join the group request
     override fun onCancel(position: Int) {
         val GroupName = groupList[position].groupName
         val builder = android.app.AlertDialog.Builder(context)
@@ -294,14 +295,15 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
                                     val GroupUserID = documennt.data["UserID"].toString()
 
                                     // if the user is already a member then it wont add or send a request
-                                    if (GroupID == GroupID_mem && UserID == GroupUserID) {
+                                    if (GroupID.equals(GroupID_mem) && UserID.equals(GroupUserID)){
                                         Toast.makeText(
                                             context,
                                             "You are already a member of this group",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         dialog.dismiss()
-                                    }else{
+                                    }
+                                    else{
 
                                         // hashmap for creating a request for the user
                                         val LocalDate = LocalDate.now()
