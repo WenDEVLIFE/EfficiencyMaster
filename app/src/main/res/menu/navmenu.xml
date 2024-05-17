@@ -23,7 +23,7 @@
             />
 
 
-    <item android:title="Group Task"
+    <item android:title="Group"
             android:icon="@drawable/people"
             android:id="@+id/group"
             android:textColor="@color/black"
