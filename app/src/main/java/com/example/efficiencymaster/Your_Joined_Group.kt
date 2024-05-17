@@ -5,6 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.RecyclerView
+import classes.Group
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +25,7 @@ class Your_Joined_Group : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var recycleviewer:RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +42,57 @@ class Your_Joined_Group : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_your__joined__group, container, false)
 
-        return view;
+        // Find the ImageButton in the fragment_group.xml layout
+        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        ImageButton.setOnClickListener {
+
+            // Open the drawer when the ImageButton is clicked
+            val activity = activity as MainActivity
+            activity.OpenDrawer()
+
+        }
+
+        // This is for search functions
+        val searchView = view.findViewById<SearchView>(R.id.search_group)
+        /* searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                // This is for searching  the group
+                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Group>()
+
+                // loop the group list and filter the value
+                for (group in groupList){
+                    if (group.groupName.lowercase(Locale.getDefault()).contains(search) || group.groupName.uppercase(Locale.getDefault()).contains(search)){
+                        temp.add(group)
+                    }
+                }
+                adapter.updateList(temp)
+                // Add your search logic here
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                // This is for searching the group
+                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Group>()
+
+                //  loop the grouplist and filter the value
+                for (group in groupList){
+                    if (group.groupName.lowercase(Locale.getDefault()).contains(search) || group.groupName.uppercase(Locale.getDefault()).contains(search)){
+                        temp.add(group)
+                    }
+                }
+                adapter.updateList(temp)
+                // Add your search logic here
+                return true
+            }
+        })  */
+
+
+
+            return view;
     }
 
     companion object {

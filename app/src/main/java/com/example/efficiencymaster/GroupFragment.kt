@@ -124,6 +124,7 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
 
         fabOption1.setOnClickListener {
             // Handle option 1 click
+            // This will joined to CreateGroupTask
             fabMenu.close(true)
             fragment = CreateGroupTask()
             bundle = Bundle()
@@ -134,8 +135,14 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
 
         fabOption2.setOnClickListener {
             // Handle option 2 click
+            // This will go to the joined groups
             fabMenu.close(true)
-            Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
+            fragment = Your_Joined_Group()
+            bundle = Bundle()
+            bundle.putString("username",username)
+            fragment.arguments = bundle
+            ReplaceFragment(fragment)
+            Toast.makeText(context, "View Joined Group", Toast.LENGTH_SHORT).show()
         }
 
         fabOption3.setOnClickListener {
@@ -144,8 +151,9 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
             Toast.makeText(context, "Your Created Groups", Toast.LENGTH_SHORT).show()
         }
 
-       // Get the recycleviwer id, set layout, call the group list and set to array
-        // also set the recycleviewer to its adapter and call the Load Group Method
+        // This will get the recycler view from the fragment_group.xml layout
+        // and set the layout manager to linear layout manager and set the adapter
+        // to the task adapter
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setLayoutManager(LinearLayoutManager(context))
         groupList = ArrayList()

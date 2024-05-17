@@ -99,7 +99,7 @@
             app:layout_constraintHorizontal_bias="0.476"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titlestext"
-            app:queryHint="Search Task Name...."
+            app:queryHint="Search Group Name...."
             app:searchHintIcon="@drawable/find"
             app:searchIcon="@drawable/find">
 
