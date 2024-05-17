@@ -83,13 +83,35 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         val searchView = view.findViewById<SearchView>(R.id.search_group)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+
+                // This is for searching  the group
                 var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Group>()
+
+                // loop the group list and filter the value
+                for (group in groupList){
+                    if (group.groupName.lowercase(Locale.getDefault()).contains(search) || group.groupName.uppercase(Locale.getDefault()).contains(search)){
+                        temp.add(group)
+                    }
+                }
+                adapter.updateList(temp)
                 // Add your search logic here
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+
+                // This is for searching the group
                 var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Group>()
+
+                //  loop the grouplist and filter the value
+                for (group in groupList){
+                    if (group.groupName.lowercase(Locale.getDefault()).contains(search) || group.groupName.uppercase(Locale.getDefault()).contains(search)){
+                        temp.add(group)
+                    }
+                }
+                adapter.updateList(temp)
                 // Add your search logic here
                 return true
             }

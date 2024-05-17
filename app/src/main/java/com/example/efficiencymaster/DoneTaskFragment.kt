@@ -117,6 +117,9 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
             }
         })
 
+        // This will get the recycler view from the fragment_group.xml layout
+        // and set the layout manager to linear layout manager and set the adapter
+        // to the task adapter
         recycleviewer = view.findViewById(R.id.recycler_view)
         recycleviewer.setLayoutManager(LinearLayoutManager(context))
         taskList = ArrayList()
@@ -131,23 +134,33 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
 
     // This  will Load the task from the database
     fun LoadTask() {
+
+        // find the username
         db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
             for (document in it) {
+
+                // then get the UserID
                 val UserID = document.data["UserID"].toString()
 
+                // Then find the username id in the task
                 db.collection("Task").whereEqualTo("UserID", UserID).get().addOnSuccessListener {
                     for (document in it) {
+
+                        // Then get the task name, description, status, and completion date.
                         val Taksname = document.data["TaskName"].toString()
                         val TaskDescription = document.data["TaskDescription"].toString()
                         val Status = document.data["Status"].toString()
                         val CompletionDate = document.data["CompletionDate"].toString()
 
+                        // if status is done, it will add on the list and then update the adapter
                         if (Status.equals("Done")) {
                             val task = DoneTask(Taksname, TaskDescription,Status, CompletionDate)
                             taskList.add(task)
                         }
 
                     }
+
+                    // update the adapter
                     adapter.notifyDataSetChanged()
                 }
             }
