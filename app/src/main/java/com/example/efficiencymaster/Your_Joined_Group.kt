@@ -1,12 +1,14 @@
 package com.example.efficiencymaster
 
 import adapters.GroupAdapter
+import adapters.JoinedGroupAdapter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,19 +27,22 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Your_Joined_Group.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Your_Joined_Group : Fragment(), GroupAdapter.OnCancelListener {
+class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     lateinit var recycleviewer:RecyclerView
-    lateinit var adapter: GroupAdapter
+    lateinit var adapter:JoinedGroupAdapter
     val db = Firebase.firestore
     var groupList = mutableListOf<Group>()
+    var username = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
         }
     }
 
@@ -47,6 +52,12 @@ class Your_Joined_Group : Fragment(), GroupAdapter.OnCancelListener {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_your__joined__group, container, false)
+
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+            username = it.getString("username").toString()
+        }
 
         // Find the ImageButton in the fragment_group.xml layout
         val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
@@ -101,13 +112,65 @@ class Your_Joined_Group : Fragment(), GroupAdapter.OnCancelListener {
         recycleviewer = view.findViewById(R.id.recycler_view)
         recycleviewer.setLayoutManager(LinearLayoutManager(context))
         groupList = ArrayList()
-        adapter = GroupAdapter(groupList)
+        adapter = JoinedGroupAdapter(groupList)
         recycleviewer.adapter = adapter
         adapter.setOnCancelListener(::onCancel)
+        LoadJoinedGroup()
 
 
 
             return view;
+    }
+
+    private fun LoadJoinedGroup() {
+        db.collection("User").whereEqualTo("username",username).get()
+            .addOnSuccessListener {
+                for (document in it){
+                    val UserID = document.data["UserID"].toString()
+
+                    db.collection("GroupMembers").whereEqualTo("UserID",UserID).get()
+                        .addOnSuccessListener {
+                            for (document in it){
+                                val GroupID = document.data["GroupID"].toString()
+                                db.collection("Group").whereEqualTo("GroupID",GroupID).get()
+                                    .addOnSuccessListener {
+                                        for (document in it){
+                                            val groupName = document.get("GroupName").toString()
+                                            val groupDescription = document.get("GroupDescription").toString()
+
+                                            // Get the group members collection
+                                            val collectionReference = db.collection("GroupMembers")
+
+                                            // Query the collection to get the group ID
+                                            val query = collectionReference.whereEqualTo("GroupID", GroupID)
+
+                                            // member size variable
+                                            var membersize= 0
+
+                                            query.get().addOnSuccessListener { memberDocuments ->
+                                                membersize = memberDocuments.size() +  1
+
+                                                // Create a group object
+                                                val group = Group(groupName, groupDescription, membersize.toString())
+
+                                                // Add the group object in the grouplist.
+                                                groupList.add(group)
+
+                                                // Notify the adapter of the recycleviewer
+                                                adapter.notifyDataSetChanged()
+
+
+                                            }.addOnFailureListener {
+                                                Toast.makeText(context, "Error getting documents: ", Toast.LENGTH_SHORT).show()
+                                            }
+
+
+                                        }
+                                    }
+                            }
+                        }
+                }
+            }
     }
 
     companion object {
