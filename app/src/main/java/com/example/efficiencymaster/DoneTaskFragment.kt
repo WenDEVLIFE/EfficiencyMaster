@@ -250,7 +250,6 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
                                 // dismis the dialog and update the list and the adapter.
                                 progressLoading.dismiss()
                                 taskList.removeAt(position)
-                                adapter.notifyDataSetChanged()
                                 dialog.dismiss()
 
                                 // Customize alert dialog below
@@ -282,6 +281,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
 
                                 dialog1.show()
                             }
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }
