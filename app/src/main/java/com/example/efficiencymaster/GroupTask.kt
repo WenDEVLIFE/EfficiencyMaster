@@ -30,11 +30,16 @@ class GroupTask : Fragment() {
     private var param2: String? = null
     private lateinit var recyclerView: RecyclerView
 
+    var username = ""
+    var groupNameIntent = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            username  =  it.getString("username").toString()
+            groupNameIntent  =  it.getString("groupName").toString()
         }
     }
 
@@ -44,6 +49,13 @@ class GroupTask : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_grouptask, container, false)
+
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+            username  =  it.getString("username").toString()
+            groupNameIntent  =  it.getString("groupName").toString()
+        }
 
         val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
         imageButton.setOnClickListener {
@@ -99,6 +111,8 @@ class GroupTask : Fragment() {
         val fabMenu = view.findViewById<FloatingActionMenu>(R.id.fab_menu)
         val fabOption1 = view.findViewById<FloatingActionButton>(R.id.fab_option1)
         val fabOption2 = view.findViewById<FloatingActionButton>(R.id.fab_option2)
+        val fabOption3 = view.findViewById<FloatingActionButton>(R.id.fab_option3)
+        val fabOption4 = view.findViewById<FloatingActionButton>(R.id.fab_option4)
 
         fabOption1.setOnClickListener {
             // Handle option 1 click
@@ -110,6 +124,18 @@ class GroupTask : Fragment() {
             // Handle option 2 click
             fabMenu.close(true)
             Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
+        }
+
+        fabOption3.setOnClickListener {
+            // Handle option 3 click
+            fabMenu.close(true)
+            Toast.makeText(context, "View Pending Task", Toast.LENGTH_SHORT).show()
+        }
+
+        fabOption4.setOnClickListener {
+            // Handle option 4 click
+            fabMenu.close(true)
+            Toast.makeText(context, "View Pending Members", Toast.LENGTH_SHORT).show()
         }
 
         recyclerView = view.findViewById(R.id.recycler_view)

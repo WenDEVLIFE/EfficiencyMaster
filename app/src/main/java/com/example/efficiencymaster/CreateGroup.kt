@@ -26,10 +26,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [CreateGroupTask.newInstance] factory method to
+ * Use the [CreateGroup.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CreateGroupTask : Fragment() {
+class CreateGroup : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -82,13 +82,17 @@ class CreateGroupTask : Fragment() {
             val groupName1 = groupName.text.toString()
             val groupDescription1 = groupDescription.text.toString()
 
+            // Check if the group name is empty
             if(groupName1.isEmpty()) {
                 groupName.error = "Please Enter Task Name"
             }else{
+
+                // Check if description is  empty
                 if(groupDescription1.isEmpty()) {
                     groupDescription.error = "Please Enter Task Description"
                 }else{
 
+                    // Call the insertGroup method to insert the group.
                     insertGroup(groupName1, groupDescription1)
                     progressLoading = ProgressDialog(context)
                     progressLoading.setTitle("Creating Group")
@@ -271,12 +275,12 @@ class CreateGroupTask : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment CreateGroupTask.
+         * @return A new instance of fragment CreateGroup.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            CreateGroupTask().apply {
+            CreateGroup().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -231,6 +231,24 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
     }
 
     override fun onCancel(position: Int) {
-        TODO("Not yet implemented")
+        var groupName = groupList[position].groupName
+        val fragment = GroupTask()
+        val Bundle = Bundle()
+        Bundle.putString("username", username)
+        Bundle.putString("groupName", groupName)
+        fragment.arguments = Bundle
+        replaceFragment(fragment)
+
+
+    }
+
+    // Method used to Replae the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
 }

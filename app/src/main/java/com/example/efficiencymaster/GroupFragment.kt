@@ -125,9 +125,9 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
 
         fabOption1.setOnClickListener {
             // Handle option 1 click
-            // This will joined to CreateGroupTask
+            // This will joined to CreateGroup
             fabMenu.close(true)
-            fragment = CreateGroupTask()
+            fragment = CreateGroup()
             bundle = Bundle()
             bundle.putString("username", username)
             fragment.arguments = bundle
