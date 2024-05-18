@@ -116,7 +116,8 @@ class CreateTaskFragment : Fragment() {
                     "TaskName" to taskname1,
                     "TaskDescription" to taskDescription1,
                     "Status" to "Pending",
-                    "UserID" to iD
+                    "UserID" to iD,
+                    "Type" to "Individual",
                 )
 
                 val xpData = Random.nextInt(100,  1000)

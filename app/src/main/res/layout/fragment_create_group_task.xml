@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2b9348"
+    tools:context=".CreateTaskFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/titlestext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Create Group Task"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.356"
+            app:layout_constraintStart_toEndOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextText2"
+            android:layout_width="@dimen/_235sdp"
+            android:layout_height="@dimen/_52sdp"
+            android:layout_marginTop="84dp"
+            android:background="@drawable/pane_layout"
+            android:ems="10"
+            android:hint="Task Name"
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titlestext" />
+
+        <EditText
+            android:id="@+id/desscripts"
+            android:layout_width="@dimen/_235sdp"
+            android:layout_height="@dimen/_52sdp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/pane_layout"
+            android:ems="10"
+            android:hint="Description"
+            android:inputType="textImeMultiLine"
+            android:padding="16dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/button"
+            android:text="Add Group Task"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/desscripts" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
