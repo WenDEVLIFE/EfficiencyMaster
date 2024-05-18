@@ -1,6 +1,7 @@
 package com.example.efficiencymaster
 
 import adapters.DoneTaskAdapter
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -76,7 +77,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         val searchView = view.findViewById<SearchView>(R.id.search_group)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = query?.lowercase(Locale.getDefault()) ?: return false
 
                 val temp = ArrayList<DoneTask>() // filtered list
 
@@ -95,7 +96,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = newText?.lowercase(Locale.getDefault()) ?: return false
 
                 val temp = ArrayList<DoneTask>() //  filter  list
 
@@ -131,6 +132,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
     }
 
     // This  will Load the task from the database
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadTask() {
 
         // find the username
@@ -187,6 +189,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
             }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCancel(position: Int) {
 
         //  Get the task name from the list
@@ -204,8 +207,15 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         val imageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
         imageView.setImageResource(R.drawable.question_mark)
 
-        titleText.text = "Delete the Task "
-        messageText.text = "Are you sure you want to delete the task $taskName?"
+        titleText.text = buildString {
+                append("Delete the Task ")
+            }
+
+        messageText.text = buildString {
+                append("Are you sure you want to delete the task ")
+                append(taskName)
+                append("?")
+            }
 
         val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
 
@@ -254,8 +264,14 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
                                 val imageView1 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
                                 imageView1.setImageResource(R.drawable.check)
 
-                                titleText1.text = "Task Delete Successfully "
-                                messageText1.text = "You successfully deleted the $taskName"
+                                titleText1.text = buildString {
+                                    append("Task Delete Successfully ")
+                                }
+
+                                messageText1.text = buildString {
+                                    append("You successfully deleted the ")
+                                    append(taskName)
+                                }
 
                                 val dialog1 = builder1.setView(dialogLayout1).create() // Create AlertDialog instance
 

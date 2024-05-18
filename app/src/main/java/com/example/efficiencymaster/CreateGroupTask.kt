@@ -35,9 +35,9 @@ class CreateGroupTask : Fragment() {
     private var param2: String? = null
     var username =""
     val db = Firebase.firestore
-    lateinit var progressLoading: ProgressDialog
-    lateinit var groupName:EditText
-    lateinit var groupDescription:EditText
+    private lateinit var progressLoading: ProgressDialog
+    private lateinit var groupName:EditText
+    private lateinit var groupDescription:EditText
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +63,8 @@ class CreateGroupTask : Fragment() {
         }
 
         // Get the ImageButton from the view
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
-        ImageButton.setOnClickListener {
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
@@ -89,7 +89,7 @@ class CreateGroupTask : Fragment() {
                     groupDescription.error = "Please Enter Task Description"
                 }else{
 
-                    InsertGroup(groupName1, groupDescription1)
+                    insertGroup(groupName1, groupDescription1)
                     progressLoading = ProgressDialog(context)
                     progressLoading.setTitle("Creating Group")
                     progressLoading.setMessage("Please wait while we create the group")
@@ -103,53 +103,54 @@ class CreateGroupTask : Fragment() {
     return view
     }
 
-    fun InsertGroup(groupName1: String , groupDescription1: String) {
+    private fun insertGroup(groupName1: String, groupDescription1: String) {
 
-        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
-            if (it.isEmpty) {
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userit ->
+            if (userit.isEmpty) {
                 // If the user does not exist
+                Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
             }else{
-                for (document in it){
-                    val ID = document.data["UserID"].toString()
+                for (userdocument in userit){
+                    val iD = userdocument.data["UserID"].toString()
 
-                    val IDGroup = Random.nextInt(123568, 9999999)
+                    val iDGroup = Random.nextInt(123568, 9999999)
                     val group = hashMapOf(
-                        "GroupID" to IDGroup,
+                        "GroupID" to iDGroup,
                         "GroupName" to groupName1,
                         "GroupDescription" to groupDescription1,
-                        "UserID" to ID
+                        "UserID" to iD
                     )
 
-                   db.collection("Group").whereEqualTo("GroupName", groupName1).whereEqualTo("UserID",ID).get().addOnSuccessListener {
-                       if (it.isEmpty) {
+                   db.collection("Group").whereEqualTo("GroupName", groupName1).whereEqualTo("UserID",iD).get().addOnSuccessListener { groupit ->
+                       if (groupit.isEmpty) {
 
 
-                           val LocalDate = LocalDate.now()
+                           val localDate = LocalDate.now()
 
                            // Hashmap for the member
-                           val Memberstats = hashMapOf(
-                                 "GroupID" to IDGroup,
-                                 "UserID" to ID,
-                                 "Joined Date" to LocalDate.toString(),
+                           val memberstats = hashMapOf(
+                                 "GroupID" to iDGroup,
+                                 "UserID" to iD,
+                                 "Joined Date" to localDate.toString(),
                                  "Role" to "Group_Admin",
                            )
                            // Add the Group and the member who created
                            db.collection("Group").add(group)
-                           db.collection("GroupMembers").add(Memberstats)
-                           db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
+                           db.collection("GroupMembers").add(memberstats)
+                           db.collection("ProgresssUser").whereEqualTo("UserID",iD).get().addOnSuccessListener { progressit ->
                                // Check if the user has any progress
-                               val XpData = Random.nextInt(100, 1000)
-                               if(it.isEmpty){
+                               val xpData = Random.nextInt(100, 1000)
+                               if(progressit.isEmpty){
 
                                    // Call the create xp method to create new progress for the user.
-                                   CreateXp(ID, XpData)
+                                   createXp(iD, xpData)
                                }
 
                                // If the user has progress
                                else{
 
                                    // Update the user progress
-                                   for (document in it){
+                                   for (document in progressit){
 
                                        // Create a dialog to show the user the progress below
                                        val builder = AlertDialog.Builder(context)
@@ -166,8 +167,14 @@ class CreateGroupTask : Fragment() {
                                        floatingAnimation.setTarget(imageView)
                                        floatingAnimation.start()
 
-                                       titleText.text = "Done Creating Group"
-                                       messageText.text = "You have gained $XpData xp for creating a group"
+                                       titleText.text = buildString {
+                                        append("Done Creating Group")
+                                    }
+                                       messageText.text = buildString {
+                                        append("You have gained ")
+                                        append(xpData)
+                                        append(" xp for creating a group")
+                                    }
 
                                        val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
 
@@ -180,10 +187,10 @@ class CreateGroupTask : Fragment() {
 
                                        // Update the user progress in the database and add it to the existing progress
                                        val xp = document.get("ProgressXp").toString().toInt()
-                                       val UpdatedXP:Int = xp + XpData
+                                       val updatedXP:Int = xp + xpData
 
                                        // Update the user progress
-                                       db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
+                                       db.collection("ProgresssUser").document(progressit.documents[0].id).update("ProgressXp", updatedXP)
 
                                        // clear the text fields
                                        groupName.text.clear()
@@ -206,12 +213,12 @@ class CreateGroupTask : Fragment() {
     }
 
     // This Method is used to create xp for the user
-    fun CreateXp (ID: String, XpData: Int) {
+    private fun createXp (iD: String, xpData: Int) {
 
         // Hashmap for progress
         val progressXp = hashMapOf(
-            "UserID" to ID,
-            "ProgressXp" to XpData,
+            "UserID" to iD,
+            "ProgressXp" to xpData,
 
             )
 
@@ -227,8 +234,14 @@ class CreateGroupTask : Fragment() {
             val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
             val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
 
-            titleText.text = "Done Creating Group"
-            messageText.text = "You have gained $XpData xp for creating a group"
+            titleText.text = buildString {
+                append("Done Creating Group")
+            }
+            messageText.text = buildString {
+                append("You have gained ")
+                append(xpData)
+                append(" xp for creating a group")
+            }
 
             val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
             button.setOnClickListener {
