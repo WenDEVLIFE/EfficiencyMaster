@@ -196,6 +196,10 @@ class CreateGroupTask : Fragment() {
                                        groupName.text.clear()
                                        groupDescription.text.clear()
                                        progressLoading.dismiss()
+
+                                       // This will  load to update the stats
+                                       val activity = activity as MainActivity
+                                       activity.loadUserStats()
                                        Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
                                    }
                                }

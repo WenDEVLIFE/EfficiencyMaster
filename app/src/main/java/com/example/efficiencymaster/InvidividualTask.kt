@@ -288,6 +288,9 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                                 val updatedXP:Int = xp + xpData
 
                                 db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", updatedXP)
+                                // This will  load to update the stats
+                                val activity = activity as MainActivity
+                                activity.loadUserStats()
                             }
                         }
                     }
@@ -313,6 +316,9 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         // This will add the progress to the database
         db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
 
+            // This will  load to update the stats
+            val activity = activity as MainActivity
+            activity.loadUserStats()
 
             // customize alertdialog below
             val builder = AlertDialog.Builder(context)

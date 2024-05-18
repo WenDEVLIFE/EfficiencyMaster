@@ -217,7 +217,9 @@ class CreateTaskFragment : Fragment() {
 
         // Add the progress to the database
         db.collection("ProgresssUser").add(progressXp).addOnSuccessListener {
-
+            // This will  load to update the stats
+            val activity = activity as MainActivity
+            activity.loadUserStats()
             // Customize dialog below here
             val builder = AlertDialog.Builder(context)
             val inflater = layoutInflater

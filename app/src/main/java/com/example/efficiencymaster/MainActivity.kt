@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity() {
      }
 
     // This method used for loading the user stats.
-    private fun loadUserStats(){
+    fun loadUserStats(){
 
         // Check if the user exists before load it
         db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
