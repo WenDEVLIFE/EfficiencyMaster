@@ -35,17 +35,19 @@ class HomeFragmentation : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var percentage : TextView
-    lateinit var TaskDone : TextView
-    lateinit var circularProgressBar : CircularProgressBar
-    lateinit var circularProgressBar2 : CircularProgressBar
-    lateinit var barChart : BarChart
+    private lateinit var percentage : TextView
+    private lateinit var taskDone : TextView
+    private lateinit var circularProgressBar : CircularProgressBar
+    private lateinit var circularProgressBar2 : CircularProgressBar
+    private lateinit var barChart : BarChart
     lateinit var bundle:Bundle
     lateinit var fragment:Fragment
 
     private var username: String? = null
     private var email: String? = null
     val db  = Firebase.firestore
+    private var retriveCount1:Double = 0.00
+    private var retriveCount2:Double = 0.00
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +67,7 @@ class HomeFragmentation : Fragment() {
         // Inflate the layout for this fragment
     val view = inflater.inflate(R.layout.fragment_home_fragmentation, container, false)
 
-       percentage = view.findViewById<TextView>(R.id.textView5)
+       percentage = view.findViewById(R.id.textView5)
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -76,8 +78,8 @@ class HomeFragmentation : Fragment() {
         }
 
         // Image Button and its ID
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
-        ImageButton.setOnClickListener {
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
@@ -87,12 +89,12 @@ class HomeFragmentation : Fragment() {
 
         barChart = view.findViewById(R.id.bargraph)
 
-        LoadDatas(barChart)
+        loadDatas(barChart)
 
 
-        TaskDone = view.findViewById(R.id.done_task_count)
+        taskDone = view.findViewById(R.id.done_task_count)
 
-        circularProgressBar = view.findViewById<CircularProgressBar>(R.id.circularProgressBar)
+        circularProgressBar = view.findViewById(R.id.circularProgressBar)
         circularProgressBar.apply {
             // Set Progress
             //progress = 100f
@@ -125,7 +127,7 @@ class HomeFragmentation : Fragment() {
             startAngle = 180f
             progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
         }
-        circularProgressBar2 = view.findViewById<CircularProgressBar>(R.id.circularProgressBar2)
+        circularProgressBar2 = view.findViewById(R.id.circularProgressBar2)
         circularProgressBar2.apply {
             // Set Progress
             //progress = 100f
@@ -157,11 +159,11 @@ class HomeFragmentation : Fragment() {
             startAngle = 180f
             progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
         }
-        LoadStats()
+        loadStats()
 
         // task buton and its ID
-        val TaskButton = view.findViewById<ImageButton>(R.id.imageButton1)
-        TaskButton.setOnClickListener{
+        val taskButton = view.findViewById<ImageButton>(R.id.imageButton1)
+        taskButton.setOnClickListener{
             // This will go to create task
             fragment = InvidividualTask()
             bundle = Bundle()
@@ -170,8 +172,8 @@ class HomeFragmentation : Fragment() {
             replaceFragment(fragment)
         }
 
-        val DoneTaskButton = view.findViewById<ImageButton>(R.id.imageButton3)
-        DoneTaskButton.setOnClickListener {
+        val doneTaskButton = view.findViewById<ImageButton>(R.id.imageButton3)
+        doneTaskButton.setOnClickListener {
             // This will go to done task
             fragment = DoneTaskFragment()
             bundle = Bundle()
@@ -186,7 +188,7 @@ class HomeFragmentation : Fragment() {
 
 
     // replace fragment
-    fun replaceFragment(fragment:Fragment){
+    private  fun replaceFragment(fragment:Fragment){
         val fragmentManager = parentFragmentManager
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
@@ -195,23 +197,23 @@ class HomeFragmentation : Fragment() {
     }
 
     // This will load the data from the database
-    private fun LoadDatas(barChart: BarChart?) {
-        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
-            if (it.isEmpty()){
+    private fun loadDatas(barChart: BarChart?) {
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit  ->
+            if (userit.isEmpty){
                 Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
             }else{
-                for (document in it){
-                    val ID = document.data["UserID"].toString()
+                for (userdocument in userit){
+                    val iD = userdocument.data["UserID"].toString()
                     val entries = ArrayList<BarEntry>()
 
                     // get the data from the past 7 days
                     val sevenDaysAgo = LocalDate.now().minusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
                     // Collection Reference
-                    val CollectionReference1 = db.collection("Task")
+                    val collectionReference1 = db.collection("Task")
 
                     // Get the query of the Done task and its completion date
-                    val query1 = CollectionReference1.whereEqualTo("Status", "Done").whereEqualTo("UserID", ID).whereGreaterThanOrEqualTo("CompletionDate", sevenDaysAgo)
+                    val query1 = collectionReference1.whereEqualTo("Status", "Done").whereEqualTo("UserID", iD).whereGreaterThanOrEqualTo("CompletionDate", sevenDaysAgo)
                     query1.get().addOnSuccessListener { documents ->
 
                         // Print the documents
@@ -270,13 +272,13 @@ class HomeFragmentation : Fragment() {
                         barChart?.invalidate() // refreshes the chart
 
                     }.addOnFailureListener { exception ->
-                        val AlertDialog = AlertDialog.Builder(context)
-                        AlertDialog.setTitle("Error")
-                        AlertDialog.setMessage("Error loading data: $exception")
-                        AlertDialog.setPositiveButton("OK") { dialog, which ->
+                        val alertDialog = AlertDialog.Builder(context)
+                        alertDialog.setTitle("Error")
+                        alertDialog.setMessage("Error loading data: $exception")
+                        alertDialog.setPositiveButton("OK") { _, _ ->
                             // Do nothing
                         }
-                        AlertDialog.show()
+                        alertDialog.show()
                     }
                 }
             }
@@ -284,36 +286,40 @@ class HomeFragmentation : Fragment() {
 
     }
 
-    fun LoadStats(){
-        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener{
-            if (it.isEmpty) {
-                percentage.text = "User does not exist"
+    private fun loadStats(){
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener{ userit ->
+            if (userit.isEmpty) {
+                percentage.text = buildString {
+        append("User does not exist")
+    }
             }
             else{
-                for (document in it){
-                    val ID = document.data["UserID"].toString()
-                    db.collection("ProgresssUser").whereEqualTo("UserID", ID).get().addOnSuccessListener {
-                        if (it.isEmpty){
-                            percentage.text = "Progress: 0%"
-                            TaskDone.text = "Task Done: 0"
+                for (document in userit){
+                    val iD = document.data["UserID"].toString()
+                    db.collection("ProgresssUser").whereEqualTo("UserID", iD).get().addOnSuccessListener { progressit ->
+                        if (progressit.isEmpty){
+                            percentage.text = buildString {
+                                append("Progress: 0%")
+                            }
+                            taskDone.text = buildString {
+                                append("Task Done: 0")
+                            }
                         }else{
-                            for (document in it){
-                                var retriveCount1:Double = 0.00
-                                var retriveCount2:Double = 0.00
+                            for (progressdocument in progressit){
 
                                 // Collection Reference
-                                val CollectionReference1 = db.collection("Task")
+                                val collectionReference1 = db.collection("Task")
 
                                 // Get the query of the Pending task for the specific user
-                                val query1 = CollectionReference1.whereEqualTo("Status", "Pending").whereEqualTo("UserID", ID)
-                                query1.get().addOnSuccessListener {
-                                    val pending = it.size()
+                                val query1 = collectionReference1.whereEqualTo("Status", "Pending").whereEqualTo("UserID", iD)
+                                query1.get().addOnSuccessListener { pendingit ->
+                                    val pending = pendingit.size()
                                     retriveCount1 = pending.toDouble()
 
                                     // Get the query of the Done task for the specific user
-                                    val query2 = CollectionReference1.whereEqualTo("Status", "Done").whereEqualTo("UserID", ID)
-                                    query2.get().addOnSuccessListener {
-                                        val done = it.size()
+                                    val query2 = collectionReference1.whereEqualTo("Status", "Done").whereEqualTo("UserID", iD)
+                                    query2.get().addOnSuccessListener {doneit ->
+                                        val done = doneit.size()
                                         retriveCount2 = done.toDouble()
 
                                         val total = retriveCount1 + retriveCount2
@@ -327,16 +333,16 @@ class HomeFragmentation : Fragment() {
                                         val subStr2 = subString(stringg1)
 
                                         // get the float value of the percentages
-                                        val FloatPercentages1 = percentages1.toFloat()
-                                        val FloatPercentages2 = percentages2.toFloat()
+                                        val floatPercentages1 = percentages1.toFloat()
+                                        val floatPercentages2 = percentages2.toFloat()
 
                                         // set the text of the percentage
                                         percentage.text = "$subStr %"
-                                        TaskDone.text = "$subStr2 %"
+                                        taskDone.text = "$subStr2 %"
 
                                         // set the progress of the circular progress bar
-                                        circularProgressBar.setProgressWithAnimation(FloatPercentages2, 3000)
-                                        circularProgressBar2.setProgressWithAnimation(FloatPercentages1, 3000)
+                                        circularProgressBar.setProgressWithAnimation(floatPercentages2, 3000)
+                                        circularProgressBar2.setProgressWithAnimation(floatPercentages1, 3000)
                                         // Update the UI here with the calculated percentage
                                     }
                                 }
@@ -348,7 +354,7 @@ class HomeFragmentation : Fragment() {
         }
     }
     // Limit the word from 0 to 5 letters only.
-    fun subString (string: String): String {
+    private fun subString (string: String): String {
         return if (string.length <= 5) string else string.substring(0, 5)
     }
     companion object {

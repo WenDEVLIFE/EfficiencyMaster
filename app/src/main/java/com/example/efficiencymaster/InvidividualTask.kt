@@ -39,7 +39,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     lateinit var adapter: TaskAdapter
     var taskList = mutableListOf<Task>()
     var username = ""
@@ -68,8 +68,8 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
             username = it.getString("username").toString()
         }
 
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
-        ImageButton.setOnClickListener {
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
@@ -81,7 +81,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         val searchView = view.findViewById<SearchView>(R.id.search_group)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = query?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<Task>() // filtered list
 
                 // This will filter the task list
@@ -98,7 +98,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = newText?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<Task>() //  filter  list
 
                 // This will filter the task list
@@ -124,24 +124,24 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         adapter = TaskAdapter(taskList)
         recyclerView.adapter = adapter
         adapter.setOnCancelListener(::onCancel)
-        LoadTask()
+        loadTask()
 
         // Floating  buton action for creation
-        val FloatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
-        FloatingActionButton.setOnClickListener {
+        val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        floatingActionButton.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
             val createTask = CreateTaskFragment()
             val bundle = Bundle()
             bundle.putString("username", username)
             createTask.arguments = bundle
-            ReplaceFragment(createTask)
+            replaceFragment(createTask)
         }
 
         return view
     }
 
     // Get the replace fragment
-    fun ReplaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         val fragmentManager = parentFragmentManager
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
@@ -171,19 +171,27 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     }
 
     // This  will Load the task from the database
-    fun LoadTask() {
-        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
-            for (document in it) {
-                val UserID = document.data["UserID"].toString()
+    private fun loadTask() {
 
-                db.collection("Task").whereEqualTo("UserID", UserID).get().addOnSuccessListener {
-                    for (document in it) {
-                        val Taksname = document.data["TaskName"].toString()
-                        val TaskDescription = document.data["TaskDescription"].toString()
-                        val Status = document.data["Status"].toString()
+        //  Find the  username in the database
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userit ->
+            for (document in userit) {
 
-                        if (Status.equals("Pending")) {
-                            val task = Task(Taksname, TaskDescription)
+                // Get the user id
+                val userID = document.data["UserID"].toString()
+
+                // Find the in task user task details
+                db.collection("Task").whereEqualTo("UserID", userID).get().addOnSuccessListener { taskit  ->
+
+                    // Retrieve the task value from the database
+                    for (taskdocument in taskit) {
+                        val taskName = taskdocument.data["TaskName"].toString()
+                        val taskDescription = taskdocument.data["TaskDescription"].toString()
+                        val status = taskdocument.data["Status"].toString()
+
+                        //  This will check if the status is pending or not
+                        if (status == "Pending") {
+                            val task = Task(taskName, taskDescription)
                             taskList.add(task)
                         }
 
@@ -197,23 +205,23 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     }
 
     override fun onCancel(position: Int) {
-        val TaskName = taskList[position].taskname
-        val TaskDescription = taskList[position].taskdescription
+        val taskn = taskList[position].taskname
+        val taskinfo = taskList[position].taskdescription
 
         // get the user id
-        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
-            for (document in it) {
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
+            for (userdocument in userit) {
 
                 // Get the user id
-                val UserID = document.data["UserID"].toString()
+                val userID = userdocument.data["UserID"].toString()
 
                 // get the task  name and its  description
-                db.collection("Task").whereEqualTo("TaskName", TaskName).whereEqualTo("TaskDescription", TaskDescription).whereEqualTo("UserID", UserID).get().addOnSuccessListener {
-                    for (document in it) {
+                db.collection("Task").whereEqualTo("TaskName", taskn).whereEqualTo("TaskDescription", taskinfo).whereEqualTo("UserID", userID).get().addOnSuccessListener { taskit->
+                    for (document in taskit) {
                         val docId = document.id
 
-                        val LocalDate =  LocalDate.now()
-                        val dateString = LocalDate.toString()
+                        val localDate =  LocalDate.now()
+                        val dateString = localDate.toString()
                         // Update the status to done
                         db.collection("Task").document(docId).update(
                             "Status", "Done",
@@ -235,12 +243,12 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
 
                     }
 
-                    db.collection("ProgresssUser").whereEqualTo("UserID",UserID).get().addOnSuccessListener {
-                        val XpData = Random.nextInt(100,  1000) //  Generate random xp
+                    db.collection("ProgresssUser").whereEqualTo("UserID",userID).get().addOnSuccessListener {
+                        val xpData = Random.nextInt(100,  1000) //  Generate random xp
 
                         // if the document is empty, it will create a new one.
                         if(it.isEmpty){
-                            CreateXp(UserID, XpData)
+                            createXp(userID, xpData)
 
                             // else it will just update the xp
                         }   else{
@@ -262,7 +270,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                                 floatingAnimation.start()
 
                                 titleText.text = "Done Creating Task"
-                                messageText.text = "You have gained $XpData xp for creating a task"
+                                messageText.text = "You have gained $xpData xp for creating a task"
 
                                 val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
 
@@ -277,9 +285,9 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
                                 val xp = document.get("ProgressXp").toString().toInt()
 
                                 // add
-                                val UpdatedXP:Int = xp + XpData
+                                val updatedXP:Int = xp + xpData
 
-                                db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
+                                db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", updatedXP)
                             }
                         }
                     }
@@ -292,13 +300,13 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     }
 
      // Method used to create Xp for the user
-    fun CreateXp (ID: String, XpData: Int) {
+   private fun createXp (iD: String, xpData: Int) {
 
 
         // This will create a hashmap of the progress
         val progressXp = hashMapOf(
-            "UserID" to ID,
-            "ProgressXp" to XpData,
+            "UserID" to iD,
+            "ProgressXp" to xpData,
 
             )
 
@@ -316,7 +324,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
             val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
 
             titleText.text = "Done Creating Task"
-            messageText.text = "You have gained $XpData xp for creating a task"
+            messageText.text = "You have gained $xpData xp for creating a task"
 
             val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
             button.setOnClickListener {

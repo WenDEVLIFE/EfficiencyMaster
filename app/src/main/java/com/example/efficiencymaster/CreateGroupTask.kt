@@ -35,7 +35,7 @@ class CreateGroupTask : Fragment() {
     private var param2: String? = null
     var username =""
     val db = Firebase.firestore
-    lateinit var ProgressLoading: ProgressDialog
+    lateinit var progressLoading: ProgressDialog
     lateinit var groupName:EditText
     lateinit var groupDescription:EditText
 
@@ -90,11 +90,11 @@ class CreateGroupTask : Fragment() {
                 }else{
 
                     InsertGroup(groupName1, groupDescription1)
-                    ProgressLoading = ProgressDialog(context)
-                    ProgressLoading.setTitle("Creating Group")
-                    ProgressLoading.setMessage("Please wait while we create the group")
-                    ProgressLoading.setCanceledOnTouchOutside(false)
-                    ProgressLoading.show()
+                    progressLoading = ProgressDialog(context)
+                    progressLoading.setTitle("Creating Group")
+                    progressLoading.setMessage("Please wait while we create the group")
+                    progressLoading.setCanceledOnTouchOutside(false)
+                    progressLoading.show()
 
                 }
             }
@@ -188,7 +188,7 @@ class CreateGroupTask : Fragment() {
                                        // clear the text fields
                                        groupName.text.clear()
                                        groupDescription.text.clear()
-                                       ProgressLoading.dismiss()
+                                       progressLoading.dismiss()
                                        Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
                                    }
                                }
@@ -196,7 +196,7 @@ class CreateGroupTask : Fragment() {
                        }else{
                            // If the group already exists
                             Toast.makeText(context, "Group Already Exists", Toast.LENGTH_SHORT).show()
-                            ProgressLoading.dismiss()
+                            progressLoading.dismiss()
                        }
                    }
                 }
@@ -244,7 +244,7 @@ class CreateGroupTask : Fragment() {
             Toast.makeText(context, "Group Inserted", Toast.LENGTH_SHORT).show()
             groupName.text.clear()
             groupDescription.text.clear()
-            ProgressLoading.dismiss()
+            progressLoading.dismiss()
         }
     }
     companion object {

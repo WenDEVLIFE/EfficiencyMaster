@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
@@ -28,26 +29,26 @@ class Registration : AppCompatActivity() {
 
     lateinit var timertext: TextView
 
-    lateinit var EditEmail: EditText
+    private lateinit var editEmail: EditText
 
-    lateinit var EditPassword: EditText
+    private lateinit var editPassword: EditText
 
-    lateinit var EditConfirmPassword: EditText
+    private lateinit var editConfirmPassword: EditText
 
-    lateinit var UsernameText: EditText
+    private lateinit var usernameText: EditText
 
-    lateinit var CodeText: EditText
+    private lateinit var codeText: EditText
 
-    lateinit var EditName: EditText
+    private lateinit var editName: EditText
 
 
     var time: Int = 0
 
-    var code_sent: String = "123456"
+    private var codeSent: String = "123456"
 
     val db = Firebase.firestore
 
-    lateinit var ProgressLoading: ProgressDialog
+    private lateinit var progressLoading: ProgressDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,31 +62,31 @@ class Registration : AppCompatActivity() {
         }
 
         // For our timer text
-        timertext = findViewById<TextView>(R.id.timertext)
-        timertext.setText("")
+        timertext = findViewById(R.id.timertext)
+        timertext.text = ""
 
         // This is for initializing the components  and  getting the id of the components
-        EditEmail = findViewById<EditText>(R.id.emailtext)
-        EditPassword = findViewById<EditText>(R.id.password)
-        EditConfirmPassword = findViewById<EditText>(R.id.comfirmpassword)
-        UsernameText = findViewById<EditText>(R.id.username)
-        CodeText = findViewById<EditText>(R.id.codetext)
-        EditName = findViewById<EditText>(R.id.fullname)
+        editEmail = findViewById(R.id.emailtext)
+        editPassword = findViewById(R.id.password)
+        editConfirmPassword = findViewById(R.id.comfirmpassword)
+        usernameText = findViewById(R.id.username)
+        codeText = findViewById(R.id.codetext)
+        editName = findViewById(R.id.fullname)
 
 
         // This is for sending the code
         val sendcodeButton = findViewById<Button>(R.id.sendbutton)
         sendcodeButton.setOnClickListener {
-            val email = EditEmail.text.toString()
+            val email = editEmail.text.toString()
 
             // This will check if the email contains @
         if(isValidEmail(email)) {
 
             // It will check the time is 0, it will send the new code
             if (time==0){
-                code_sent = generateCode()
+                codeSent = generateCode()
                 startTimer()
-                SendMail(email, code_sent)
+                sendMail(email, codeSent)
 
             } else{
                 Toast.makeText(this, "Please wait for 60 seconds", Toast.LENGTH_SHORT).show()
@@ -94,7 +95,7 @@ class Registration : AppCompatActivity() {
         }else{
 
             // else it is not valid, it will error!
-            EditEmail.error = "Invalid email"
+            editEmail.error = "Invalid email"
         }
 
         }
@@ -104,56 +105,56 @@ class Registration : AppCompatActivity() {
         registerButton.setOnClickListener {
 
             // constructors for the components info
-            val username = UsernameText.text.toString()
-            val password = EditPassword.text.toString()
-            val confirmpassword = EditConfirmPassword.text.toString()
-            val name = EditName.text.toString()
-            val code = CodeText.text.toString()
-            val email = EditEmail.text.toString()
+            val username = usernameText.text.toString()
+            val password = editPassword.text.toString()
+            val confirmpassword = editConfirmPassword.text.toString()
+            val name = editName.text.toString()
+            val code = codeText.text.toString()
+            val email = editEmail.text.toString()
 
             // This will check if the code send is equal to the sent on the email.
-            if (code==code_sent){
+            if (code==codeSent){
 
                 // This will check if password length less than 8 or greater than 13
                 if (password.length<8  || password.length>=13){
-                    EditPassword.error = "Password must be 8-12 characters"
-                    EditConfirmPassword.error = "Password must be 8-12 characters"
+                    editPassword.error = "Password must be 8-12 characters"
+                    editConfirmPassword.error = "Password must be 8-12 characters"
                 }else{
 
                     // If name is empty error
                    if(name.isEmpty()){
-                          EditName.error = "Name is required"
+                          editName.error = "Name is required"
                    } else{
 
                        // If username is empty error
                        if(username.isEmpty()){
-                           UsernameText.error = "Username is required"
+                           usernameText.error = "Username is required"
                        }else{
 
 
                            // If password is not equal to confirm password, it will error
                            if (password!=confirmpassword){
-                               EditPassword.error = "Password does not match"
-                               EditConfirmPassword.error = "Password does not match"
+                               editPassword.error = "Password does not match"
+                               editConfirmPassword.error = "Password does not match"
                            }else{
 
                                // This will check if password has Uppercase and Special Chracters
-                               if (HasUpperCase(password)){
+                               if (hasUpperCase(password)){
                                    if (hasSpecialChar(password)){
 
                                        // This will check if email is valid
                                     if(isValidEmail(email)){
                                         // Insert to the database method
-                                        val User_Data = arrayOf(username,password,name,email)
-                                        Database(User_Data)
+                                        val userdata = arrayOf(username,password,name,email)
+                                        database(userdata)
                                     }
                                    }else{
-                                       EditPassword.error = "Password must contain special character"
-                                       EditConfirmPassword.error = "Password must contain special character"
+                                       editPassword.error = "Password must contain special character"
+                                       editConfirmPassword.error = "Password must contain special character"
                                    }
                                }else{
-                                   EditPassword.error = "Password must contain uppercase"
-                                   EditConfirmPassword.error = "Password must contain uppercase"
+                                   editPassword.error = "Password must contain uppercase"
+                                   editConfirmPassword.error = "Password must contain uppercase"
                                }
                            }
                        }
@@ -161,7 +162,7 @@ class Registration : AppCompatActivity() {
                 }
 
             } else{
-                CodeText.error = "Invalid code"
+                codeText.error = "Invalid code"
 
             }
 
@@ -180,14 +181,14 @@ class Registration : AppCompatActivity() {
     }
 
     // Insert the user from the database
-    private fun Database(User_Data: Array<String>) {
+    private fun database(userdata: Array<String>) {
 
         // Declare the ProgressDialog Value
-        ProgressLoading = ProgressDialog(this)
-        ProgressLoading.setTitle("Adding the User ")
-        ProgressLoading.setMessage("Please wait...")
-        ProgressLoading.setCancelable(false)
-        ProgressLoading.show()
+        progressLoading = ProgressDialog(this)
+        progressLoading.setTitle("Adding the User ")
+        progressLoading.setMessage("Please wait...")
+        progressLoading.setCancelable(false)
+        progressLoading.show()
 
         // Create a storage reference
         val storageRef = Firebase.storage.reference
@@ -205,30 +206,30 @@ class Registration : AppCompatActivity() {
         val fileName = UUID.randomUUID().toString()
         val fileReference = storageRef.child("uploads/$fileName.png")
 
-        db.collection("User").whereEqualTo("username",User_Data[0]).get().addOnSuccessListener {
+        db.collection("User").whereEqualTo("username",userdata[0]).get().addOnSuccessListener {
             if(it.isEmpty){
                 // Upload the ByteArray to Firebase Storage
-                fileReference.putBytes(data).addOnSuccessListener { taskSnapshot ->
+                fileReference.putBytes(data).addOnSuccessListener {
                     // Get the download URL of the uploaded file
                     fileReference.downloadUrl.addOnSuccessListener { uri ->
                         val imageUrl = uri.toString()
 
                         // User id
-                        val UserID = UUID.randomUUID().toString()
+                        val userID = UUID.randomUUID().toString()
 
                         // User
-                        val passwordHashed = BCrypt.withDefaults().hashToString(12, User_Data[1].toCharArray())
+                        val passwordHashed = BCrypt.withDefaults().hashToString(12, userdata[1].toCharArray())
                         val userinfo = hashMapOf(
-                            "UserID" to UserID,
-                            "username" to User_Data[0],
+                            "UserID" to userID,
+                            "username" to userdata[0],
                             "password" to passwordHashed,
                         )
 
                         //  User Details
                         val userdata = hashMapOf(
-                            "UserID" to UserID,
-                            "name" to User_Data[2],
-                            "email" to User_Data[3],
+                            "UserID" to userID,
+                            "name" to userdata[2],
+                            "email" to userdata[3],
                             "image" to fileName,
                             "imageurl" to imageUrl
                         )
@@ -237,33 +238,37 @@ class Registration : AppCompatActivity() {
                         db.collection("User").add(userinfo)
                         db.collection("UserDetails").add(userdata)
                         Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
-                        ProgressLoading.dismiss()
-                        UsernameText.setText("")
-                        EditPassword.setText("")
-                        EditConfirmPassword.setText("")
-                        EditName.setText("")
-                        CodeText.setText("")
-                        EditEmail.setText("")
+                        progressLoading.dismiss()
+                        usernameText.setText("")
+                        editPassword.setText("")
+                        editConfirmPassword.setText("")
+                        editName.setText("")
+                        codeText.setText("")
+                        editEmail.setText("")
                         timertext.text = ""
                         time = 0
 
 
+                    }.addOnFailureListener {
+                        Toast.makeText(this, "Upload failed", Toast.LENGTH_SHORT).show()
+                        // Hide the ProgressDialog
+                        progressLoading.dismiss()
                     }
                 }.addOnFailureListener { e ->
-                    Toast.makeText(this, "Upload failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Upload failed ${e.message}", Toast.LENGTH_SHORT).show()
                     // Hide the ProgressDialog
-                    ProgressLoading.dismiss()
+                    progressLoading.dismiss()
                 }
 
             }else{
                 Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show()
-                ProgressLoading.dismiss()
+                progressLoading.dismiss()
             }
         }
     }
 
     // This method used to start the timer 60 seconds.
-    fun startTimer() {
+    private fun startTimer() {
 
         // Set the time to 60 seconds.
         time = 60
@@ -283,30 +288,31 @@ class Registration : AppCompatActivity() {
     }
 
     // Method used to check the email contains @ or not
-    fun isValidEmail(email: String): Boolean {
+    private fun isValidEmail(email: String): Boolean {
         return email.contains("@")
     }
 
     // This is used to generate code 6 digits
-    fun generateCode(): String {
+    private fun generateCode(): String {
         val code = (100000..999999).random()
         return code.toString()
     }
-// This method is used for checking password has a special character
-    fun hasSpecialChar(password: String): Boolean {
+
+    // This method is used for checking password has a special character
+    private fun hasSpecialChar(password: String): Boolean {
         val regex = Regex("[^A-Za-z0-9 ]")
         return regex.containsMatchIn(password)
     }
 
     // This method is used for checking if password has a UpperCase
-    fun HasUpperCase(password: String): Boolean {
+    private fun hasUpperCase(password: String): Boolean {
         val regex = Regex("[A-Z]")
         return regex.containsMatchIn(password)
 
     }
 
     // Method used for sending email and code
-    fun SendMail(email: String, code: String) {
+    private fun sendMail(email: String, code: String) {
 
         // Set the subject of the email
         val subject = "EfficiencyMaster Registration Verification Code"
@@ -315,6 +321,7 @@ class Registration : AppCompatActivity() {
         val message = "Your verification code is: $code"
 
         // Call the YahooMailAPI Class to send the email and execute.
+        SuppressLint("Deprecation")
         YahooMailAPI(this, email, subject, message, code).execute()
     }
 }

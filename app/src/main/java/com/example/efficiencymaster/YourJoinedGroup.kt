@@ -36,6 +36,7 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
     val db = Firebase.firestore
     var groupList = mutableListOf<Group>()
     var username = ""
+    var membersize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,7 +118,7 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
         adapter = JoinedGroupAdapter(groupList)
         recycleviewer.adapter = adapter
         adapter.setOnCancelListener(::onCancel)
-        LoadJoinedGroup()
+        loadJoinedGroup()
 
 
 
@@ -126,7 +127,7 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
 
     // This will load the join user groups
     @SuppressLint("NotifyDataSetChanged")
-    private fun LoadJoinedGroup() {
+    private fun loadJoinedGroup() {
 
         // Find the username
         db.collection("User").whereEqualTo("username",username).get()
@@ -147,8 +148,8 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
                                }else{
 
                                    // Retrieve the group member id
-                                   for (groupdocument_members in memberIT){
-                                       val groupID = groupdocument_members.data["GroupID"].toString()
+                                   for (groupdocumentmembers in memberIT){
+                                       val groupID = groupdocumentmembers.data["GroupID"].toString()
 
                                         // Load the group
                                        db.collection("Group").get()
@@ -172,8 +173,6 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
                                                         // Query the collection to get the group ID
                                                         val query = collectionReference.whereEqualTo("GroupID", groupID)
 
-                                                        // member size variable
-                                                        var membersize = 0
 
                                                         query.get().addOnSuccessListener { memberDocuments ->
                                                             membersize = memberDocuments.size() +  1

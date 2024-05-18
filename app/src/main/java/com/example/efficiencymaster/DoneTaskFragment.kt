@@ -36,10 +36,10 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
     private var param2: String? = null
     val db = Firebase.firestore
     lateinit var adapter:DoneTaskAdapter
-    lateinit var recycleviewer:RecyclerView
+    private lateinit var recycleviewer:RecyclerView
     var taskList = mutableListOf<DoneTask>()
     var username =""
-    lateinit var ProgressLoading: ProgressDialog
+    private lateinit var progressLoading: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +64,8 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         }
 
         // Image Button and its ID
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
-        ImageButton.setOnClickListener {
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
@@ -124,35 +124,35 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         adapter = DoneTaskAdapter(taskList)
         recycleviewer.adapter=adapter
         adapter.setOnCancelListener(::onCancel)
-        LoadTask()
+        loadTask()
 
 
         return view
     }
 
     // This  will Load the task from the database
-    fun LoadTask() {
+    private fun loadTask() {
 
         // find the username
-        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
-            for (document in it) {
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userit->
+            for (userdocument in userit) {
 
                 // then get the UserID
-                val UserID = document.data["UserID"].toString()
+                val userID = userdocument.data["UserID"].toString()
 
                 // Then find the username id in the task
-                db.collection("Task").whereEqualTo("UserID", UserID).get().addOnSuccessListener {
-                    for (document in it) {
+                db.collection("Task").whereEqualTo("UserID", userID).get().addOnSuccessListener {  taskit ->
+                    for (taskdocument in taskit) {
 
                         // Then get the task name, description, status, and completion date.
-                        val Taksname = document.data["TaskName"].toString()
-                        val TaskDescription = document.data["TaskDescription"].toString()
-                        val Status = document.data["Status"].toString()
-                        val CompletionDate = document.data["CompletionDate"].toString()
+                        val taskName = taskdocument.data["TaskName"].toString()
+                        val taskDescription = taskdocument.data["TaskDescription"].toString()
+                        val status = taskdocument.data["Status"].toString()
+                        val completionDate = taskdocument.data["CompletionDate"].toString()
 
                         // if status is done, it will add on the list and then update the adapter
-                        if (Status.equals("Done")) {
-                            val task = DoneTask(Taksname, TaskDescription,Status, CompletionDate)
+                        if (status == "Done") {
+                            val task = DoneTask(taskName, taskDescription,status, completionDate)
                             taskList.add(task)
                         }
 
@@ -201,8 +201,8 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
         val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
         val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
-        val ImageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
-        ImageView.setImageResource(R.drawable.question_mark)
+        val imageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+        imageView.setImageResource(R.drawable.question_mark)
 
         titleText.text = "Delete the Task "
         messageText.text = "Are you sure you want to delete the task $taskName?"
@@ -212,33 +212,33 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         button.setOnClickListener {
 
             // Load the ProgressDialog
-            ProgressLoading = ProgressDialog(context)
-            ProgressLoading.setMessage("Deleting Task...")
-            ProgressLoading.setMessage("This will take a while..")
-            ProgressLoading.setCanceledOnTouchOutside(false)
-            ProgressLoading.show()
+            progressLoading = ProgressDialog(context)
+            progressLoading.setMessage("Deleting Task...")
+            progressLoading.setMessage("This will take a while..")
+            progressLoading.setCanceledOnTouchOutside(false)
+            progressLoading.show()
             // Handle button click here
 
             // Find the username in the collections
-            db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
-                if (it.isEmpty) {
+            db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {  userit  ->
+                if (userit.isEmpty) {
                     Toast.makeText(context , "User does not exist", Toast.LENGTH_SHORT).show()
-                    ProgressLoading.dismiss()
+                    progressLoading.dismiss()
                     return@addOnSuccessListener
                 }
                 else{
 
                     // Then load the UserID
-                    for (document in it){
+                    for (document in userit){
 
-                        val UserID = document.data["UserID"].toString()
-                        db.collection("Task").whereEqualTo("TaskName", taskName).whereEqualTo("UserID" ,UserID).get().addOnSuccessListener {
-                            for (document in it) {
-                                val documentid = document.id
+                        val userID = document.data["UserID"].toString()
+                        db.collection("Task").whereEqualTo("TaskName", taskName).whereEqualTo("UserID" ,userID).get().addOnSuccessListener { taskit  ->
+                            for (taskdocument in taskit) {
+                                val documentid = taskdocument.id
                                 db.collection("Task").document(documentid).delete()
 
                                 // dismis the dialog and update the list and the adapter.
-                                ProgressLoading.dismiss()
+                                progressLoading.dismiss()
                                 taskList.removeAt(position)
                                 adapter.notifyDataSetChanged()
                                 dialog.dismiss()
@@ -251,8 +251,8 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
                                 val titleText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_title)
                                 val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
                                 val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
-                                val ImageView1 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
-                                ImageView1.setImageResource(R.drawable.check)
+                                val imageView1 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+                                imageView1.setImageResource(R.drawable.check)
 
                                 titleText1.text = "Task Delete Successfully "
                                 messageText1.text = "You successfully deleted the $taskName"

@@ -28,7 +28,7 @@ class GroupTask : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +45,8 @@ class GroupTask : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_grouptask, container, false)
 
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
-        ImageButton.setOnClickListener {
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity

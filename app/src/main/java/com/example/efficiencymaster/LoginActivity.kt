@@ -22,7 +22,7 @@ import com.google.firebase.ktx.Firebase
 class LoginActivity : AppCompatActivity() {
 
     val db = Firebase.firestore
-    lateinit var  ProgressLoading: ProgressDialog
+    private lateinit var progressLoading: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        Load()
+        load()
         // Our password layout
         val passwordLayout = findViewById<TextInputLayout>(R.id.password_layout)
         val color = ContextCompat.getColor(this, R.color.black)
@@ -67,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
 
                     // Else all the fields are not empty it will send the value
                     // to the loginVerification method
-                    LoginVerification(username, password)
+                    loginVerification(username, password)
                 }
             }
 
@@ -78,8 +78,8 @@ class LoginActivity : AppCompatActivity() {
         registerText.setOnClickListener {
 
             // Go to registration activity
-            val Intent = Intent(this, Registration::class.java)
-            startActivity(Intent)
+            val intent = Intent(this, Registration::class.java)
+            startActivity(intent)
             finish()
         }
 
@@ -87,35 +87,35 @@ class LoginActivity : AppCompatActivity() {
 
 
     // This method used for login verifications
-    fun LoginVerification(username: String, password: String) {
+    private fun loginVerification(username: String, password: String) {
 
         // Declare the ProgressLoading value
-        ProgressLoading = ProgressDialog(this)
-        ProgressLoading.setTitle("Loading")
-        ProgressLoading.setMessage("Please wait...")
-        ProgressLoading.setCanceledOnTouchOutside(false)
-        ProgressLoading.show()
+        progressLoading = ProgressDialog(this)
+        progressLoading.setTitle("Loading")
+        progressLoading.setMessage("Please wait...")
+        progressLoading.setCanceledOnTouchOutside(false)
+        progressLoading.show()
 
         // Check if the user exists before inserting
         db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
           // If the user does not exist it will error
             if (it.isEmpty) {
                 Toast.makeText(this, "User does not exist", Toast.LENGTH_SHORT).show()
-                 ProgressLoading.dismiss()
+                 progressLoading.dismiss()
             }else{
 
                 // This will load the documents of user
                 for (document in it) {
 
                     // Get the retrieve password and use bycrypt to verify the passwoord
-                    val PASSWORD = document.getString("password")
-                    val result = BCrypt.verifyer().verify(password.toCharArray(), PASSWORD)
+                    val retrievepass = document.getString("password")
+                    val result = BCrypt.verifyer().verify(password.toCharArray(), retrievepass)
 
 
                     // If the result is verified, it will proceed to the main activity
                     if(result.verified){
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                        ProgressLoading.dismiss()
+                        progressLoading.dismiss()
 
 
                         // Create an instance of SessionManager and log in the user
@@ -123,15 +123,15 @@ class LoginActivity : AppCompatActivity() {
                         sessionManager.userLogin(username)
 
 
-                        val Intent = Intent(this, MainActivity::class.java)
-                        Intent.putExtra("username", username)
-                        startActivity(Intent)
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.putExtra("username", username)
+                        startActivity(intent)
                         finish()
 
                         // Else it will show incorrect password
                     }else{
                         Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show()
-                        ProgressLoading.dismiss()
+                        progressLoading.dismiss()
 
                     }
 
@@ -142,7 +142,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // This method  will check if the user session exiist
-    fun Load() {
+    private fun load() {
         // Create an instance of SessionManager
         val sessionManager = SessionManager(this)
 
