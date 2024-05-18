@@ -166,7 +166,7 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         return view
     }
 
-      // Method used to Replae the fragment
+      // Method used to Replace the fragment
     private fun replaceFragment(fragment:Fragment){
         val fragmentManager = parentFragmentManager
         val transaction = fragmentManager.beginTransaction()

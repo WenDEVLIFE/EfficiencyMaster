@@ -29,6 +29,8 @@ class GroupTask : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recyclerView: RecyclerView
+    private lateinit var fragment:Fragment
+    private lateinit var bundle:Bundle
 
     var username = ""
     var groupNameIntent = ""
@@ -118,6 +120,13 @@ class GroupTask : Fragment() {
             // Handle option 1 click
             fabMenu.close(true)
             Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
+            fragment = CreateGroupTask()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            bundle.putString("groupName", groupNameIntent)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
+
         }
 
         fabOption2.setOnClickListener {
@@ -141,6 +150,16 @@ class GroupTask : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = NonInterceptingLinearLayoutManager(requireContext())
         return view
+    }
+
+    // Method used to Replace the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
 
     companion object {

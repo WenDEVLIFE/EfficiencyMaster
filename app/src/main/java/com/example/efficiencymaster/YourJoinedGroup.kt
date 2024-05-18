@@ -231,13 +231,14 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
     }
 
     override fun onCancel(position: Int) {
-        var groupName = groupList[position].groupName
+        val groupName = groupList[position].groupName
         val fragment = GroupTask()
         val Bundle = Bundle()
         Bundle.putString("username", username)
         Bundle.putString("groupName", groupName)
         fragment.arguments = Bundle
         replaceFragment(fragment)
+        Toast.makeText(context, "Group Task $groupName", Toast.LENGTH_SHORT).show()
 
 
     }

@@ -85,6 +85,7 @@ class CreateGroupTask : Fragment() {
         // Get the spinner
         groupmemberSpinner = view.findViewById(R.id.spinner)
         memberList.add("Select a member")
+        loadMember() // Load the member of the group
 
         // adapter for spinner
         val adapter = ArrayAdapter(requireContext(), R.layout.spinnerlayout, memberList)
@@ -113,13 +114,13 @@ class CreateGroupTask : Fragment() {
                         Toast.makeText(context, "Please Select a member", Toast.LENGTH_SHORT).show()
                         }
                      else{
-                        insertTask(taskname1, taskdescription1)
+                        insertTask(taskname1, taskdescription1, memberName)
 
                         // Load the progressdialog when the task is being inserted
                         Suppress("DEPRECATION")
                         progressLoading= ProgressDialog(requireContext())
-                        progressLoading.setTitle("Inserting Task")
-                        progressLoading.setMessage("Inserting Task Please Wait..")
+                        progressLoading.setTitle("Inserting Group Task")
+                        progressLoading.setMessage("Inserting Group Task Please Wait..")
                         progressLoading.setCanceledOnTouchOutside(false)
                         progressLoading.show()
                     }
@@ -132,11 +133,12 @@ class CreateGroupTask : Fragment() {
     }
 
     // This method is used to Insert the Task 👌
-    private fun insertTask(taskname1: String, taskDescription1: String) {
+    private fun insertTask(taskname1: String, taskDescription1: String, memberName: String) {
 
-        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
+        db.collection("User").whereEqualTo("username",memberName).get().addOnSuccessListener { userit ->
             for (document in userit){
                 val iD = document.data["UserID"].toString()
+                val userRetrieve = document.data["username"].toString()
 
                 // This will insert the task into the Firestore database
                 val task = hashMapOf(
@@ -146,7 +148,7 @@ class CreateGroupTask : Fragment() {
                     "Status" to "Pending",
                     "UserID" to iD,
                     "CreatedBy" to username,
-                    "AssignedTo" to username,
+                    "AssignedTo" to userRetrieve,
                     "Type" to "Group",
                 )
 
@@ -161,7 +163,7 @@ class CreateGroupTask : Fragment() {
                             taskName.text.clear()
                             taskdescription.text.clear()
                             progressLoading.dismiss()
-                            Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Group Task Inserted", Toast.LENGTH_SHORT).show()
                         }
 
                         db.collection("ProgresssUser").whereEqualTo("UserID",iD).get().addOnSuccessListener { progressit ->
@@ -194,12 +196,12 @@ class CreateGroupTask : Fragment() {
                                     floatingAnimation.start()
 
                                     titleText.text = buildString {
-                                        append("Done Creating Task")
+                                        append("Done Creating Group Task")
                                     }
                                     messageText.text = buildString {
                                         append("You have gained ")
                                         append(xpData)
-                                        append(" xp for creating a task")
+                                        append(" xp for creating a group task")
                                     }
 
                                     val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
@@ -222,6 +224,7 @@ class CreateGroupTask : Fragment() {
                                     taskName.text.clear()
                                     taskdescription.text.clear()
                                     progressLoading.dismiss()
+                                    groupmemberSpinner.setSelection(0)
                                     Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
                                 }
                             }
@@ -261,12 +264,12 @@ class CreateGroupTask : Fragment() {
             val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
 
             titleText.text = buildString {
-                append("Done Creating Task")
+                append("Done Creating Group Task")
             }
             messageText.text = buildString {
                 append("You have gained ")
                 append(xpData)
-                append(" xp for creating a task")
+                append(" xp for creating a group task")
             }
 
             val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
@@ -284,6 +287,7 @@ class CreateGroupTask : Fragment() {
             taskName.text.clear()
             taskdescription.text.clear()
             progressLoading.dismiss()
+            groupmemberSpinner.setSelection(0)
             Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
         }
     }
@@ -291,13 +295,59 @@ class CreateGroupTask : Fragment() {
     //  This will load the member from the list
     private fun loadMember(){
         db.collection("Group").whereEqualTo("GroupName",groupName).get().addOnSuccessListener { groupit->
-            for (document in groupit){
+            if (groupit.isEmpty) {
+                Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+            }else{
+                for (document in groupit){
 
-                val groupID= document.data["GroupID"].toString()
+                    // Then get the GroupID
+                    val groupID= document.data["GroupID"].toString()
 
+                    // Get the user id from the group members
+                    db.collection("GroupMembers").get().addOnSuccessListener { memberit->
+                      if (memberit.isEmpty) {
+                          Toast.makeText(context, "No member in the group", Toast.LENGTH_SHORT)
+                              .show()
+                      }
+                        else{
+                          for (memberdocument in memberit){
 
+                              val groupid = memberdocument.data["GroupID"].toString()
 
+                              if (groupid == groupID){
+                                  // Get the user id from the group members
+                                  val userid = memberdocument.data["UserID"].toString()
+
+                                  // Then get the username by the user id
+                                  db.collection("User").whereEqualTo("UserID",userid).get().addOnSuccessListener { userit->
+                                      if (userit.isEmpty) {
+                                          Toast.makeText(
+                                              context,
+                                              "No member in the group",
+                                              Toast.LENGTH_SHORT
+                                          )
+                                              .show()
+                                      }else{
+                                          for (userdocument in userit){
+
+                                              // Once we get the username we will now add it on the list
+                                              memberList.add(userdocument.data["username"].toString())
+                                          }
+                                      }
+                                  }.addOnFailureListener {
+                                      Toast.makeText(context, "Error loading member", Toast.LENGTH_SHORT).show()
+                                  }
+                              }
+                          }
+                      }
+                    }.addOnFailureListener {
+                        Toast.makeText(context, "Error loading member", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
             }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error loading member", Toast.LENGTH_SHORT).show()
         }
     }
 
