@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
@@ -35,10 +37,12 @@ class CreateGroupTask : Fragment() {
     private lateinit var taskName: EditText
     private lateinit var taskdescription: EditText
     private lateinit var progressLoading: ProgressDialog
+    private lateinit var groupmemberSpinner:Spinner
 
     val db = Firebase.firestore
     var username =""
-    var groupName =""
+    private var groupName =""
+    private var memberList =ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,10 +78,29 @@ class CreateGroupTask : Fragment() {
 
         }
 
+            // Our edit text
+        taskName = view.findViewById(R.id.editTextText2)
+        taskdescription = view.findViewById(R.id.desscripts)
+
+        // Get the spinner
+        groupmemberSpinner = view.findViewById(R.id.spinner)
+        memberList.add("Select a member")
+
+        // adapter for spinner
+        val adapter = ArrayAdapter(requireContext(), R.layout.spinnerlayout, memberList)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Set the adapter to the spinner
+        groupmemberSpinner.adapter = adapter
+
+        // Set the default selection
+        groupmemberSpinner.setSelection(0)
+
         val createTaskBtn = view.findViewById<Button>(R.id.button2)
         createTaskBtn.setOnClickListener {
             val taskname1 = taskName.text.toString()
             val taskdescription1 = taskdescription.text.toString()
+            val memberName = groupmemberSpinner.selectedItem.toString()
 
             if(taskname1.isEmpty()) {
                 taskName.error = "Please Enter Task Name"
@@ -86,15 +109,20 @@ class CreateGroupTask : Fragment() {
                     this.taskdescription.error = "Please Enter Task Description"
                 }else{
 
-                    insertTask(taskname1, taskdescription1)
+                    if (memberName == "Select a member"){
+                        Toast.makeText(context, "Please Select a member", Toast.LENGTH_SHORT).show()
+                        }
+                     else{
+                        insertTask(taskname1, taskdescription1)
 
-                    // Load the progressdialog when the task is being inserted
-                    Suppress("DEPRECATION")
-                    progressLoading= ProgressDialog(requireContext())
-                    progressLoading.setTitle("Inserting Task")
-                    progressLoading.setMessage("Inserting Task Please Wait..")
-                    progressLoading.setCanceledOnTouchOutside(false)
-                    progressLoading.show()
+                        // Load the progressdialog when the task is being inserted
+                        Suppress("DEPRECATION")
+                        progressLoading= ProgressDialog(requireContext())
+                        progressLoading.setTitle("Inserting Task")
+                        progressLoading.setMessage("Inserting Task Please Wait..")
+                        progressLoading.setCanceledOnTouchOutside(false)
+                        progressLoading.show()
+                    }
                 }
             }
         }
@@ -257,6 +285,19 @@ class CreateGroupTask : Fragment() {
             taskdescription.text.clear()
             progressLoading.dismiss()
             Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    //  This will load the member from the list
+    private fun loadMember(){
+        db.collection("Group").whereEqualTo("GroupName",groupName).get().addOnSuccessListener { groupit->
+            for (document in groupit){
+
+                val groupID= document.data["GroupID"].toString()
+
+
+
+            }
         }
     }
 
