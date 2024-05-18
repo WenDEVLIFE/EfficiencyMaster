@@ -73,7 +73,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
-            activity.OpenDrawer()
+            activity.openDrawer()
 
         }
 
@@ -130,7 +130,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         val FloatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         FloatingActionButton.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
-            val createTask = CreateTask_Fragment()
+            val createTask = CreateTaskFragment()
             val bundle = Bundle()
             bundle.putString("username", username)
             createTask.arguments = bundle

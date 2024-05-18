@@ -1,7 +1,7 @@
 package com.example.efficiencymaster
 
-import adapters.GroupAdapter
 import adapters.JoinedGroupAdapter
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,14 +24,14 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [Your_Joined_Group.newInstance] factory method to
+ * Use the [YourJoinedGroup.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
+class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var recycleviewer:RecyclerView
+    private lateinit var recycleviewer:RecyclerView
     lateinit var adapter:JoinedGroupAdapter
     val db = Firebase.firestore
     var groupList = mutableListOf<Group>()
@@ -60,12 +60,12 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
         }
 
         // Find the ImageButton in the fragment_group.xml layout
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
-        ImageButton.setOnClickListener {
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
-            activity.OpenDrawer()
+            activity.openDrawer()
 
         }
 
@@ -75,7 +75,7 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 // This is for searching  the group
-                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = query?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<Group>()
 
                 // loop the group list and filter the value
@@ -92,7 +92,7 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
             override fun onQueryTextChange(newText: String?): Boolean {
 
                 // This is for searching the group
-                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = newText?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<Group>()
 
                 //  loop the grouplist and filter the value
@@ -121,58 +121,59 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
 
 
 
-            return view;
+            return view
     }
 
     // This will load the join user groups
+    @SuppressLint("NotifyDataSetChanged")
     private fun LoadJoinedGroup() {
 
         // Find the username
         db.collection("User").whereEqualTo("username",username).get()
-            .addOnSuccessListener {
-               if (it.isEmpty()){
+            .addOnSuccessListener { userIt ->
+                if (userIt.isEmpty){
                      Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
                }else{
 
                    // Load the retrieve username id
-                   for (document in it){
-                       val UserID = document.data["UserID"].toString()
+                   for (document in userIt){
+                       val userID = document.data["UserID"].toString()
 
                        // Find the username id on the group members
-                       db.collection("GroupMembers").whereEqualTo("UserID",UserID).get()
-                           .addOnSuccessListener{
-                               if(it.isEmpty()){
+                       db.collection("GroupMembers").whereEqualTo("UserID",userID).get()
+                           .addOnSuccessListener{ memberIT ->
+                               if(memberIT.isEmpty){
                                       Toast.makeText(context, "Group Member does not exist", Toast.LENGTH_SHORT).show()
                                }else{
 
                                    // Retrieve the group member id
-                                   for (groupdocument_members in it){
-                                       val GroupID = groupdocument_members.data["GroupID"].toString()
+                                   for (groupdocument_members in memberIT){
+                                       val groupID = groupdocument_members.data["GroupID"].toString()
 
                                         // Load the group
                                        db.collection("Group").get()
-                                           .addOnSuccessListener {
-                                              if(it.isEmpty()){
+                                           .addOnSuccessListener { groupIt ->
+                                              if(groupIt.isEmpty){
                                                     Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
                                               }
                                                else{
 
                                                    // Retrive the group name, description and id
-                                                  for (group_document in it){
-                                                      val groupName = group_document.data["GroupName"].toString()
-                                                      val groupDescription = group_document.data["GroupDescription"].toString()
-                                                      val GroupIDs = group_document.data["GroupID"].toString()
+                                                  for (groupDocument in groupIt){
+                                                      val groupName = groupDocument.data["GroupName"].toString()
+                                                      val groupDescription = groupDocument.data["GroupDescription"].toString()
+                                                      val groupIds = groupDocument.data["GroupID"].toString()
 
                                                       // This will check if the group id member is equal to the group id of group.
-                                                    if (GroupID == GroupIDs){
+                                                    if (groupID == groupIds){
                                                         // Get the group members collection
                                                         val collectionReference = db.collection("GroupMembers")
 
                                                         // Query the collection to get the group ID
-                                                        val query = collectionReference.whereEqualTo("GroupID", GroupID)
+                                                        val query = collectionReference.whereEqualTo("GroupID", groupID)
 
                                                         // member size variable
-                                                        var membersize= 0
+                                                        var membersize = 0
 
                                                         query.get().addOnSuccessListener { memberDocuments ->
                                                             membersize = memberDocuments.size() +  1
@@ -222,7 +223,7 @@ class Your_Joined_Group : Fragment(), JoinedGroupAdapter.OnCancelListener {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            Your_Joined_Group().apply {
+            YourJoinedGroup().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -68,7 +68,7 @@ class CreateGroupTask : Fragment() {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
-            activity.OpenDrawer()
+            activity.openDrawer()
 
         }
 

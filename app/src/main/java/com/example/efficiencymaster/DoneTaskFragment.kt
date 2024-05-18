@@ -12,12 +12,10 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.DoneTask
-import classes.Task
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Locale
@@ -71,7 +69,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
-            activity.OpenDrawer()
+            activity.openDrawer()
 
         }
         // This is for search functions

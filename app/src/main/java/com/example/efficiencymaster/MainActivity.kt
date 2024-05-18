@@ -19,13 +19,13 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var usernametext: TextView
+    private lateinit var usernametext: TextView
 
-    lateinit var nametext: TextView
+    private lateinit var nametext: TextView
 
-    lateinit var progresstext: TextView
+    private lateinit var progresstext: TextView
 
-    lateinit var userImage: ImageView
+    private lateinit var userImage: ImageView
 
     var username = ""
 
@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         val sessionManager = SessionManager(this)
 
         // get the intent
-        val Intent = intent
-        username = Intent.getStringExtra("username").toString()
+        val intent1 = intent
+        username = intent1.getStringExtra("username").toString()
 
 
         // Find the id of naview
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         nametext = navigationView.getHeaderView(0).findViewById(R.id.name)
         userImage = navigationView.getHeaderView(0).findViewById(R.id.user_icon)
         progresstext = navigationView.getHeaderView(0).findViewById(R.id.progress_id)
-        LoadUserStats()
+        loadUserStats()
 
         // This is the navigation view listener.
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                    val builder = AlertDialog.Builder(this)
                     builder.setTitle("Home")
                     builder.setMessage("Welcome to Home")
-                    builder.setPositiveButton("OK"){dialog, which ->}
+                    builder.setPositiveButton("OK"){ _, _ ->}
                     builder.show()
 
                     // This will go to home fragment
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("Achievements")
                     builder.setMessage("Welcome to Achievements")
-                    builder.setPositiveButton("OK"){dialog, which ->}
+                    builder.setPositiveButton("OK"){_, _ ->}
                     builder.show()
                     true
                 }
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("User")
                     builder.setMessage("Welcome to User")
-                    builder.setPositiveButton("OK"){dialog, which ->}
+                    builder.setPositiveButton("OK"){ _, _ ->}
                     builder.show()
                     true
                 }
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("Logout")
                     builder.setMessage("Are you sure you want to logout?")
-                    builder.setPositiveButton("Yes"){dialog, which ->
+                    builder.setPositiveButton("Yes"){_, _ ->
                         val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
                         finish()
@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                         // Log out the user
                         sessionManager.logOut()
                     }
-                    builder.setNegativeButton("No"){dialog, which ->}
+                    builder.setNegativeButton("No"){_, _ ->}
                     builder.show()
                     true
                 }
@@ -186,36 +186,44 @@ class MainActivity : AppCompatActivity() {
     }
 
     // This is used to open the navbar menu
-     fun OpenDrawer(){
+     fun openDrawer(){
          val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
          drawerLayout.openDrawer(GravityCompat.START)
      }
 
     // This method used for loading the user stats.
-    fun LoadUserStats(){
+    private fun loadUserStats(){
 
         // Check if the user exists before load it
         db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
             if (it.isEmpty) {
-                usernametext.text = "User does not exist"
+                usernametext.text = buildString {
+                    append("User does not exist")
+                }
             }else{
-                for (document in it){
+                for (userdocument in it){
 
                     // Retrieve the variables from the document
-                    val username = document.data["username"].toString()
-                    val ID = document.data["UserID"].toString()
+                    val username = userdocument.data["username"].toString()
+                    val iD = userdocument.data["UserID"].toString()
 
                     // This will load the user details and check if the user has any progress
-                    db.collection("UserDetails").whereEqualTo("UserID", ID).get().addOnSuccessListener {
-                        for (document in it){
+                    db.collection("UserDetails").whereEqualTo("UserID", iD).get().addOnSuccessListener { userit->
+                        for (document in userit){
 
                             // Retrieve the variables from the document
                             val image = document.data["imageurl"].toString()
                             val name = document.data["name"].toString()
 
                             // insert the retrieve value to the TextView.
-                            usernametext.text = "Username:$username"
-                            nametext.text = "Name:$name"
+                            usernametext.text = buildString {
+                            append("Username:")
+                            append(username)
+                        }
+                            nametext.text = buildString {
+                            append("Name:")
+                            append(name)
+                        }
 
                             // Set the retrieve Imageurl to image
                             Glide.with(this).load(image).into(userImage)
@@ -223,18 +231,24 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     // Check if user has any progress
-                    db.collection("ProgresssUser").whereEqualTo("UserID", ID).get().addOnSuccessListener {
-                        if (it.isEmpty){
-                            progresstext.text = "Progress:01%"
+                    db.collection("ProgresssUser").whereEqualTo("UserID", iD).get().addOnSuccessListener { progressit ->
+                        if (progressit.isEmpty){
+                            progresstext.text = buildString {
+                            append("Progress:01%")
+                        }
                             AlertDialog.Builder(this)
                                 .setTitle("Progress")
                                 .setMessage("You have no progress")
-                                .setPositiveButton("OK"){dialog, which ->}
+                                .setPositiveButton("OK"){_, _ ->}
                                 .show()
                         }else{
-                            for (document in it){
+                            for (document in progressit){
                                 val progress = document.getLong("ProgressXp") // Retrieve as Long
-                                progresstext.text = "Progress: ${progress.toString()} xp"
+                                progresstext.text = buildString {
+                                append("Progress: ")
+                                append(progress.toString())
+                                append(" xp")
+                            }
                             }
                         }
                     }

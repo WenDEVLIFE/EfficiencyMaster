@@ -25,16 +25,16 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [CreateTask_Fragment.newInstance] factory method to
+ * Use the [CreateTaskFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CreateTask_Fragment : Fragment() {
+class CreateTaskFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var TaskName:EditText
-    lateinit var TaskDescription: EditText
-    lateinit var ProgressLoading: ProgressDialog
+    private lateinit var taskName:EditText
+    private lateinit var taskdescription: EditText
+    private lateinit var progressLoading: ProgressDialog
 
     val db = Firebase.firestore
     var username =""
@@ -63,39 +63,40 @@ class CreateTask_Fragment : Fragment() {
         }
 
         // Get the id of the text fields
-        TaskName = view.findViewById<EditText>(R.id.editTextText2)
-        TaskDescription = view.findViewById<EditText>(R.id.desscripts)
+        taskName = view.findViewById(R.id.editTextText2)
+        taskdescription = view.findViewById(R.id.desscripts)
 
-        val create_Task_btn = view.findViewById<Button>(R.id.button2)
-        create_Task_btn.setOnClickListener {
-            val taskname = TaskName.text.toString()
-            val taskdescription = TaskDescription.text.toString()
+        val createTaskBtn = view.findViewById<Button>(R.id.button2)
+        createTaskBtn.setOnClickListener {
+            val taskname1 = taskName.text.toString()
+            val taskdescription1 = taskdescription.text.toString()
 
-           if(taskname.isEmpty()) {
-              TaskName.error = "Please Enter Task Name"
+           if(taskname1.isEmpty()) {
+              taskName.error = "Please Enter Task Name"
            }else{
-               if(taskdescription.isEmpty()) {
-                   TaskDescription.error = "Please Enter Task Description"
+               if(taskdescription1.isEmpty()) {
+                   this.taskdescription.error = "Please Enter Task Description"
                }else{
 
-                   InsertTask(taskname, taskdescription)
+                   insertTask(taskname1, taskdescription1)
 
                    // Load the progressdialog when the task is being inserted
-                   ProgressLoading= ProgressDialog(context)
-                   ProgressLoading.setTitle("Inserting Task")
-                   ProgressLoading.setMessage("Inserting Task Please Wait..")
-                   ProgressLoading.setCanceledOnTouchOutside(false)
-                   ProgressLoading.show()
+                   Suppress("DEPRECATION")
+                   progressLoading= ProgressDialog(requireContext())
+                   progressLoading.setTitle("Inserting Task")
+                   progressLoading.setMessage("Inserting Task Please Wait..")
+                   progressLoading.setCanceledOnTouchOutside(false)
+                   progressLoading.show()
                }
            }
         }
 
-        val ImageButton = view.findViewById<ImageButton>(R.id.imageButton)
-        ImageButton.setOnClickListener {
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
 
             // Open the drawer when the ImageButton is clicked
             val activity = activity as MainActivity
-            activity.OpenDrawer()
+            activity.openDrawer()
 
         }
 
@@ -103,48 +104,48 @@ class CreateTask_Fragment : Fragment() {
     }
 
     // This method is used to Insert the Task 👌
-    fun InsertTask(taskname: String, taskDescription: String) {
+    private fun insertTask(taskname1: String, taskDescription1: String) {
 
-        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener {
-            for (document in it){
-                val ID = document.data["UserID"].toString()
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
+            for (document in userit){
+                val iD = document.data["UserID"].toString()
 
                 // This will insert the task into the Firestore database
                 val task = hashMapOf(
-                    "UserID" to ID,
-                    "TaskName" to taskname,
-                    "TaskDescription" to taskDescription,
+                    "UserID" to iD,
+                    "TaskName" to taskname1,
+                    "TaskDescription" to taskDescription1,
                     "Status" to "Pending",
-                    "UserID" to ID
+                    "UserID" to iD
                 )
 
-                val XpData = Random.nextInt(100,  1000)
+                val xpData = Random.nextInt(100,  1000)
 
                 // Check if the task already exists in the database
-               db.collection("Task").whereEqualTo("TaskName", taskname).whereEqualTo("UserID",ID).get().addOnSuccessListener {
-                   if(it.isEmpty){
+               db.collection("Task").whereEqualTo("TaskName", taskname1).whereEqualTo("UserID",iD).get().addOnSuccessListener { taskit->
+                   if(taskit.isEmpty){
 
                        // Insert the task into the database
                        db.collection("Task").add(task).addOnSuccessListener {
-                            TaskName.text.clear()
-                            TaskDescription.text.clear()
-                           ProgressLoading.dismiss()
+                            taskName.text.clear()
+                            taskdescription.text.clear()
+                           progressLoading.dismiss()
                            Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
                        }
 
-                       db.collection("ProgresssUser").whereEqualTo("UserID",ID).get().addOnSuccessListener {
+                       db.collection("ProgresssUser").whereEqualTo("UserID",iD).get().addOnSuccessListener { progressit ->
                           // Check if the user has any progress
-                           if(it.isEmpty){
+                           if(progressit.isEmpty){
 
                                // Call the create xp method to create new progress for the user.
-                              CreateXp(ID, XpData)
+                              createXp(iD, xpData)
                            }
 
                            // If the user has progress
                            else{
 
                                // Update the user progress
-                               for (document in it){
+                               for (progressdocument in progressit){
 
                                    // Create a dialog to show the user the progress below
                                    val builder = AlertDialog.Builder(context)
@@ -161,8 +162,14 @@ class CreateTask_Fragment : Fragment() {
                                    floatingAnimation.setTarget(imageView)
                                    floatingAnimation.start()
 
-                                   titleText.text = "Done Creating Task"
-                                   messageText.text = "You have gained $XpData xp for creating a task"
+                                   titleText.text = buildString {
+                                        append("Done Creating Task")
+                                    }
+                                   messageText.text = buildString {
+                                    append("You have gained ")
+                                    append(xpData)
+                                    append(" xp for creating a task")
+                                }
 
                                    val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
 
@@ -174,23 +181,23 @@ class CreateTask_Fragment : Fragment() {
                                    dialog.show() // Show the dialog
 
                                    // Update the user progress in the database and add it to the existing progress
-                                   val xp = document.get("ProgressXp").toString().toInt()
-                                   val UpdatedXP:Int = xp + XpData
+                                   val xp = progressdocument.get("ProgressXp").toString().toInt()
+                                   val updatedXP:Int = xp + xpData
 
                                    // Update the user progress
-                                   db.collection("ProgresssUser").document(it.documents[0].id).update("ProgressXp", UpdatedXP)
+                                   db.collection("ProgresssUser").document(progressit.documents[0].id).update("ProgressXp", updatedXP)
 
                                   // clear the text fields
-                                   TaskName.text.clear()
-                                   TaskDescription.text.clear()
-                                   ProgressLoading.dismiss()
+                                   taskName.text.clear()
+                                   taskdescription.text.clear()
+                                   progressLoading.dismiss()
                                    Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
                                }
                            }
                        }
                    }else{
-                       TaskName.error = "Task Already Exists"
-                       ProgressLoading.dismiss()
+                       taskName.error = "Task Already Exists"
+                       progressLoading.dismiss()
                    }
                }
             }
@@ -199,12 +206,12 @@ class CreateTask_Fragment : Fragment() {
 
 
     // This method is used to create a new progress for the user
-    fun CreateXp (ID: String, XpData: Int) {
+    private fun createXp (iD: String, xpData: Int) {
 
         // Hashmap for progress
         val progressXp = hashMapOf(
-            "UserID" to ID,
-            "ProgressXp" to XpData,
+            "UserID" to iD,
+            "ProgressXp" to xpData,
 
             )
 
@@ -220,8 +227,14 @@ class CreateTask_Fragment : Fragment() {
             val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
             val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
 
-            titleText.text = "Done Creating Task"
-            messageText.text = "You have gained $XpData xp for creating a task"
+            titleText.text = buildString {
+                    append("Done Creating Task")
+                }
+            messageText.text = buildString {
+                append("You have gained ")
+                append(xpData)
+                append(" xp for creating a task")
+            }
 
             val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
             button.setOnClickListener {
@@ -235,9 +248,9 @@ class CreateTask_Fragment : Fragment() {
             builder.show()
 
             // clear the text fields
-            TaskName.text.clear()
-            TaskDescription.text.clear()
-            ProgressLoading.dismiss()
+            taskName.text.clear()
+            taskdescription.text.clear()
+            progressLoading.dismiss()
             Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
         }
     }
@@ -251,12 +264,12 @@ class CreateTask_Fragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment CreateTask_Fragment.
+         * @return A new instance of fragment CreateTaskFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            CreateTask_Fragment().apply {
+            CreateTaskFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
