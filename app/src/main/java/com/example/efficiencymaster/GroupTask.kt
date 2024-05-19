@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import adapters.GroupTaskAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,12 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import classes.GroupTaskInfo
 import classes.NonInterceptingLinearLayoutManager
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,16 +28,19 @@ private const val ARG_PARAM2 = "param2"
  * Use the [GroupTask.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GroupTask : Fragment() {
+class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var fragment:Fragment
     private lateinit var bundle:Bundle
+    private lateinit var adapters: GroupTaskAdapter
+    val db = Firebase.firestore
 
     var username = ""
     var groupNameIntent = ""
+    var grouptaskList = mutableListOf<GroupTaskInfo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,6 +156,12 @@ class GroupTask : Fragment() {
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = NonInterceptingLinearLayoutManager(requireContext())
+        grouptaskList = ArrayList()
+        adapters =  GroupTaskAdapter(grouptaskList)
+        recyclerView.adapter = adapters
+        adapters.setOnCancelListener(::onCancel)
+        loadGroupTask()
+
         return view
     }
 
@@ -160,6 +173,23 @@ class GroupTask : Fragment() {
         transaction.addToBackStack(null)
         transaction.commit()
 
+    }
+
+    private fun loadGroupTask(){
+        db.collection("Group").whereEqualTo("groupName", groupNameIntent).get().addOnSuccessListener { grouptaskit ->
+            if (grouptaskit.isEmpty) {
+                Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+            }else{
+                for (groupdocument in grouptaskit){
+
+                    val groupid =  groupdocument.data["GroupID"].toString()
+
+
+
+                }
+
+            }
+        }
     }
 
     companion object {
@@ -180,5 +210,9 @@ class GroupTask : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onCancel(position: Int) {
+        TODO("Not yet implemented")
     }
 }

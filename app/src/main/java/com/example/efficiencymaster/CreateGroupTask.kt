@@ -135,107 +135,121 @@ class CreateGroupTask : Fragment() {
     // This method is used to Insert the Task 👌
     private fun insertTask(taskname1: String, taskDescription1: String, memberName: String) {
 
-        db.collection("User").whereEqualTo("username",memberName).get().addOnSuccessListener { userit ->
-            for (document in userit){
-                val iD = document.data["UserID"].toString()
-                val userRetrieve = document.data["username"].toString()
+        db.collection("Group").whereEqualTo("GroupName",groupName).get().addOnSuccessListener { groupit ->
+            if (groupit.isEmpty){
+                Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                for (groupdoc in groupit){
 
-                // This will insert the task into the Firestore database
-                val task = hashMapOf(
-                    "UserID" to iD,
-                    "TaskName" to taskname1,
-                    "TaskDescription" to taskDescription1,
-                    "Status" to "Pending",
-                    "UserID" to iD,
-                    "CreatedBy" to username,
-                    "AssignedTo" to userRetrieve,
-                    "Type" to "Group",
-                )
+                    val groupid = groupdoc.data["GroupID"].toString()
 
-                val xpData = Random.nextInt(100,  1000)
+                    db.collection("User").whereEqualTo("username",memberName).get().addOnSuccessListener { userit ->
+                        for (document in userit){
+                            val iD = document.data["UserID"].toString()
+                            val userRetrieve = document.data["username"].toString()
 
-                // Check if the task already exists in the database
-                db.collection("Task").whereEqualTo("TaskName", taskname1).whereEqualTo("UserID",iD).get().addOnSuccessListener { taskit->
-                    if(taskit.isEmpty){
+                            // This will insert the task into the Firestore database
+                            val task = hashMapOf(
+                                "UserID" to iD,
+                                "TaskName" to taskname1,
+                                "TaskDescription" to taskDescription1,
+                                "Status" to "Pending",
+                                "UserID" to iD,
+                                "CreatedBy" to username,
+                                "AssignedTo" to userRetrieve,
+                                "GroupID" to groupid,
+                                "Type" to "Group",
+                            )
 
-                        // Insert the task into the database
-                        db.collection("Task").add(task).addOnSuccessListener {
-                            taskName.text.clear()
-                            taskdescription.text.clear()
-                            progressLoading.dismiss()
-                            Toast.makeText(context, "Group Task Inserted", Toast.LENGTH_SHORT).show()
-                        }
+                            val xpData = Random.nextInt(100,  1000)
 
-                        db.collection("ProgresssUser").whereEqualTo("UserID",iD).get().addOnSuccessListener { progressit ->
-                            // Check if the user has any progress
-                            if(progressit.isEmpty){
+                            // Check if the task already exists in the database
+                            db.collection("Task").whereEqualTo("TaskName", taskname1).whereEqualTo("UserID",iD).get().addOnSuccessListener { taskit->
+                                if(taskit.isEmpty){
 
-                                // Call the create xp method to create new progress for the user.
-                                createXp(iD, xpData)
-                            }
-
-                            // If the user has progress
-                            else{
-
-                                // Update the user progress
-                                for (progressdocument in progressit){
-
-                                    // Create a dialog to show the user the progress below
-                                    val builder = AlertDialog.Builder(context)
-                                    val inflater = layoutInflater
-                                    val dialogLayout = inflater.inflate(R.layout.message_layout, null)
-
-                                    val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
-                                    val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
-                                    val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
-
-                                    // added a animation when it pop up
-                                    val floatingAnimation = AnimatorInflater.loadAnimator(context, R.animator.floatingxml)
-                                    val imageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
-                                    floatingAnimation.setTarget(imageView)
-                                    floatingAnimation.start()
-
-                                    titleText.text = buildString {
-                                        append("Done Creating Group Task")
-                                    }
-                                    messageText.text = buildString {
-                                        append("You have gained ")
-                                        append(xpData)
-                                        append(" xp for creating a group task")
+                                    // Insert the task into the database
+                                    db.collection("Task").add(task).addOnSuccessListener {
+                                        taskName.text.clear()
+                                        taskdescription.text.clear()
+                                        progressLoading.dismiss()
+                                        Toast.makeText(context, "Group Task Inserted", Toast.LENGTH_SHORT).show()
                                     }
 
-                                    val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+                                    db.collection("ProgresssUser").whereEqualTo("UserID",iD).get().addOnSuccessListener { progressit ->
+                                        // Check if the user has any progress
+                                        if(progressit.isEmpty){
 
-                                    button.setOnClickListener {
-                                        // Handle button click here
-                                        dialog.dismiss()
+                                            // Call the create xp method to create new progress for the user.
+                                            createXp(iD, xpData)
+                                        }
+
+                                        // If the user has progress
+                                        else{
+
+                                            // Update the user progress
+                                            for (progressdocument in progressit){
+
+                                                // Create a dialog to show the user the progress below
+                                                val builder = AlertDialog.Builder(context)
+                                                val inflater = layoutInflater
+                                                val dialogLayout = inflater.inflate(R.layout.message_layout, null)
+
+                                                val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+                                                val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+                                                val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+
+                                                // added a animation when it pop up
+                                                val floatingAnimation = AnimatorInflater.loadAnimator(context, R.animator.floatingxml)
+                                                val imageView = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+                                                floatingAnimation.setTarget(imageView)
+                                                floatingAnimation.start()
+
+                                                titleText.text = buildString {
+                                                    append("Done Creating Group Task")
+                                                }
+                                                messageText.text = buildString {
+                                                    append("You have gained ")
+                                                    append(xpData)
+                                                    append(" xp for creating a group task")
+                                                }
+
+                                                val dialog = builder.setView(dialogLayout).create() // Create AlertDialog instance
+
+                                                button.setOnClickListener {
+                                                    // Handle button click here
+                                                    dialog.dismiss()
+                                                }
+
+                                                dialog.show() // Show the dialog
+
+                                                // Update the user progress in the database and add it to the existing progress
+                                                val xp = progressdocument.get("ProgressXp").toString().toInt()
+                                                val updatedXP:Int = xp + xpData
+
+                                                // Update the user progress
+                                                db.collection("ProgresssUser").document(progressit.documents[0].id).update("ProgressXp", updatedXP)
+
+                                                // clear the text fields
+                                                taskName.text.clear()
+                                                taskdescription.text.clear()
+                                                progressLoading.dismiss()
+                                                groupmemberSpinner.setSelection(0)
+                                                Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
                                     }
-
-                                    dialog.show() // Show the dialog
-
-                                    // Update the user progress in the database and add it to the existing progress
-                                    val xp = progressdocument.get("ProgressXp").toString().toInt()
-                                    val updatedXP:Int = xp + xpData
-
-                                    // Update the user progress
-                                    db.collection("ProgresssUser").document(progressit.documents[0].id).update("ProgressXp", updatedXP)
-
-                                    // clear the text fields
-                                    taskName.text.clear()
-                                    taskdescription.text.clear()
+                                }else{
+                                    taskName.error = "Task Already Exists"
                                     progressLoading.dismiss()
-                                    groupmemberSpinner.setSelection(0)
-                                    Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
-                    }else{
-                        taskName.error = "Task Already Exists"
-                        progressLoading.dismiss()
                     }
                 }
             }
         }
+
     }
 
 
