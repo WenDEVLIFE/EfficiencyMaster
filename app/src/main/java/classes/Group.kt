@@ -5,13 +5,13 @@ data class Group(var _groupName:String,
     var _memberSize:String,
     ){
 
-    private val groupName:String
+     val groupName:String
     get() = _groupName
 
-    private val groupDescription:String
+    val groupDescription:String
     get() = _groupDescription
 
-    private val memberSize:String
+     val memberSize:String
     get() = _memberSize
 
     override fun toString(): String {

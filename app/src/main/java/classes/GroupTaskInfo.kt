@@ -6,19 +6,19 @@ data class GroupTaskInfo(var _taskName:String,
                          var _assigned:String,
                          var _createdBy :String,
 ){
-    private val taskname:String
+    val taskname:String
         get() = _taskName
 
-    private val taskdescription:String
+    val taskdescription:String
         get() = _taskDescription
 
-    private val status:String
+    val status:String
         get() = _status
 
-    private val assigned:String
+    val assigned:String
         get() = _assigned
 
-    private val createdby:String
+    val createdby:String
         get() = _createdBy
 
     override fun toString(): String {

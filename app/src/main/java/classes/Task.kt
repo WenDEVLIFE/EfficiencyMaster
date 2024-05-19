@@ -5,10 +5,10 @@ data class Task(
     var _taskDescription:String,
 
 ){
-    private val taskname:String
+    val taskname:String
         get() = _taskNamme
 
-    private val taskdescription:String
+    val taskdescription:String
         get() = _taskDescription
 
     override fun toString(): String {
