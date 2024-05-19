@@ -1,6 +1,7 @@
 package com.example.efficiencymaster
 
 import adapters.GroupTaskAdapter
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,8 +40,8 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
     val db = Firebase.firestore
 
     var username = ""
-    var groupNameIntent = ""
-    var grouptaskList = mutableListOf<GroupTaskInfo>()
+    private var groupNameIntent = ""
+    private var grouptaskList = mutableListOf<GroupTaskInfo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -175,14 +176,45 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
 
     }
 
+    // This will load the group
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadGroupTask(){
-        db.collection("Group").whereEqualTo("groupName", groupNameIntent).get().addOnSuccessListener { grouptaskit ->
+
+        // Find the  group name on the group collection
+        db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { grouptaskit ->
             if (grouptaskit.isEmpty) {
                 Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
             }else{
+
+                //  Then if found it  will load the group id
                 for (groupdocument in grouptaskit){
 
+                    // get the group id from the database
                     val groupid =  groupdocument.data["GroupID"].toString()
+
+                    // Find the task group where equals to group id
+                    db.collection("Task").whereEqualTo("GroupID", groupid).get().addOnSuccessListener { taskit ->
+                        if (taskit.isEmpty) {
+                            Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT).show()
+                        }else{
+
+                            // Then load the task details
+                            for (taskdocument in taskit){
+                                val taskname = taskdocument.data["TaskName"].toString()
+                                val details = taskdocument.data["TaskDescription"].toString()
+                                val status = taskdocument.data["Status"].toString()
+                                val assigned = taskdocument.data["AssignedTo"].toString()
+                                val createdBy = taskdocument.data["CreatedBy"].toString()
+
+                                // Load the task and add on the list
+                                val groupTaskInfo = GroupTaskInfo(taskname, details, status, assigned, createdBy)
+                                grouptaskList.add(groupTaskInfo)
+                            }
+
+                            // Notify the adapter
+                            adapters.notifyDataSetChanged()
+                        }
+                    }
 
 
 
