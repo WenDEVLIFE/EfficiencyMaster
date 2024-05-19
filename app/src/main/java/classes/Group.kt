@@ -1,18 +1,18 @@
 package classes
 
-data class Group(var _GroupName:String,
-    var _GroupDescription:String,
-    var _MemberSize:String,
+data class Group(var _groupName:String,
+    var _groupDescription:String,
+    var _memberSize:String,
     ){
 
-    val groupName:String
-    get() = _GroupName
+    private val groupName:String
+    get() = _groupName
 
-    val groupDescription:String
-    get() = _GroupDescription
+    private val groupDescription:String
+    get() = _groupDescription
 
-    val memberSize:String
-    get() = _MemberSize
+    private val memberSize:String
+    get() = _memberSize
 
     override fun toString(): String {
         return "Group Name: $groupName, Group Description: $groupDescription , Member Size: $memberSize"

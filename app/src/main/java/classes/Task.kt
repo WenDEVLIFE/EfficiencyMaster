@@ -1,15 +1,15 @@
 package classes
 
 data class Task(
-    var _TaskNamme:String,
-    var _TaskDescription:String,
+    var _taskNamme:String,
+    var _taskDescription:String,
 
 ){
-    val taskname:String
-        get() = _TaskNamme
+    private val taskname:String
+        get() = _taskNamme
 
-    val taskdescription:String
-        get() = _TaskDescription
+    private val taskdescription:String
+        get() = _taskDescription
 
     override fun toString(): String {
         return "Taskname: $taskname, TaskDescription: $taskdescription"

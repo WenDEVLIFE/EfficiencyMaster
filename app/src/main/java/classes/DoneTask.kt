@@ -6,19 +6,21 @@ data class DoneTask(
     var _Status:String,
     var _Completion:String,
     ){
-    val taskname:String
+    private val taskname:String
         get() = _TaskNamme
 
-    val taskdescription:String
+    private val taskdescription:String
         get() = _TaskDescription
 
-    val status:String
+    private val status:String
         get() = _Status
 
-    val completion:String
+    private val completion:String
         get() = _Completion
 
     override fun toString(): String {
         return "Taskname: $taskname, TaskDescription: $taskdescription, Status: $status, Completion: $completion"
     }
 }
+
+
