@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -52,8 +53,8 @@ class JoinedGroupAdapter(private var groupList: List<Group>) : RecyclerView.Adap
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val GroupName: TextView = itemView.findViewById(R.id.textView241)
-        private val Details: TextView = itemView.findViewById(R.id.textView2411)
-        private val MemberSize:TextView = itemView.findViewById(R.id.textView2)
+        private val Details: EditText = itemView.findViewById(R.id.textView2411)
+        private val MemberSize: EditText = itemView.findViewById(R.id.textView2)
         private val JoinButton: Button =itemView.findViewById(R.id.button3)
 
 
@@ -67,8 +68,10 @@ class JoinedGroupAdapter(private var groupList: List<Group>) : RecyclerView.Adap
 
         fun bind(info: Group) {
             GroupName.text = info.groupName
-            Details.text = info.groupDescription
-            MemberSize.text = info.memberSize
+            Details.setText(info.groupDescription)
+            Details.isEnabled = false
+            MemberSize.setText(info.memberSize)
+            MemberSize.isEnabled = false
 
 
 

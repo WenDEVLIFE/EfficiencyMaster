@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import classes.Task
@@ -54,7 +55,7 @@ class TaskAdapter(private var taskList: List<Task>) : RecyclerView.Adapter<TaskA
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val TaskName: TextView = itemView.findViewById(R.id.textView241)
-        private val Details: TextView = itemView.findViewById(R.id.textView2411)
+        private val Details: EditText = itemView.findViewById(R.id.textView2411)
         private val DoneTask: CheckBox = itemView.findViewById(R.id.checkBox)
 
 
@@ -74,7 +75,8 @@ class TaskAdapter(private var taskList: List<Task>) : RecyclerView.Adapter<TaskA
 
         fun bind(info: Task) {
             TaskName.text = info.taskname
-            Details.text = info.taskdescription
+            Details.setText(info.taskdescription)
+            Details.isEnabled = false
 
 
         }

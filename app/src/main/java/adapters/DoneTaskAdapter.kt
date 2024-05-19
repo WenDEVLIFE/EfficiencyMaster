@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -56,9 +57,9 @@ class DoneTaskAdapter(private var taskList: List<DoneTask>) : RecyclerView.Adapt
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val TaskName: TextView = itemView.findViewById(R.id.textView241)
-        private val Details: TextView = itemView.findViewById(R.id.textView2411)
-        private val StatusText:TextView = itemView.findViewById(R.id.textView2)
-        private val CompletionText:TextView = itemView.findViewById(R.id.textView3)
+        private val Details: EditText = itemView.findViewById(R.id.textView2411)
+        private val StatusText: EditText = itemView.findViewById(R.id.textView2)
+        private val CompletionText:EditText = itemView.findViewById(R.id.textView3)
         private val DeleteTask: ImageButton =itemView.findViewById(R.id.imageButton2)
 
 
@@ -72,9 +73,12 @@ class DoneTaskAdapter(private var taskList: List<DoneTask>) : RecyclerView.Adapt
 
         fun bind(info: DoneTask) {
             TaskName.text = info.taskname
-            Details.text = info.taskdescription
-            StatusText.text = info.status
-            CompletionText.text = info.completion
+            Details.setText(info.taskdescription)
+            Details.isEnabled = false
+            StatusText.setText(info.status)
+            StatusText.isEnabled  = false
+            CompletionText.setText(info.completion)
+            CompletionText.isEnabled = false
 
 
         }
