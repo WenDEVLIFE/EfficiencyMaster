@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
 import classes.NonInterceptingLinearLayoutManager
@@ -162,7 +163,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         }
 
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = NonInterceptingLinearLayoutManager(requireContext())
+        recyclerView.setLayoutManager(LinearLayoutManager(requireContext()))
         grouptaskList = ArrayList()
         adapters =  GroupTaskAdapter(grouptaskList)
         recyclerView.adapter = adapters
