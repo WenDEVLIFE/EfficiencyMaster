@@ -149,6 +149,12 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         fabOption3.setOnClickListener {
             // Handle option 3 click
             fabMenu.close(true)
+            //  This will go to created groups of user
+            fragment = CreatedGroup()
+            bundle  = Bundle()
+            bundle.putString("username", username)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
             Toast.makeText(context, "Your Created Groups", Toast.LENGTH_SHORT).show()
         }
 
@@ -190,6 +196,8 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
                     // Get the UserID retrieve
                     // Then
                     val iD = document.data["UserID"].toString()
+
+                    // Load the group collections
                     db.collection("Group").get().addOnSuccessListener { groupDocuments ->
                         for (groupDocument in groupDocuments){
                             // Get the group name
