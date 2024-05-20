@@ -11,6 +11,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/button"
+            android:text="Back to group"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button2" />
+
         <TextView
                 android:text="Create Group"
                 android:textSize="@dimen/_20sdp"

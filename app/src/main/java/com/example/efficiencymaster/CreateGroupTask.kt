@@ -128,6 +128,17 @@ class CreateGroupTask : Fragment() {
             }
         }
 
+        //  button used to go back to group fragment
+        val backBtn = view.findViewById<Button>(R.id.button4)
+        backBtn.setOnClickListener {
+            val fragment = GroupTask()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            bundle.putString("groupName", groupName)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
+
+        }
 
     return view
     }
@@ -365,6 +376,15 @@ class CreateGroupTask : Fragment() {
         }
     }
 
+    // Method used to Replace the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+    }
 
     companion object {
         /**
