@@ -2,17 +2,22 @@ package com.example.efficiencymaster
 
 import adapters.GroupTaskAdapter
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
 import classes.NonInterceptingLinearLayoutManager
+import com.bumptech.glide.Glide
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import com.google.firebase.firestore.ktx.firestore
@@ -37,6 +42,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
     private lateinit var fragment:Fragment
     private lateinit var bundle:Bundle
     private lateinit var adapters: GroupTaskAdapter
+    private lateinit var progressLoading: ProgressDialog
     val db = Firebase.firestore
 
     var username = ""
@@ -207,7 +213,9 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                                 val createdBy = taskdocument.data["CreatedBy"].toString()
 
                                 // Load the task and add on the list
-                                val groupTaskInfo = GroupTaskInfo(taskname, details, status, assigned, createdBy)
+                                val groupTaskInfo = GroupTaskInfo(
+                                    "Task:$taskname",
+                                    "Details:$details", "Status:$status", "Assigned:$assigned", "CreatedBy$createdBy")
                                 grouptaskList.add(groupTaskInfo)
                             }
 
@@ -244,7 +252,139 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCancel(position: Int) {
-        TODO("Not yet implemented")
+        // Get the taskname from the list
+        val TaskName = grouptaskList[position].taskname
+
+        val tasknameSubString = TaskName.removePrefix("Task:")
+
+        // cuztomize alert dialog component below
+        val builder = android.app.AlertDialog.Builder(context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
+        val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+        val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+        val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        button.text = buildString {
+            append("Delete")
+        }
+        val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
+        val imageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.confused)
+            .into(imageView1)
+        imageView1.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params = imageView1.layoutParams
+        val scale = resources.displayMetrics.density
+        params.width = (100 * scale).toInt()
+        params.height = (100 * scale).toInt()
+        imageView1.layoutParams = params
+        titleText.text = buildString {
+            append("Delete the task")
+        }
+        messageText.text = buildString {
+            append("Are you sure you want to delete the task?")
+            append(TaskName)
+            append("?")
+        }
+
+        val dialog = builder.setView(dialogLayout).create()
+
+        dialog.show()
+
+        button.setOnClickListener {
+
+            // Load the progress dialog
+            progressLoading = ProgressDialog(requireContext())
+            progressLoading.setTitle("Deleting Task...")
+            progressLoading.setMessage("Please wait...")
+            progressLoading.setCanceledOnTouchOutside(false)
+            progressLoading.show()
+
+            // Find the taskname in task collection
+            db.collection("Task").whereEqualTo("TaskName",tasknameSubString).get().addOnSuccessListener { taskit ->
+
+                // This  will error if the task is empty
+                if (taskit.isEmpty){
+                    Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT).show()
+                    progressLoading.dismiss()
+                }else{
+
+                    // Delete the task
+                    for (taskdocument in taskit) {
+                        val taskid = taskdocument.id
+                        db.collection("Task").document(taskid).delete().addOnSuccessListener {
+
+                            // Call the method success then remove the value from the task and update the recycleviewer adapter and dismiss the dialog
+                            success()
+                            grouptaskList.removeAt(position)
+                            adapters.notifyDataSetChanged()
+                            dialog.dismiss()
+                            progressLoading.dismiss()
+                        }.addOnFailureListener {
+                            Toast.makeText(context, "Task not deleted", Toast.LENGTH_SHORT).show()
+                            progressLoading.dismiss()
+                        }
+                    }
+                }
+
+            }.addOnFailureListener {
+                Toast.makeText(context, "Task not deleted", Toast.LENGTH_SHORT).show()
+                progressLoading.dismiss()
+            }
+
+
+        }
+
+        button2.setOnClickListener{
+            dialog.dismiss()
+        }
     }
+
+    private fun success(){
+        // below are the customize alert dialgo components and etc.
+        val builder1 = android.app.AlertDialog.Builder(context)
+        val inflater1 = layoutInflater
+        val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+        val titleText1= dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+        val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+        val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+        button1.text = buildString {
+            append("Ok")
+        }
+        val imageView2 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.alert)
+            .into(imageView2)
+        imageView2.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params1 = imageView2.layoutParams
+        val scale1 = resources.displayMetrics.density
+        params1.width = (100 * scale1).toInt()
+        params1.height = (100 * scale1).toInt()
+        imageView2.layoutParams = params1
+        titleText1.text = buildString {
+            append("Task Alert")
+        }
+        messageText1.text = buildString {
+            append("Task Delete Successfully .")
+        }
+
+        val dialog1 = builder1.setView(dialogLayout1).create()
+
+        dialog1.show()
+        button1.setOnClickListener{
+            dialog1.dismiss()
+        }
+    }
+
+    private fun subString(value:String): String {
+        val substr = value.substring(0, 4)
+        return substr
+    }
+
 }
