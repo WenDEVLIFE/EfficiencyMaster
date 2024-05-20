@@ -89,10 +89,10 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 var search: String = query?.lowercase(Locale.getDefault()) ?: return false
-               /* val temp = ArrayList<Task>() // filtered list
+               val temp = ArrayList<GroupTaskInfo>() // filtered list
 
                 // This will filter the task list
-                for (task in taskList) {
+                for (task in grouptaskList) {
 
                     // get the lowercase and uppercase
                     if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
@@ -100,17 +100,17 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                         temp.add(task)
                     }
                 }
-                adapter.updateList(temp) */
+                adapters.updateList(temp)
                 // Add your search logic here
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
-              /*  val temp = ArrayList<Task>() //  filter  list
+                val temp = ArrayList<GroupTaskInfo>() //  filter  list
 
                 // This will filter the task list
-                for (task in taskList){
+                for (task in grouptaskList){
 
                     // get the lowercase and uppercase
                     if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
@@ -119,7 +119,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                     }
                 }
                 // Add your search logic here
-                adapter.updateList(temp) */
+                adapters.updateList(temp)
                 return true
             }
         })
