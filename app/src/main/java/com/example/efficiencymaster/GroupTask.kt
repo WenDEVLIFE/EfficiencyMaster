@@ -255,9 +255,9 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
     @SuppressLint("NotifyDataSetChanged")
     override fun onCancel(position: Int) {
         // Get the taskname from the list
-        val TaskName = grouptaskList[position].taskname
+        val taskName = grouptaskList[position].taskname
 
-        val tasknameSubString = TaskName.removePrefix("Task:")
+        val tasknameSubString = taskName.removePrefix("Task:")
 
         // cuztomize alert dialog component below
         val builder = android.app.AlertDialog.Builder(context)
@@ -287,7 +287,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         }
         messageText.text = buildString {
             append("Are you sure you want to delete the task?")
-            append(TaskName)
+            append(taskName)
             append("?")
         }
 
@@ -449,9 +449,5 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         }
     }
 
-    private fun subString(value:String): String {
-        val substr = value.substring(0, 4)
-        return substr
-    }
 
 }
