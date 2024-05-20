@@ -304,36 +304,103 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             progressLoading.setCanceledOnTouchOutside(false)
             progressLoading.show()
 
-            // Find the taskname in task collection
-            db.collection("Task").whereEqualTo("TaskName",tasknameSubString).get().addOnSuccessListener { taskit ->
-
-                // This  will error if the task is empty
-                if (taskit.isEmpty){
-                    Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT).show()
+            // Find the Group Name in the group collection
+            db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit->
+                if (groupit.isEmpty) {
+                    Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
                     progressLoading.dismiss()
-                }else{
-
-                    // Delete the task
-                    for (taskdocument in taskit) {
-                        val taskid = taskdocument.id
-                        db.collection("Task").document(taskid).delete().addOnSuccessListener {
-
-                            // Call the method success then remove the value from the task and update the recycleviewer adapter and dismiss the dialog
-                            success()
-                            grouptaskList.removeAt(position)
-                            adapters.notifyDataSetChanged()
-                            dialog.dismiss()
-                            progressLoading.dismiss()
-                        }.addOnFailureListener {
-                            Toast.makeText(context, "Task not deleted", Toast.LENGTH_SHORT).show()
-                            progressLoading.dismiss()
-                        }
                     }
+                else{
+
+                    // else it will load the group id
+                    for  (groupdoc in groupit){
+
+                        // Get the group id
+                        val groupid = groupdoc.data["GroupID"].toString().toInt()
+
+                        // Get the username from the user collection
+                        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
+                            if (userit.isEmpty){
+                                Toast.makeText(context, "User does not exist", Toast.LENGTH_SHORT).show()
+                                progressLoading.dismiss()
+                            }
+
+                            //  else it will load the user id
+                            else{
+                                 for (userdoc in userit){
+
+                                     // get the  user id
+                                     val userid = userdoc.data["UserID"].toString()
+
+                                     //  Find the group member where equals to group id and user id
+                                     db.collection("GroupMembers")
+                                         .whereEqualTo("GroupID",groupid)
+                                         .whereEqualTo("UserID", userid)
+                                         .get().addOnSuccessListener {
+                                                groupmemberit ->
+                                                if (groupmemberit.isEmpty){
+                                                    Toast.makeText(context, "User is not a member of the group", Toast.LENGTH_SHORT).show()
+                                                    progressLoading.dismiss()
+                                                }
+
+                                                // else it will load the group documents info
+                                                else{
+                                                    for (groupmemberdoc in groupmemberit){
+
+                                                        // Get the role
+                                                        val groupRole = groupmemberdoc.data["Role"].toString()
+
+                                                        if(groupRole == "Group_Admin"){
+                                                            // Find the taskname in task collection
+                                                            db.collection("Task").whereEqualTo("TaskName",tasknameSubString).get().addOnSuccessListener { taskit ->
+
+                                                                // This  will error if the task is empty
+                                                                if (taskit.isEmpty){
+                                                                    Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT).show()
+                                                                    progressLoading.dismiss()
+                                                                }else{
+
+                                                                    // Delete the task
+                                                                    for (taskdocument in taskit) {
+                                                                        val taskid = taskdocument.id
+                                                                        db.collection("Task").document(taskid).delete().addOnSuccessListener {
+
+                                                                            // Call the method success then remove the value from the task and update the recycleviewer adapter and dismiss the dialog
+                                                                            success()
+                                                                            grouptaskList.removeAt(position)
+                                                                            adapters.notifyDataSetChanged()
+                                                                            dialog.dismiss()
+                                                                            progressLoading.dismiss()
+                                                                        }.addOnFailureListener {
+                                                                            Toast.makeText(context, "Task not deleted", Toast.LENGTH_SHORT).show()
+                                                                            progressLoading.dismiss()
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                            }.addOnFailureListener {
+                                                                Toast.makeText(context, "Task not deleted", Toast.LENGTH_SHORT).show()
+                                                                progressLoading.dismiss()
+                                                            }
+                                                        }else{
+                                                            Toast.makeText(context, "You are not allowed to delete the task", Toast.LENGTH_SHORT).show()
+                                                            progressLoading.dismiss()
+                                                        }
+
+
+                                                    }
+                                                }
+                                         }
+                                }
+                            }
+
+
+                        }
+
+                    }
+
                 }
 
-            }.addOnFailureListener {
-                Toast.makeText(context, "Task not deleted", Toast.LENGTH_SHORT).show()
-                progressLoading.dismiss()
             }
 
 
