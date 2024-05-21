@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.appcompat.widget.SearchView
 import classes.GroupTaskInfo
 import com.google.firebase.firestore.ktx.firestore
@@ -61,6 +62,16 @@ class Members : Fragment() {
             username = it.getString("username").toString()
             groupNameIntent = it.getString("groupName").toString()
         }
+
+        val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
+        imageButton.setOnClickListener {
+
+            // Open the drawer when the ImageButton is clicked
+            val activity = activity as MainActivity
+            activity.openDrawer()
+
+        }
+
 
         // This is for search functions
         val searchView = view.findViewById<SearchView>(R.id.search_group)
