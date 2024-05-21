@@ -152,6 +152,14 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         fabOption2.setOnClickListener {
             // Handle option 2 click
             fabMenu.close(true)
+
+            // This will go to Members.kt
+            fragment = Members()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            bundle.putString("groupName", groupNameIntent)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
             Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
         }
 
