@@ -266,49 +266,104 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
 
                         // Get the docs id and group id
                         val groupiddocs =  groupdocs.id
-                        val groupid = groupdocs.data["GroupID"].toString().toInt()
+                        val groupidString = groupdocs.data["GroupID"].toString()
+                        var groupid = 0
 
-                        // Find the group id on task collections
-                        db.collection("Task").whereEqualTo("GroupID",groupid).get().addOnSuccessListener { taskit->
-                            if (taskit.isEmpty){
-                                Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT).show()
-                                 progressLoading.dismiss()
-                            }else{
+                        // This will check if the group id is not null or empty
+                        if (groupidString != "null" && groupidString.isNotEmpty()) {
+                            try {
 
-                                //  Load the task in the documents  and delete the task
-                                for (taskdocs in taskit){
+                                // Convert the group id to integer
+                                groupid = Integer.parseInt(groupidString)
 
-                                    // get the task id document
-                                    val taskid = taskdocs.id
+                                // Find the group id on task collections
+                                db.collection("Task").whereEqualTo("GroupID",groupidString).get().addOnSuccessListener { taskit ->
+                                    if (taskit.isEmpty) {
+                                        progressLoading.dismiss()
 
-                                    db.collection("GroupMembers").whereEqualTo("GroupID",groupid).get().addOnSuccessListener { memberit->
-                                        if (memberit.isEmpty){
-                                            Toast.makeText(context, "GroupID member does not exist", Toast.LENGTH_SHORT).show()
-                                        }else{
+                                        //  This will delete the group collections, if the task does not exist
+                                        db.collection("Group").document(groupiddocs).delete()
+                                            .addOnSuccessListener {
+                                                success()
+                                                groupList.removeAt(position)
+                                                adapter.notifyDataSetChanged()
+                                            }
+                                    } else {
 
-                                            // Load the member in the documents and delete the member
-                                            for (memberdocs in memberit){
+                                        //  Load the task in the documents  and delete the task
+                                        for (taskdocs in taskit) {
 
-                                                // Get the member document id
-                                                val memberid = memberdocs.id
 
-                                                // Delete the members, task, and group collections
-                                                db.collection("GroupMembers").document(memberid).delete().addOnSuccessListener {
-                                                    db.collection("Task").document(taskid).delete().addOnSuccessListener {
-                                                        db.collection("Group").document(groupiddocs).delete().addOnSuccessListener {
-                                                            progressLoading.dismiss()
-                                                            success()
-                                                            groupList.removeAt(position)
-                                                            adapter.notifyDataSetChanged()
+                                            // get the task id document
+                                            val taskid = taskdocs.id
+
+                                            db.collection("GroupMembers")
+                                                .whereEqualTo("GroupID", groupid).get()
+                                                .addOnSuccessListener { memberit ->
+                                                    if (memberit.isEmpty) {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "GroupID member does not exist",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+
+                                                        //  This will delete the task and group collections, if the member does not exist
+                                                        db.collection("Task").document(taskid)
+                                                            .delete().addOnSuccessListener {
+                                                                db.collection("Group")
+                                                                    .document(groupiddocs).delete()
+                                                                    .addOnSuccessListener {
+                                                                        progressLoading.dismiss()
+                                                                        success()
+                                                                        groupList.removeAt(position)
+                                                                        adapter.notifyDataSetChanged()
+                                                                    }
+                                                            }
+
+                                                    } else {
+
+                                                        // Load the member in the documents and delete the member
+                                                        for (memberdocs in memberit) {
+
+                                                            // Get the member document id
+                                                            val memberid = memberdocs.id
+
+                                                            // Delete the members, task, and group collections
+                                                            db.collection("GroupMembers")
+                                                                .document(memberid).delete()
+                                                                .addOnSuccessListener {
+                                                                    db.collection("Task")
+                                                                        .document(taskid).delete()
+                                                                        .addOnSuccessListener {
+                                                                            db.collection("Group")
+                                                                                .document(
+                                                                                    groupiddocs
+                                                                                ).delete()
+                                                                                .addOnSuccessListener {
+                                                                                    progressLoading.dismiss()
+                                                                                    success()
+                                                                                    groupList.removeAt(
+                                                                                        position
+                                                                                    )
+                                                                                    adapter.notifyDataSetChanged()
+                                                                                }
+                                                                        }
+                                                                }
                                                         }
                                                     }
                                                 }
-                                            }
                                         }
                                     }
+
+
                                 }
+                            } catch (e: NumberFormatException) {
+                                // handle the exception
+                                Toast.makeText(context, "GroupID does not exist or null", Toast.LENGTH_SHORT).show()
+                                progressLoading.dismiss()
                             }
                         }
+
 
                     }
                 }
