@@ -2,18 +2,23 @@ package com.example.efficiencymaster
 
 import adapters.CreatedGroupAdapter
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.Group
 import classes.GroupTaskInfo
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Locale
@@ -34,6 +39,7 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
     private var param2: String? = null
     lateinit var adapter:CreatedGroupAdapter
     private lateinit var recyclerView:RecyclerView
+    private lateinit var progressLoading: ProgressDialog
     var groupList = mutableListOf<Group>()
     var username = ""
     private var membersize = 0
@@ -75,7 +81,7 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
         val searchView = view.findViewById<SearchView>(R.id.search_group)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = query?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<Group>() // filtered list
 
                 // This will filter the task list
@@ -93,7 +99,7 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = newText?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<Group>() //  filter  list
 
                 // This will filter the task list
@@ -199,7 +205,166 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
             }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCancel(position: Int) {
-        TODO("Not yet implemented")
+
+        // Get the taskname from the list
+        val groupName = groupList[position].groupName
+        // cuztomize alert dialog component below
+        val builder = android.app.AlertDialog.Builder(context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
+        val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+        val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+        val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        button.text = buildString {
+            append("Delete")
+        }
+        val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
+        val imageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.confused)
+            .into(imageView1)
+        imageView1.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params = imageView1.layoutParams
+        val scale = resources.displayMetrics.density
+        params.width = (100 * scale).toInt()
+        params.height = (100 * scale).toInt()
+        imageView1.layoutParams = params
+        titleText.text = buildString {
+            append("Delete the task")
+        }
+        messageText.text = buildString {
+            append("Are you sure you want to delete the task?")
+            append(groupName)
+            append("?")
+        }
+
+        val dialog = builder.setView(dialogLayout).create()
+
+        dialog.show()
+
+        button.setOnClickListener {
+
+            // Load the progress dialog
+            progressLoading = ProgressDialog(requireContext())
+            progressLoading.setTitle("Deleting Group...")
+            progressLoading.setMessage("Please wait...")
+            progressLoading.setCanceledOnTouchOutside(false)
+            progressLoading.show()
+
+            // This will  find the group name on group collections
+            db.collection("Group").whereEqualTo("GroupName",groupName).get().addOnSuccessListener { groupit->
+                if (groupit.isEmpty){
+                    Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+                }else{
+
+                    // Loadd the documents in the group collection
+                    for  (groupdocs in groupit){
+
+                        // Get the docs id and group id
+                        val groupiddocs =  groupdocs.id
+                        val groupid = groupdocs.data["GroupID"].toString().toInt()
+
+                        // Find the group id on task collections
+                        db.collection("Task").whereEqualTo("GroupID",groupid).get().addOnSuccessListener { taskit->
+                            if (taskit.isEmpty){
+                                Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT).show()
+                                 progressLoading.dismiss()
+                            }else{
+
+                                //  Load the task in the documents  and delete the task
+                                for (taskdocs in taskit){
+
+                                    // get the task id document
+                                    val taskid = taskdocs.id
+
+                                    db.collection("GroupMembers").whereEqualTo("GroupID",groupid).get().addOnSuccessListener { memberit->
+                                        if (memberit.isEmpty){
+                                            Toast.makeText(context, "GroupID member does not exist", Toast.LENGTH_SHORT).show()
+                                        }else{
+
+                                            // Load the member in the documents and delete the member
+                                            for (memberdocs in memberit){
+
+                                                // Get the member document id
+                                                val memberid = memberdocs.id
+
+                                                // Delete the members, task, and group collections
+                                                db.collection("GroupMembers").document(memberid).delete().addOnSuccessListener {
+                                                    db.collection("Task").document(taskid).delete().addOnSuccessListener {
+                                                        db.collection("Group").document(groupiddocs).delete().addOnSuccessListener {
+                                                            progressLoading.dismiss()
+                                                            success()
+                                                            groupList.removeAt(position)
+                                                            adapter.notifyDataSetChanged()
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+        }
+
+        button2.setOnClickListener{
+            dialog.dismiss()
+        }
     }
+
+    //  This method used for success
+    private fun success(){
+        // below are the customize alert dialgo components and etc.
+        val builder1 = android.app.AlertDialog.Builder(context)
+        val inflater1 = layoutInflater
+        val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+        val titleText1= dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+        val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+        val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+        button1.text = buildString {
+            append("Ok")
+        }
+        val imageView2 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.alert)
+            .into(imageView2)
+        imageView2.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params1 = imageView2.layoutParams
+        val scale1 = resources.displayMetrics.density
+        params1.width = (100 * scale1).toInt()
+        params1.height = (100 * scale1).toInt()
+        imageView2.layoutParams = params1
+        titleText1.text = buildString {
+            append("Group Alert")
+        }
+        messageText1.text = buildString {
+            append("Group Delete Successfully .")
+        }
+
+        val dialog1 = builder1.setView(dialogLayout1).create()
+
+        dialog1.show()
+        button1.setOnClickListener{
+            dialog1.dismiss()
+        }
+    }
+
 }
