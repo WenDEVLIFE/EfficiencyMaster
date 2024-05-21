@@ -36,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        // Load the session
         load()
 
         // This will check if user is connected to the internet.

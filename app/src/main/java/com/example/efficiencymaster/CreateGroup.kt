@@ -38,6 +38,7 @@ class CreateGroup : Fragment() {
     private lateinit var progressLoading: ProgressDialog
     private lateinit var groupName:EditText
     private lateinit var groupDescription:EditText
+    private val networkManager = NetworkManager()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +54,11 @@ class CreateGroup : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
+
         // Inflate the layout for this fragment
         val view  = inflater.inflate(R.layout.fragment_create_group, container, false)
 

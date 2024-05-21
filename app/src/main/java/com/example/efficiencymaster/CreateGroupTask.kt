@@ -38,6 +38,7 @@ class CreateGroupTask : Fragment() {
     private lateinit var taskdescription: EditText
     private lateinit var progressLoading: ProgressDialog
     private lateinit var groupmemberSpinner:Spinner
+    private val networkManager = NetworkManager()
 
     val db = Firebase.firestore
     var username =""
@@ -58,6 +59,10 @@ class CreateGroupTask : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_create_group_task, container, false)
 

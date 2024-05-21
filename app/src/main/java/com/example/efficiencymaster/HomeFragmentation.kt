@@ -42,6 +42,7 @@ class HomeFragmentation : Fragment() {
     private lateinit var barChart : BarChart
     lateinit var bundle:Bundle
     lateinit var fragment:Fragment
+    private val networkManager = NetworkManager()
 
     private var username: String? = null
     private var email: String? = null
@@ -64,6 +65,12 @@ class HomeFragmentation : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
+
         // Inflate the layout for this fragment
     val view = inflater.inflate(R.layout.fragment_home_fragmentation, container, false)
 

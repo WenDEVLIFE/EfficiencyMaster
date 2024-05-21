@@ -49,6 +49,7 @@ class Registration : AppCompatActivity() {
     val db = Firebase.firestore
 
     private lateinit var progressLoading: ProgressDialog
+    private val networkManager = NetworkManager()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +61,9 @@ class Registration : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(this)
 
         // For our timer text
         timertext = findViewById(R.id.timertext)

@@ -44,6 +44,7 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
     var taskList = mutableListOf<Task>()
     var username = ""
     val db = Firebase.firestore
+    private val networkManager = NetworkManager()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +60,10 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_invidividual_task, container, false)
 

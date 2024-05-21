@@ -41,6 +41,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
     var taskList = mutableListOf<DoneTask>()
     var username =""
     private lateinit var progressLoading: ProgressDialog
+    private val networkManager = NetworkManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,10 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_done_task, container, false)
 

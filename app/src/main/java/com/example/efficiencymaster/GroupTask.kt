@@ -45,6 +45,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
     private lateinit var adapters: GroupTaskAdapter
     private lateinit var progressLoading: ProgressDialog
     val db = Firebase.firestore
+    private val networkManager = NetworkManager()
 
     var username = ""
     private var groupNameIntent = ""
@@ -64,6 +65,10 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_grouptask, container, false)
 

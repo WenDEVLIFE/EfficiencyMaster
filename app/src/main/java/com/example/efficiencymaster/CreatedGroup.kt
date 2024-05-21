@@ -44,6 +44,7 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
     var username = ""
     private var membersize = 0
     val db = Firebase.firestore
+    private val networkManager = NetworkManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +59,11 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_created_group, container, false)
 
