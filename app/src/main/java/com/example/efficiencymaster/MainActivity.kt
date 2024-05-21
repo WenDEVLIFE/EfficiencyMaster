@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     var username = ""
 
     val db = Firebase.firestore
+
+    private val networkManager = NetworkManager()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,6 +44,9 @@ class MainActivity : AppCompatActivity() {
 
         // Create an instance of SessionManager
         val sessionManager = SessionManager(this)
+
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(this)
 
         // get the intent
         val intent1 = intent
