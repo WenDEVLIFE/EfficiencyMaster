@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.favre.lib.crypto.bcrypt.BCrypt
+import classes.NetworkManager
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -23,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
 
     val db = Firebase.firestore
     private lateinit var progressLoading: ProgressDialog
+    private val networkManager = NetworkManager()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         load()
+        networkManager.checkNetworkAndExitIfNotAvailable(this)
         // Our password layout
         val passwordLayout = findViewById<TextInputLayout>(R.id.password_layout)
         val color = ContextCompat.getColor(this, R.color.black)
