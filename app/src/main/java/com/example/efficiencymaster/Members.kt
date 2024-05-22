@@ -1,5 +1,7 @@
 package com.example.efficiencymaster
 
+import adapters.MemberAdapter
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
+import classes.Member
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Locale
@@ -28,11 +33,15 @@ class Members : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var progressLoading: ProgressDialog
+    private lateinit var recycleViewer:RecyclerView
+    private lateinit var adapters: MemberAdapter
     val db = Firebase.firestore
     private val networkManager = NetworkManager()
 
     var username = ""
     private var groupNameIntent = ""
+    var memberList = mutableListOf<Member>()
+    var groupid = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,7 +122,48 @@ class Members : Fragment() {
             }
         }) */
 
+        // Set  the recycleviewer and it's components.
+        recycleViewer = view.findViewById(R.id.recycler_view)
+        recycleViewer.setLayoutManager(LinearLayoutManager(requireContext()))
+        memberList =  ArrayList()
+        adapters = MemberAdapter(memberList)
+        recycleViewer.adapter = adapters
+        loadMembers()
+
+
+
+
+
         return view
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun loadMembers(){
+        db.collection("Group").whereEqualTo("GroupName",groupNameIntent).get().addOnSuccessListener { groupit ->
+            for (groupdocument in groupit){
+                val groupIDsubString = groupdocument.data["GroupID"].toString()
+                groupid = Integer.parseInt(groupIDsubString)
+
+                db.collection("GroupMembers").whereEqualTo("GroupID", groupid).get().addOnSuccessListener{ membersit ->
+                    for (memberdocument in membersit){
+                        val memberID = memberdocument.data["UserID"].toString()
+                        val joinedDate = memberdocument.data["Joined Date"].toString()
+                        val role = memberdocument.data["Role"].toString()
+
+                        db.collection("User").whereEqualTo("UserID", memberID).get().addOnSuccessListener { userit ->
+                            for (userdocument in userit){
+                                val username = userdocument.data["username"].toString()
+                                val member = Member(username, role, memberID, joinedDate)
+                                memberList.add(member)
+                            }
+                            adapters.notifyDataSetChanged()
+                        }
+                    }
+
+
+                }
+            }
+        }
     }
 
     companion object {

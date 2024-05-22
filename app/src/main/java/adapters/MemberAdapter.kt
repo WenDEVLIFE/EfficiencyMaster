@@ -3,19 +3,15 @@ package adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import classes.Group
 import classes.Member
 import com.example.efficiencymaster.R
-import com.sun.mail.imap.protocol.FetchResponse.getItem
 
 
-class MemberAdapter(private var groupList: List<Member>) : RecyclerView.Adapter<MemberAdapter.TaskViewHolder>() {
+class MemberAdapter(private var memberList: List<Member>) : RecyclerView.Adapter<MemberAdapter.MemberViewHolder>() {
 
     private var cancelListener: ((Int) -> Unit)? = null
 
@@ -37,28 +33,28 @@ class MemberAdapter(private var groupList: List<Member>) : RecyclerView.Adapter<
         fun onEdit(position: Int)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.group_view2, parent, false)
-        return TaskViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.memberview, parent, false)
+        return MemberViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val info = groupList[position]
+    override fun onBindViewHolder(holder: MemberViewHolder, position: Int) {
+        val info = memberList[position]
         holder.bind(info)
     }
 
-    override fun getItemCount() = groupList.size
+    override fun getItemCount() = memberList.size
     fun updateList(temp: ArrayList<Member>) {
-        groupList = temp
+        memberList = temp
         notifyDataSetChanged()
 
     }
 
-    inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MemberViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val username: TextView = itemView.findViewById(R.id.textView241)
         private val roleText: EditText = itemView.findViewById(R.id.textView2411)
         private val userID:EditText = itemView.findViewById(R.id.textView2)
-        private val joinedDate:EditText = itemView.findViewById(R.id.textView3)
+        private val joinedDate:EditText = itemView.findViewById(R.id.textView13)
 
 
 
