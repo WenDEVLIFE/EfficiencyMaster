@@ -90,18 +90,18 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
 
         // This is for search functions
         val searchView = view.findViewById<SearchView>(R.id.search_group)
-        /*searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
-                val temp = ArrayList<GroupTaskInfo>() // filtered list
+                val search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Member>() // filtered list
 
                 // This will filter the task list
-                for (task in grouptaskList) {
+                for (user in memberList) {
 
                     // get the lowercase and uppercase
-                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
+                    if (user.username.lowercase(Locale.getDefault()).contains(search) || user.username.uppercase(
                             Locale.getDefault()).contains(search)) {
-                        temp.add(task)
+                        temp.add(user)
                     }
                 }
                 adapters.updateList(temp)
@@ -110,23 +110,23 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
-                val temp = ArrayList<GroupTaskInfo>() //  filter  list
+                val search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val temp = ArrayList<Member>() //  filter  list
 
                 // This will filter the task list
-                for (task in grouptaskList){
+                for (user in memberList){
 
                     // get the lowercase and uppercase
-                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
+                    if (user.username.lowercase(Locale.getDefault()).contains(search) || user.username.uppercase(
                             Locale.getDefault()).contains(search)){
-                        temp.add(task)
+                        temp.add(user)
                     }
                 }
                 // Add your search logic here
                 adapters.updateList(temp)
                 return true
             }
-        }) */
+        })
 
         // Set  the recycleviewer and it's components.
         recycleViewer = view.findViewById(R.id.recycler_view)
