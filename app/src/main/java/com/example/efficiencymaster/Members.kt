@@ -197,8 +197,13 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
             }
     }
 
+    // This remove the member from the group
     override fun onDelete(position: Int) {
+
+        // get the username position on the list
         val usernameVal = memberList[position].username
+
+        // Custom alert dialog below
         val builder = android.app.AlertDialog.Builder(context)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
@@ -225,7 +230,7 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
             append("Remove user from group")
         }
         messageText.text = buildString {
-            append("Are you sure you remove this member from the group?")
+            append("Are you sure you remove this member from the group")
             append(usernameVal)
             append("?")
         }
@@ -297,12 +302,127 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
         }
 
     }
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCancel(position: Int) {
-        Toast.makeText(requireContext(), "Cancel", Toast.LENGTH_SHORT).show()
+
     }
 
+    // This will change the user to moderator
     override fun onEdit(position: Int) {
-        Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show()
+        // get the username position on the list
+        val usernameVal = memberList[position].username
+
+        // Custom alert dialog below
+        val builder = android.app.AlertDialog.Builder(context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
+        val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+        val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+        val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        button.text = buildString {
+            append("Set to Moderator")
+        }
+        val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
+        val imageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.confused)
+            .into(imageView1)
+        imageView1.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params = imageView1.layoutParams
+        val scale = resources.displayMetrics.density
+        params.width = (100 * scale).toInt()
+        params.height = (100 * scale).toInt()
+        imageView1.layoutParams = params
+        titleText.text = buildString {
+            append("Set to Moderator")
+        }
+        messageText.text = buildString {
+            append("Are you sure you want to set this user as a moderator")
+            append(usernameVal)
+            append("?")
+        }
+
+        val dialog = builder.setView(dialogLayout).create()
+
+        dialog.show()
+
+        button.setOnClickListener{
+
+            // Load the progress dialog
+            progressLoading = ProgressDialog(requireContext())
+            progressLoading.setTitle("Loading")
+            progressLoading.setMessage("Wait while loading...")
+            progressLoading.setCanceledOnTouchOutside(false)
+            progressLoading.show()
+
+            // check if username is the same as the current user
+            if(usernameVal == username){
+                Toast.makeText(requireContext(), "You cannot change yourself to group moderator", Toast.LENGTH_SHORT).show()
+                progressLoading.dismiss()
+            }else{
+
+                // Find the group name from the group collecitons
+                db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
+                    for (groupdocument in groupit) {
+
+                        // then get the group id then convert it to string
+                        val groupIDsubString = groupdocument.data["GroupID"].toString()
+                        groupid = Integer.parseInt(groupIDsubString)
+
+                        // Find the group members where equal to group id
+                        db.collection("GroupMembers").whereEqualTo("GroupID", groupid).get()
+                            .addOnSuccessListener { membersit ->
+                                for (memberdocument in membersit) {
+
+                                    // load the user id and get it
+                                    val memberID = memberdocument.data["UserID"].toString()
+                                    val role = memberdocument.data["Role"].toString()
+
+                                    // This will check if member id is equal to retrieve id on the collection
+                                    if (memberID == memberList[position].userid) {
+
+                                        // This will check if the user is not a group admin or group moderator, if not it will change the role
+                                        if (role!= "Group_Admin" || role!= "Group_Moderator"){
+
+                                            // update the role of the user
+                                            db.collection("GroupMembers").document(memberdocument.id)
+                                                .update("Role", "Group_Moderator").addOnSuccessListener {
+
+                                                    // call the success1 method to pop up the success message
+                                                    success1()
+                                                    adapters.notifyDataSetChanged()
+                                                    dialog.dismiss()
+                                                }
+
+
+                                        } else{
+                                            Toast.makeText(requireContext(), "User is already a $role", Toast.LENGTH_SHORT).show()
+                                            progressLoading.dismiss()
+
+                                        }
+
+
+                                    }
+                                }
+
+                            }.addOnFailureListener {
+                                Toast.makeText(requireContext(), "Error removing member", Toast.LENGTH_SHORT).show()
+                                progressLoading.dismiss()
+                            }
+                    }
+                }.addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Error removing member", Toast.LENGTH_SHORT).show()
+                    progressLoading.dismiss()
+                }
+            }
+
+        }
+
+        button2.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     // This method used to pop up sucess functions
@@ -333,6 +453,44 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
         }
         messageText1.text = buildString {
             append("User has been removed from the group")
+        }
+
+        val dialog1 = builder1.setView(dialogLayout1).create()
+
+        dialog1.show()
+        button1.setOnClickListener{
+            dialog1.dismiss()
+        }
+    }
+
+    // Success message for changing the user to moderator
+    private fun success1(){
+
+        // below are the alert dialog components and etc.
+        val builder1 = android.app.AlertDialog.Builder(context)
+        val inflater1 = layoutInflater
+        val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+        val titleText1= dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+        val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+        val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+        button1.text = getString(R.string.ok)
+        val imageView2 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.paper_plane)
+            .into(imageView2)
+        imageView2.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params1 = imageView2.layoutParams
+        val scale1 = resources.displayMetrics.density
+        params1.width = (100 * scale1).toInt()
+        params1.height = (100 * scale1).toInt()
+        imageView2.layoutParams = params1
+        titleText1.text = buildString {
+            append("Group Alert")
+        }
+        messageText1.text = buildString {
+            append("User has succesfully changed to moderator")
         }
 
         val dialog1 = builder1.setView(dialogLayout1).create()
