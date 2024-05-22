@@ -8,15 +8,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
 import classes.Member
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -165,6 +170,8 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
                     }
 
 
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Error loading members", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -191,14 +198,148 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
     }
 
     override fun onDelete(position: Int) {
-        Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show()
-    }
+        val usernameVal = memberList[position].username
+        val builder = android.app.AlertDialog.Builder(context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
+        val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+        val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+        val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        button.text = buildString {
+            append("Remove")
+        }
+        val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
+        val imageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
 
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.confused)
+            .into(imageView1)
+        imageView1.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params = imageView1.layoutParams
+        val scale = resources.displayMetrics.density
+        params.width = (100 * scale).toInt()
+        params.height = (100 * scale).toInt()
+        imageView1.layoutParams = params
+        titleText.text = buildString {
+            append("Remove user from group")
+        }
+        messageText.text = buildString {
+            append("Are you sure you remove this member from the group?")
+            append(usernameVal)
+            append("?")
+        }
+
+        val dialog = builder.setView(dialogLayout).create()
+
+        dialog.show()
+
+        button.setOnClickListener{
+
+            // Load the progress dialog
+            progressLoading = ProgressDialog(requireContext())
+            progressLoading.setTitle("Loading")
+            progressLoading.setMessage("Wait while loading...")
+            progressLoading.setCanceledOnTouchOutside(false)
+            progressLoading.show()
+
+            // check if username is the same as the current user
+            if(usernameVal == username){
+                Toast.makeText(requireContext(), "You cannot remove yourself from the group", Toast.LENGTH_SHORT).show()
+                progressLoading.dismiss()
+            }else{
+
+                // Find the group name from the group collecitons
+                db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
+                    for (groupdocument in groupit) {
+
+                        // then get the group id then convert it to string
+                        val groupIDsubString = groupdocument.data["GroupID"].toString()
+                        groupid = Integer.parseInt(groupIDsubString)
+
+                        // Find the group members where equal to group id
+                        db.collection("GroupMembers").whereEqualTo("GroupID", groupid).get()
+                            .addOnSuccessListener { membersit ->
+                                for (memberdocument in membersit) {
+
+                                    // load the user id and get it
+                                    val memberID = memberdocument.data["UserID"].toString()
+
+                                    // This will check if member id is equal to retrieve id on the collection
+                                    if (memberID == memberList[position].userid) {
+
+                                        // Then remove the group members from the group
+                                        db.collection("GroupMembers").document(memberdocument.id)
+                                            .delete().addOnSuccessListener {
+                                                memberList.removeAt(position)
+                                                success()
+                                                adapters.notifyDataSetChanged()
+                                                dialog.dismiss()
+                                            }
+                                    }
+                                }
+
+                            }.addOnFailureListener {
+                                Toast.makeText(requireContext(), "Error removing member", Toast.LENGTH_SHORT).show()
+                                progressLoading.dismiss()
+                            }
+                    }
+                }.addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Error removing member", Toast.LENGTH_SHORT).show()
+                    progressLoading.dismiss()
+                }
+            }
+
+        }
+
+        button2.setOnClickListener {
+            dialog.dismiss()
+        }
+
+    }
     override fun onCancel(position: Int) {
         Toast.makeText(requireContext(), "Cancel", Toast.LENGTH_SHORT).show()
     }
 
     override fun onEdit(position: Int) {
         Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show()
+    }
+
+    // This method used to pop up sucess functions
+    private fun success(){
+
+        // below are the alert dialog components and etc.
+        val builder1 = android.app.AlertDialog.Builder(context)
+        val inflater1 = layoutInflater
+        val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+        val titleText1= dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+        val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+        val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+        button1.text = getString(R.string.ok)
+        val imageView2 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.paper_plane)
+            .into(imageView2)
+        imageView2.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params1 = imageView2.layoutParams
+        val scale1 = resources.displayMetrics.density
+        params1.width = (100 * scale1).toInt()
+        params1.height = (100 * scale1).toInt()
+        imageView2.layoutParams = params1
+        titleText1.text = buildString {
+            append("Group Alert")
+        }
+        messageText1.text = buildString {
+            append("User has been removed from the group")
+        }
+
+        val dialog1 = builder1.setView(dialogLayout1).create()
+
+        dialog1.show()
+        button1.setOnClickListener{
+            dialog1.dismiss()
+        }
     }
 }
