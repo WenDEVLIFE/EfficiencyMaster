@@ -304,7 +304,120 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
     }
     @SuppressLint("NotifyDataSetChanged")
     override fun onCancel(position: Int) {
+// get the username position on the list
+        val usernameVal = memberList[position].username
 
+        // Custom alert dialog below
+        val builder = android.app.AlertDialog.Builder(context)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.message_layout2, null)
+        val titleText = dialogLayout.findViewById<TextView>(R.id.dialog_title)
+        val messageText = dialogLayout.findViewById<TextView>(R.id.dialog_message)
+        val button = dialogLayout.findViewById<Button>(R.id.dialog_button)
+        button.text = buildString {
+            append("Remove as moderator")
+        }
+        val button2 = dialogLayout.findViewById<Button>(R.id.dialog_button2)
+        val imageView1 = dialogLayout.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.confused)
+            .into(imageView1)
+        imageView1.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params = imageView1.layoutParams
+        val scale = resources.displayMetrics.density
+        params.width = (100 * scale).toInt()
+        params.height = (100 * scale).toInt()
+        imageView1.layoutParams = params
+        titleText.text = buildString {
+            append("Remove to Moderator")
+        }
+        messageText.text = buildString {
+            append("Are you sure you want to remove this user as a moderator")
+            append(usernameVal)
+            append("?")
+        }
+
+        val dialog = builder.setView(dialogLayout).create()
+
+        dialog.show()
+
+        button.setOnClickListener{
+
+            // Load the progress dialog
+            progressLoading = ProgressDialog(requireContext())
+            progressLoading.setTitle("Loading")
+            progressLoading.setMessage("Wait while loading...")
+            progressLoading.setCanceledOnTouchOutside(false)
+            progressLoading.show()
+
+            // check if username is the same as the current user
+            if(usernameVal == username){
+                Toast.makeText(requireContext(), "You cannot remove yourself as a moderator", Toast.LENGTH_SHORT).show()
+                progressLoading.dismiss()
+            }else{
+
+                // Find the group name from the group collecitons
+                db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
+                    for (groupdocument in groupit) {
+
+                        // then get the group id then convert it to string
+                        val groupIDsubString = groupdocument.data["GroupID"].toString()
+                        groupid = Integer.parseInt(groupIDsubString)
+
+                        // Find the group members where equal to group id
+                        db.collection("GroupMembers").whereEqualTo("GroupID", groupid).get()
+                            .addOnSuccessListener { membersit ->
+                                for (memberdocument in membersit) {
+
+                                    // load the user id and get it
+                                    val memberID = memberdocument.data["UserID"].toString()
+                                    val role = memberdocument.data["Role"].toString()
+
+                                    // This will check if member id is equal to retrieve id on the collection
+                                    if (memberID == memberList[position].userid) {
+
+                                        // This will check if the user is not a group admin or group moderator, if not it will change the role
+                                        if (role!= "Group_Admin"){
+
+                                            // update the role of the user
+                                            db.collection("GroupMembers").document(memberdocument.id)
+                                                .update("Role", "Member").addOnSuccessListener {
+
+                                                    // call the success1 method to pop up the success message
+                                                    success1()
+                                                    adapters.notifyDataSetChanged()
+                                                    dialog.dismiss()
+                                                }
+
+
+                                        } else{
+                                            Toast.makeText(requireContext(), "User is a $role , you cannot remove yourself because you are the group admin", Toast.LENGTH_SHORT).show()
+                                            progressLoading.dismiss()
+
+                                        }
+
+
+                                    }
+                                }
+
+                            }.addOnFailureListener {
+                                Toast.makeText(requireContext(), "Error removing member", Toast.LENGTH_SHORT).show()
+                                progressLoading.dismiss()
+                            }
+                    }
+                }.addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Error removing member", Toast.LENGTH_SHORT).show()
+                    progressLoading.dismiss()
+                }
+            }
+
+        }
+
+        button2.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     // This will change the user to moderator
