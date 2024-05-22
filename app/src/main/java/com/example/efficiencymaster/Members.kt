@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +29,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Members.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Members : Fragment() {
+class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEditListener, MemberAdapter.OnCancelListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -128,6 +129,9 @@ class Members : Fragment() {
         memberList =  ArrayList()
         adapters = MemberAdapter(memberList)
         recycleViewer.adapter = adapters
+        adapters.setOnCancelListener(::onCancel)
+        adapters.setOnDeleteListener(::onDelete)
+        adapters.setOnEditListener(::onEdit)
         loadMembers()
 
 
@@ -184,5 +188,17 @@ class Members : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onDelete(position: Int) {
+        Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onCancel(position: Int) {
+        Toast.makeText(requireContext(), "Cancel", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onEdit(position: Int) {
+        Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show()
     }
 }

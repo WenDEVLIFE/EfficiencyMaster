@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_150sdp"
+    android:layout_height="@dimen/_120sdp"
+    android:background="@drawable/pane_layout2"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/home"
+        android:layout_width="@dimen/_150sdp"
+        android:padding="@dimen/_5sdp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_height="@dimen/_40sdp"
+        android:textSize="@dimen/_15sdp"
+        android:text="Remove from the group"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/change_to_admin"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:padding="@dimen/_5sdp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Set to moderator"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
+
+    <TextView
+        android:id="@+id/change_to_user"
+        android:layout_width="@dimen/_150sdp"
+        android:padding="@dimen/_5sdp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_height="@dimen/_40sdp"
+        android:textSize="@dimen/_15sdp"
+        android:text="Remove as moderator"
+        android:textColor="@color/black" />
+</LinearLayout>
