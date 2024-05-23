@@ -153,14 +153,42 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             // Handle option 2 click
             fabMenu.close(true)
 
-            // This will go to Members.kt
-            fragment = Members()
-            bundle = Bundle()
-            bundle.putString("username", username)
-            bundle.putString("groupName", groupNameIntent)
-            fragment.arguments = bundle
-            replaceFragment(fragment)
-            Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
+            // Find the username  from the user collection
+           db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit->
+
+               // This will error if the user is empty
+               for (userdoc in userit){
+
+                   // Get the user id
+                   val userid = userdoc.data["UserID"].toString()
+
+                   // Find the group member where equals to user id
+                   db.collection("GroupMembers").whereEqualTo("UserID",userid).get().addOnSuccessListener { groupmemberit->
+
+                       //   This will error if the group member is empty
+                       for (groupmemberdoc in groupmemberit){
+
+                           // Get the role
+                           val role = groupmemberdoc.data["Role"].toString()
+                           
+                           
+                           // this will check if the role is group admin
+                           if (role == "Group_Admin") {
+
+                               // This will go to Members.kt
+                               fragment = Members()
+                               bundle = Bundle()
+                               bundle.putString("username", username)
+                               bundle.putString("groupName", groupNameIntent)
+                               fragment.arguments = bundle
+                               replaceFragment(fragment)
+                           }else{
+                                 Toast.makeText(context, "You are not allowed to view the members", Toast.LENGTH_SHORT).show()
+                           }
+                       }
+                   }
+               }
+           }
         }
 
         fabOption3.setOnClickListener {
