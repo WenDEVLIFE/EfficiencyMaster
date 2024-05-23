@@ -12,36 +12,33 @@ import com.example.efficiencymaster.R
 
 class GroupTaskAdapter (private var grouptaskList: List<GroupTaskInfo>) : RecyclerView.Adapter<GroupTaskAdapter.TaskViewHolder>()  {
 
+    // This is the listener
     private var cancelListener: ((Int) -> Unit)? = null
 
-    private var editListener: ((Int) -> Unit)? = null
-
+// This function will set the listener
     fun setOnCancelListener(listener: (Int) -> Unit) {
         cancelListener = listener
     }
 
+    // This is the interface
     fun interface OnCancelListener {
         fun onCancel(position: Int)
     }
 
-    fun setOnEditListener(listener: (Int) -> Unit) {
-        editListener = listener
-    }
 
-    fun interface OnEditListener {
-        fun onEdit(position: Int)
-    }
-
+// This function will create the view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.group_task_view, parent, false)
         return TaskViewHolder(view)
     }
 
+    // This function will bind the data
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val info = grouptaskList[position]
         holder.bind(info)
     }
 
+    // This function will return the size of the list
     override fun getItemCount() = grouptaskList.size
     fun updateList(temp: ArrayList<GroupTaskInfo>) {
         grouptaskList = temp
@@ -49,6 +46,7 @@ class GroupTaskAdapter (private var grouptaskList: List<GroupTaskInfo>) : Recycl
 
     }
 
+    // This is the inner class
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val taskName: TextView = itemView.findViewById(R.id.textView241)
         private val details: EditText = itemView.findViewById(R.id.textView2411)
@@ -58,6 +56,7 @@ class GroupTaskAdapter (private var grouptaskList: List<GroupTaskInfo>) : Recycl
         private val CreatedBy:EditText = itemView.findViewById(R.id.textView11)
 
 
+        // This is the init block
         init {
             DeleteTask.setOnClickListener{
                 cancelListener?.invoke(adapterPosition)
@@ -66,6 +65,7 @@ class GroupTaskAdapter (private var grouptaskList: List<GroupTaskInfo>) : Recycl
 
         }
 
+        // This function will bind the data
         fun bind(info: GroupTaskInfo) {
             taskName.text = info.taskname
             details.setText(info.taskdescription)

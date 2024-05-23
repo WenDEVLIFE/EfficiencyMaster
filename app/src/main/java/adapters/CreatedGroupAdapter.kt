@@ -14,36 +14,33 @@ import com.example.efficiencymaster.R
 
 class CreatedGroupAdapter(private var groupList: List<Group>) : RecyclerView.Adapter<CreatedGroupAdapter.TaskViewHolder>() {
 
-    private var cancelListener: ((Int) -> Unit)? = null
+    private var cancelListener: ((Int) -> Unit)? = null // This is the listener
 
-    private var editListener: ((Int) -> Unit)? = null
+    // This function will set the listener
 
     fun setOnCancelListener(listener: (Int) -> Unit) {
         cancelListener = listener
     }
 
+    // This is the interface
     fun interface OnCancelListener {
         fun onCancel(position: Int)
     }
 
-    fun setOnEditListener(listener: (Int) -> Unit) {
-        editListener = listener
-    }
 
-    fun interface OnEditListener {
-        fun onEdit(position: Int)
-    }
-
+    // This function will create the view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.group_view2, parent, false)
         return TaskViewHolder(view)
     }
 
+    // This function will bind the data
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val info = groupList[position]
         holder.bind(info)
     }
 
+    // This function will return the size of the list
     override fun getItemCount() = groupList.size
     fun updateList(temp: ArrayList<Group>) {
         groupList = temp
@@ -51,6 +48,7 @@ class CreatedGroupAdapter(private var groupList: List<Group>) : RecyclerView.Ada
 
     }
 
+    // This is the view holder or inner class
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val GroupName: TextView = itemView.findViewById(R.id.textView241)
         private val Details: EditText = itemView.findViewById(R.id.textView2411)
@@ -58,6 +56,7 @@ class CreatedGroupAdapter(private var groupList: List<Group>) : RecyclerView.Ada
         private val JoinButton: Button =itemView.findViewById(R.id.button3)
 
 
+        // This function will bind the data
         init {
             JoinButton.setOnClickListener{
                 cancelListener?.invoke(adapterPosition)
@@ -66,6 +65,7 @@ class CreatedGroupAdapter(private var groupList: List<Group>) : RecyclerView.Ada
 
         }
 
+        // This function will bind the data
         fun bind(info: Group) {
             GroupName.text = info.groupName
             Details.setText(info.groupDescription)

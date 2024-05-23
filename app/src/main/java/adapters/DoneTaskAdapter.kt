@@ -18,36 +18,33 @@ import kotlin.concurrent.thread
 
 class DoneTaskAdapter(private var taskList: List<DoneTask>) : RecyclerView.Adapter<DoneTaskAdapter.TaskViewHolder>() {
 
-    private var cancelListener: ((Int) -> Unit)? = null
+    private var cancelListener: ((Int) -> Unit)? = null  // This is the listener
 
-    private var editListener: ((Int) -> Unit)? = null
 
+    // This function will set the listener
     fun setOnCancelListener(listener: (Int) -> Unit) {
         cancelListener = listener
     }
 
+    // This is the interface
     fun interface OnCancelListener {
         fun onCancel(position: Int)
     }
 
-    fun setOnEditListener(listener: (Int) -> Unit) {
-        editListener = listener
-    }
 
-    fun interface OnEditListener {
-        fun onEdit(position: Int)
-    }
-
+    // This function will create the view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.done_taskview, parent, false)
         return TaskViewHolder(view)
     }
 
+    //  This function will bind the data
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val info = taskList[position]
         holder.bind(info)
     }
 
+    // This function will return the size of the list
     override fun getItemCount() = taskList.size
     fun updateList(temp: ArrayList<DoneTask>) {
         taskList = temp
@@ -55,6 +52,7 @@ class DoneTaskAdapter(private var taskList: List<DoneTask>) : RecyclerView.Adapt
 
     }
 
+    // This is the inner class
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val TaskName: TextView = itemView.findViewById(R.id.textView241)
         private val Details: EditText = itemView.findViewById(R.id.textView2411)
@@ -63,6 +61,7 @@ class DoneTaskAdapter(private var taskList: List<DoneTask>) : RecyclerView.Adapt
         private val DeleteTask: ImageButton =itemView.findViewById(R.id.imageButton2)
 
 
+        // This function will set the listener
         init {
             DeleteTask.setOnClickListener{
                 cancelListener?.invoke(adapterPosition)
@@ -71,6 +70,7 @@ class DoneTaskAdapter(private var taskList: List<DoneTask>) : RecyclerView.Adapt
 
         }
 
+        // This function will bind the data
         fun bind(info: DoneTask) {
             TaskName.text = info.taskname
             Details.setText(info.taskdescription)
