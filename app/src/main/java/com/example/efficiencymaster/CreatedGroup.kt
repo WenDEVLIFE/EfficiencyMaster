@@ -131,11 +131,27 @@ class CreatedGroup : Fragment(), CreatedGroupAdapter.OnCancelListener {
         adapter.setOnCancelListener(::onCancel)
         loadGroup()
 
+        val floatingActionButton = view.findViewById<ImageButton>(R.id.floatingActionButton2)
+        floatingActionButton.setOnClickListener {
+            val fragment = GroupFragment()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
+        }
+
 
 
 
 
         return view
+    }
+
+    private fun replaceFragment(fragment:Fragment){
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     // This method will load the group
