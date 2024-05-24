@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                     bundle.putString("username", username)
                     homeFragmentation.arguments = bundle
                     replaceFragment(homeFragmentation)
+                    closeDrawer()
 
 
                     true
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                     bundle.putString("username", username)
                     groupFragment.arguments = bundle
                     replaceFragment(groupFragment)
+                    closeDrawer()
                     true
                 }
 
@@ -111,15 +113,16 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.profile ->{
+                    closeDrawer()
 
                     true
                 }
                 R.id.Feed ->{
-
+                    closeDrawer()
                     true
                 }
                 R.id.leadeboards  ->{
-
+                    closeDrawer()
                     true
                 }
                     // This will go to achievements
@@ -129,6 +132,7 @@ class MainActivity : AppCompatActivity() {
                     builder.setMessage("Welcome to Achievements")
                     builder.setPositiveButton("OK"){_, _ ->}
                     builder.show()
+                    closeDrawer()
                     true
                 }
 
@@ -139,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                     builder.setMessage("Welcome to User")
                     builder.setPositiveButton("OK"){ _, _ ->}
                     builder.show()
+                    closeDrawer()
                     true
                 }
 
@@ -154,6 +159,7 @@ class MainActivity : AppCompatActivity() {
 
                         // Log out the user
                         sessionManager.logOut()
+                        closeDrawer()
                     }
                     builder.setNegativeButton("No"){_, _ ->}
                     builder.show()
@@ -195,6 +201,11 @@ class MainActivity : AppCompatActivity() {
          val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
          drawerLayout.openDrawer(GravityCompat.START)
      }
+
+    fun closeDrawer(){
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+        drawerLayout.closeDrawer(GravityCompat.START)
+    }
 
     // This method used for loading the user stats.
     fun loadUserStats(){
