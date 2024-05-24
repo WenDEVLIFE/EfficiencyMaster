@@ -139,11 +139,33 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
         adapters.setOnEditListener(::onEdit)
         loadMembers()
 
+        // This is a back button
+        val floatingActionButton = view.findViewById<ImageButton>(R.id.floatingActionButton2)
+        floatingActionButton.setOnClickListener {
+            val fragment = GroupTask()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            bundle.putString("groupName", groupNameIntent)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
+
+        }
+
 
 
 
 
         return view
+    }
+
+    // Method used to Replace the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
