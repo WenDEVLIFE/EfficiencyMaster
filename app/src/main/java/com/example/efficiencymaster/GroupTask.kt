@@ -79,6 +79,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             groupNameIntent  =  it.getString("groupName").toString()
         }
 
+        // This will Open the drawer when the ImageButton is clicked
         val imageButton = view.findViewById<ImageButton>(R.id.imageButton)
         imageButton.setOnClickListener {
 
@@ -93,7 +94,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         val searchView = view.findViewById<SearchView>(R.id.search_group)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var search: String = query?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = query?.lowercase(Locale.getDefault()) ?: return false
                val temp = ArrayList<GroupTaskInfo>() // filtered list
 
                 // This will filter the task list
@@ -111,7 +112,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                var search: String = newText?.lowercase(Locale.getDefault()) ?: return false
+                val search: String = newText?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<GroupTaskInfo>() //  filter  list
 
                 // This will filter the task list
@@ -135,6 +136,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         val fabOption2 = view.findViewById<FloatingActionButton>(R.id.fab_option2)
         val fabOption3 = view.findViewById<FloatingActionButton>(R.id.fab_option3)
         val fabOption4 = view.findViewById<FloatingActionButton>(R.id.fab_option4)
+        val fabOption5 = view.findViewById<FloatingActionButton>(R.id.fab_option5)
 
         fabOption1.setOnClickListener {
             // Handle option 1 click
@@ -201,6 +203,17 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             // Handle option 4 click
             fabMenu.close(true)
             Toast.makeText(context, "View Pending Members", Toast.LENGTH_SHORT).show()
+        }
+
+        fabOption5.setOnClickListener {
+            // Handle option 5 click
+            fabMenu.close(true)
+            // This will go to joined group fragment 👾
+            fragment = YourJoinedGroup()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
         }
 
         recyclerView = view.findViewById(R.id.recycler_view)
