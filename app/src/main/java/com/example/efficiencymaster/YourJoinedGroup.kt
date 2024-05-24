@@ -125,6 +125,15 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
         adapter.setOnCancelListener(::onCancel)
         loadJoinedGroup()
 
+        val floatingActionButton = view.findViewById<ImageButton>(R.id.floatingActionButton2)
+        floatingActionButton.setOnClickListener {
+            val fragment = GroupFragment()
+            val Bundle = Bundle()
+            Bundle.putString("username", username)
+            fragment.arguments = Bundle
+            replaceFragment(fragment)
+        }
+
 
 
             return view

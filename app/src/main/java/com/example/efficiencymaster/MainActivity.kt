@@ -82,6 +82,8 @@ class MainActivity : AppCompatActivity() {
                     bundle.putString("username", username)
                     homeFragmentation.arguments = bundle
                     replaceFragment(homeFragmentation)
+
+                    // This wil close the drawer of the navigation view
                     closeDrawer()
 
 
@@ -97,6 +99,8 @@ class MainActivity : AppCompatActivity() {
                     bundle.putString("username", username)
                     groupFragment.arguments = bundle
                     replaceFragment(groupFragment)
+
+                    // This will close the drawer
                     closeDrawer()
                     true
                 }
@@ -110,18 +114,27 @@ class MainActivity : AppCompatActivity() {
                     groupFragment.arguments = bundle
                     replaceFragment(groupFragment)
 
+                    // This will close the drawer
+                    closeDrawer()
+
                     true
                 }
                 R.id.profile ->{
+
+                    // This will go to profile fragment
                     closeDrawer()
 
                     true
                 }
                 R.id.Feed ->{
+
+                    // This will go to feed fragment
                     closeDrawer()
                     true
                 }
                 R.id.leadeboards  ->{
+
+                    // This will go to leaderboards fragment
                     closeDrawer()
                     true
                 }
@@ -132,6 +145,8 @@ class MainActivity : AppCompatActivity() {
                     builder.setMessage("Welcome to Achievements")
                     builder.setPositiveButton("OK"){_, _ ->}
                     builder.show()
+
+                    // This will go to achievements fragment
                     closeDrawer()
                     true
                 }
@@ -143,6 +158,9 @@ class MainActivity : AppCompatActivity() {
                     builder.setMessage("Welcome to User")
                     builder.setPositiveButton("OK"){ _, _ ->}
                     builder.show()
+
+
+                    // This will go to user fragment
                     closeDrawer()
                     true
                 }
@@ -159,6 +177,8 @@ class MainActivity : AppCompatActivity() {
 
                         // Log out the user
                         sessionManager.logOut()
+
+                        // This will
                         closeDrawer()
                     }
                     builder.setNegativeButton("No"){_, _ ->}
@@ -170,6 +190,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             }
+
+        // get the id of username text and name text from the navheader
         usernametext = navigationView.getHeaderView(0).findViewById(R.id.username)
         nametext = navigationView.getHeaderView(0).findViewById(R.id.name)
 
@@ -250,7 +272,7 @@ class MainActivity : AppCompatActivity() {
                     db.collection("ProgresssUser").whereEqualTo("UserID", iD).get().addOnSuccessListener { progressit ->
                         if (progressit.isEmpty){
                             progresstext.text = buildString {
-                            append("Progress:01%")
+                            append("Progress:0%")
                         }
                             AlertDialog.Builder(this)
                                 .setTitle("Progress")
