@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import adapters.PendingAdapter
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -25,7 +26,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [PendingMembers.newInstance] factory method to
  * create an instance of this fragment.
  */
-class PendingMembers : Fragment() {
+class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener{
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -163,5 +164,9 @@ class PendingMembers : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onDelete(position: Int) {
+        TODO("Not yet implemented")
     }
 }
