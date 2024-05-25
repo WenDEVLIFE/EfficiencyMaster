@@ -196,13 +196,20 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         fabOption3.setOnClickListener {
             // Handle option 3 click
             fabMenu.close(true)
-            Toast.makeText(context, "View Pending Task", Toast.LENGTH_SHORT).show()
+            // This will go to PendingMembers.kt 👾
+            fragment = PendingMembers()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            bundle.putString("groupName", groupNameIntent)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
+            Toast.makeText(context, "View Pending Members", Toast.LENGTH_SHORT).show()
         }
 
         fabOption4.setOnClickListener {
             // Handle option 4 click
             fabMenu.close(true)
-            Toast.makeText(context, "View Pending Members", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "View Done Task", Toast.LENGTH_SHORT).show()
         }
 
         fabOption5.setOnClickListener {
@@ -270,7 +277,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                                 // Load the task and add on the list
                                 val groupTaskInfo = GroupTaskInfo(
                                     "Task:$taskname",
-                                    "Details:$details", "Status:$status", "Assigned:$assigned", "CreatedBy$createdBy")
+                                    "Details:$details", "Status:$status", "Assigned to:$assigned", "Created by:$createdBy")
                                 grouptaskList.add(groupTaskInfo)
                             }
 
