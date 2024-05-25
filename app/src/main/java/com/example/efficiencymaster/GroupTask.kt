@@ -196,7 +196,7 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         fabOption3.setOnClickListener {
             // Handle option 3 click
             fabMenu.close(true)
-            // This will go to PendingMembers.kt 👾
+            // This will go to MembersPending.kt 👾
             fragment = PendingMembers()
             bundle = Bundle()
             bundle.putString("username", username)
