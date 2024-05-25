@@ -11,6 +11,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -29,6 +31,7 @@ class PendingMembers : Fragment() {
     private var param2: String? = null
     lateinit var recyclerView:RecyclerView
     lateinit var progressLoading:ProgressDialog
+    val db = Firebase.firestore
 
 
     var username =""
