@@ -12,12 +12,9 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import classes.GroupTaskInfo
-import classes.Member
 import classes.MembersPending
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.ktx.firestore
@@ -91,18 +88,18 @@ class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener, PendingAdapt
 
         // This is for search functions
         val searchView = view.findViewById<SearchView>(R.id.search_group)
-        /* searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val search: String = query?.lowercase(Locale.getDefault()) ?: return false
-                val temp = ArrayList<GroupTaskInfo>() // filtered list
+                val temp = ArrayList<MembersPending>() // filtered list
 
                 // This will filter the task list
-                for (task in grouptaskList) {
+                for (member in memberList) {
 
                     // get the lowercase and uppercase
-                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
+                    if (member.username.lowercase(Locale.getDefault()).contains(search) || member.username.uppercase(
                             Locale.getDefault()).contains(search)) {
-                        temp.add(task)
+                        temp.add(member)
                     }
                 }
                 adapters.updateList(temp)
@@ -112,22 +109,22 @@ class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener, PendingAdapt
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 val search: String = newText?.lowercase(Locale.getDefault()) ?: return false
-                val temp = ArrayList<GroupTaskInfo>() //  filter  list
+                val temp = ArrayList<MembersPending>() //  filter  list
 
                 // This will filter the task list
-                for (task in grouptaskList){
+                for (member in memberList){
 
                     // get the lowercase and uppercase
-                    if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
+                    if (member.username.lowercase(Locale.getDefault()).contains(search) || member.username.uppercase(
                             Locale.getDefault()).contains(search)){
-                        temp.add(task)
+                        temp.add(member)
                     }
                 }
                 // Add your search logic here
                 adapters.updateList(temp)
                 return true
             }
-        }) */
+        })
 
 
         val floatingActionButton = view.findViewById<ImageButton>(R.id.floatingActionButton2)

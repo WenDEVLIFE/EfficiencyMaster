@@ -44,4 +44,14 @@
             android:text="Progress Xp:"
             android:textSize="14sp"
             android:textColor="@color/white" />
+    <TextView
+            android:id="@+id/levelid"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Level:"
+            android:textSize="14sp"
+            android:textColor="@color/white" />
+
+
 </LinearLayout>
