@@ -629,7 +629,7 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
 
         Glide.with(requireContext())
             .asGif()
-            .load(R.drawable.paper_plane)
+            .load(R.drawable.double_check)
             .into(imageView2)
         imageView2.scaleType = ImageView.ScaleType.FIT_CENTER
         val params1 = imageView2.layoutParams
