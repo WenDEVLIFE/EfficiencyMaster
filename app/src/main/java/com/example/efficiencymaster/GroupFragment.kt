@@ -301,28 +301,15 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
             db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
                 for (userdocument in userit){
                     val userID = userdocument.data["UserID"].toString()
-                    db.collection("Group").whereEqualTo("GroupName", groupName).get().addOnSuccessListener {
-                        for (document in userit){
+                    db.collection("Group").whereEqualTo("GroupName", groupName).get().addOnSuccessListener { groupits1  ->
+                        for (document in groupits1){
 
                             val groupID = document.data["GroupID"].toString()
+                            val groupids = Integer.parseInt(groupID)
 
                             // It will check if the user is already a member of the group
-                            db.collection("GroupMembers").get().addOnSuccessListener {  groupit ->
+                            db.collection("GroupMembers").whereEqualTo("GroupID",groupids).get().addOnSuccessListener {  groupit ->
                                 for (documennt in groupit){
-
-                                    val groupIDmem = documennt.data["GroupID"].toString()
-                                    val groupUserID = documennt.data["UserID"].toString()
-
-                                    // if the user is already a member then it wont add or send a request
-                                    if (groupID == groupIDmem && userID == groupUserID){
-                                        Toast.makeText(
-                                            context,
-                                            "You are already a member of this group",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        dialog.dismiss()
-                                    }
-                                    else{
 
                                         // hashmap for creating a request for the user
                                         val localDate = LocalDate.now()
@@ -336,28 +323,42 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
 
 
                                         // Insert the pending request for joining the group
-                                        db.collection("PendingGroupMembers").whereEqualTo("GroupID",groupID).whereEqualTo("UserID", userID).get().addOnSuccessListener {
-                                            if (it.isEmpty){
-                                                db.collection("PendingGroupMembers").add(groupMember)
-                                                    .addOnSuccessListener {
+                                        db.collection("GroupMembers").whereEqualTo("GroupID",groupids).whereEqualTo("UserID", userID).get().addOnSuccessListener {groupits2  ->
 
-                                                        // Load the success dialog
-                                                        dialog.dismiss()
-                                                       success()
+                                            // This will check if the user is already a member of the group
+                                            if (groupits2.isEmpty){
 
+                                                // This  will check if the user already send a  request to join the group
+                                               db.collection("PendingMembers").whereEqualTo("GroupID",groupids).whereEqualTo("UserID", userID).get().addOnSuccessListener {
+                                                    if (it.isEmpty){
+
+                                                        // Insert the pending request for joining the group
+                                                        db.collection("PendingGroupMembers").add(groupMember)
+                                                            .addOnSuccessListener {
+
+                                                                // Load the success dialog
+                                                                dialog.dismiss()
+                                                                success()
+
+                                                            }
+                                                            .addOnFailureListener {
+                                                                Toast.makeText(context, "Error sending request", Toast.LENGTH_SHORT).show()
+                                                                dialog.dismiss()
+                                                                warning()
+                                                            }
+                                                    }else{
+                                                        warning()
                                                     }
-                                                    .addOnFailureListener {
-                                                        Toast.makeText(context, "Error sending request", Toast.LENGTH_SHORT).show()
-                                                        dialog.dismiss()
-                                                    }
+                                                }
+                                                dialog.dismiss()
                                             }else{
 
                                                 // Load the warning dialog
                                                 dialog.dismiss()
-                                                warning()
+                                              Toast.makeText(context, "You already a member of the group", Toast.LENGTH_SHORT).show()
                                             }
                                         }
-                                    }
+
 
                                 }
                             }

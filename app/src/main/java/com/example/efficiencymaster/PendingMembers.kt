@@ -324,7 +324,7 @@ class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener, PendingAdapt
     }
 
     override fun onEdit(position: Int) {
-        TODO("Not yet implemented")
+
     }
 
     // This method used to pop up sucess functions
