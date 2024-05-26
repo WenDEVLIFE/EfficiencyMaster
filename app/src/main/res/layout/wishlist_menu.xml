@@ -34,4 +34,14 @@
         android:text="Remove as moderator"
         android:textColor="@color/black"
         android:textSize="@dimen/_15sdp" />
+
+    <TextView
+        android:id="@+id/close_menu"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:fontFamily="sans-serif-condensed"
+        android:padding="@dimen/_5sdp"
+        android:text="Cancel"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
 </LinearLayout>
