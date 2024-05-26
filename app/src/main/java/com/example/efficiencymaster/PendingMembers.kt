@@ -12,6 +12,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
+import classes.Member
+import classes.MembersPending
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Locale
@@ -26,17 +28,19 @@ private const val ARG_PARAM2 = "param2"
  * Use the [PendingMembers.newInstance] factory method to
  * create an instance of this fragment.
  */
-class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener{
+class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener, PendingAdapter.OnEditListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     lateinit var recyclerView:RecyclerView
     lateinit var progressLoading:ProgressDialog
+    lateinit var adapters:PendingAdapter
     val db = Firebase.firestore
 
 
     var username =""
     var groupNameIntent=""
+    var memberList = mutableListOf<MembersPending>()
     private val networkManager = NetworkManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,6 +138,7 @@ class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener{
         recyclerView.setLayoutManager(LinearLayoutManager(context))
 
 
+
         return view
     }
 
@@ -167,6 +172,10 @@ class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener{
     }
 
     override fun onDelete(position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onEdit(position: Int) {
         TODO("Not yet implemented")
     }
 }

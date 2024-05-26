@@ -111,17 +111,18 @@ class PendingAdapter(private var memberList: List<MembersPending>) : RecyclerVie
 
             // This will show the popup menu
             val deniedBtn = popupView.findViewById<TextView>(R.id.home)
+            deniedBtn.setText("Denied Membership")
             deniedBtn.setOnClickListener {
                 deleteListener?.invoke(adapterPosition)
                 popupWindow.dismiss()
             }
 
             // This will show the popup menu
-            val CloseMenu = popupView.findViewById<TextView>(R.id.change_to_admin)
-            CloseMenu.visibility = View.VISIBLE
-            CloseMenu.setOnClickListener {
-                // editListener?.invoke(adapterPosition)
-
+            val acceptBtn = popupView.findViewById<TextView>(R.id.change_to_admin)
+            acceptBtn.setText("Accept Membership")
+            acceptBtn.setOnClickListener {
+                editListener?.invoke(adapterPosition)
+                popupWindow.dismiss()
             }
 
             // This will show the popup menu
