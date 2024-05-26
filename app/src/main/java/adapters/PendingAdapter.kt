@@ -118,16 +118,22 @@ class PendingAdapter(private var memberList: List<MembersPending>) : RecyclerVie
 
             // This will show the popup menu
             val CloseMenu = popupView.findViewById<TextView>(R.id.change_to_admin)
+            CloseMenu.visibility = View.VISIBLE
             CloseMenu.setOnClickListener {
                 // editListener?.invoke(adapterPosition)
-                popupWindow.dismiss()
+
             }
 
             // This will show the popup menu
             val changeToUser = popupView.findViewById<TextView>(R.id.change_to_user)
             changeToUser.visibility = View.VISIBLE
             changeToUser.setOnClickListener {
-                cancelListener?.invoke(adapterPosition)
+               // cancelListener?.invoke(adapterPosition)
+                popupWindow.dismiss()
+            }
+
+            val cancel_menu = popupView.findViewById<TextView>(R.id.close_menu)
+            cancel_menu.setOnClickListener {
                 popupWindow.dismiss()
             }
 

@@ -133,6 +133,11 @@ class MemberAdapter(private var memberList: List<Member>) : RecyclerView.Adapter
                 popupWindow.dismiss()
             }
 
+            val cancel_menu = popupView.findViewById<TextView>(R.id.close_menu)
+            cancel_menu.setOnClickListener {
+                popupWindow.dismiss()
+            }
+
             // This will show the popup menu as dropdown
             popupWindow.showAsDropDown(view)
         }

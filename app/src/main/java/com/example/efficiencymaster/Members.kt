@@ -169,24 +169,40 @@ class Members : Fragment(), MemberAdapter.OnDeleteListener, MemberAdapter.OnEdit
     }
 
     @SuppressLint("NotifyDataSetChanged")
+
+    // This method is used to load the members of the group
     private fun loadMembers(){
+
+        // Find the group name from the group collecitons
         db.collection("Group").whereEqualTo("GroupName",groupNameIntent).get().addOnSuccessListener { groupit ->
             for (groupdocument in groupit){
+
+                // get the group id and convert it to string
                 val groupIDsubString = groupdocument.data["GroupID"].toString()
+
+                // convert the string to integer
                 groupid = Integer.parseInt(groupIDsubString)
 
+                //Find the group members where equal to group id
                 db.collection("GroupMembers").whereEqualTo("GroupID", groupid).get().addOnSuccessListener{ membersit ->
                     for (memberdocument in membersit){
+
+                        // Load the user id, joined date and role
                         val memberID = memberdocument.data["UserID"].toString()
                         val joinedDate = memberdocument.data["Joined Date"].toString()
                         val role = memberdocument.data["Role"].toString()
 
+                        // Find the user id from the user collection
                         db.collection("User").whereEqualTo("UserID", memberID).get().addOnSuccessListener { userit ->
                             for (userdocument in userit){
+
+                                // Load the username from the user collection  and add it on the list
                                 val username = userdocument.data["username"].toString()
                                 val member = Member(username, role, memberID, joinedDate)
-                                memberList.add(member)
+                                memberList.add(member) // Add the member to the list
                             }
+
+                            // Notify the adapter
                             adapters.notifyDataSetChanged()
                         }
                     }
