@@ -100,7 +100,7 @@ class PendingAdapter(private var memberList: List<MembersPending>) : RecyclerVie
             val inflater = LayoutInflater.from(view.context)
 
             // This will inflate the menu
-            val popupView = inflater.inflate(R.layout.wishlist_menu, null)
+            val popupView = inflater.inflate(R.layout.whistlist_layout1, null)
 
             // This will create a popup window
             val popupWindow = PopupWindow(
@@ -122,14 +122,6 @@ class PendingAdapter(private var memberList: List<MembersPending>) : RecyclerVie
             acceptBtn.setText("Accept Membership")
             acceptBtn.setOnClickListener {
                 editListener?.invoke(adapterPosition)
-                popupWindow.dismiss()
-            }
-
-            // This will show the popup menu
-            val changeToUser = popupView.findViewById<TextView>(R.id.change_to_user)
-            changeToUser.visibility = View.VISIBLE
-            changeToUser.setOnClickListener {
-               // cancelListener?.invoke(adapterPosition)
                 popupWindow.dismiss()
             }
 

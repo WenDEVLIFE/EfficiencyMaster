@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/_150sdp"
-    android:layout_height="@dimen/_170sdp"
+    android:layout_height="@dimen/_120sdp"
     android:background="@drawable/menu_customizer"
     android:orientation="vertical">
 
@@ -12,7 +12,7 @@
         android:fontFamily="sans-serif-condensed"
         android:layout_height="@dimen/_40sdp"
         android:textSize="@dimen/_15sdp"
-        android:text="Remove from the group"
+        android:text="Denied Membership"
         android:textColor="@color/black" />
 
     <TextView
@@ -21,17 +21,7 @@
         android:layout_height="@dimen/_40sdp"
         android:padding="@dimen/_5sdp"
         android:fontFamily="sans-serif-condensed"
-        android:text="Set to moderator"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_15sdp" />
-
-    <TextView
-        android:id="@+id/change_to_user"
-        android:layout_width="@dimen/_150sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:fontFamily="sans-serif-condensed"
-        android:padding="@dimen/_5sdp"
-        android:text="Remove as moderator"
+        android:text="Accept Membership"
         android:textColor="@color/black"
         android:textSize="@dimen/_15sdp" />
 

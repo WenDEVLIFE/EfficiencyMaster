@@ -1,6 +1,7 @@
 package com.example.efficiencymaster
 
 import adapters.PendingAdapter
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -136,10 +137,55 @@ class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener, PendingAdapt
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setLayoutManager(LinearLayoutManager(context))
+        memberList = ArrayList()
+        adapters = PendingAdapter(memberList)
+        recyclerView.adapter = adapters
+        adapters.setOnDeleteListener(::onDelete)
+        adapters.setOnEditListener(::onEdit)
+        loadPendingMembers()
 
 
 
         return view
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun loadPendingMembers(){
+
+        // This will get the group id
+        db.collection("Group").whereEqualTo("GroupName",groupNameIntent).get().addOnSuccessListener { documents ->
+            for (document in documents){
+
+                // This will get the group id
+                val groupid = document.data["GroupID"].toString()
+
+                // This will get the pending members
+                db.collection("PendingGroupMembers").whereEqualTo("GroupID",groupid).get().addOnSuccessListener { pendingit ->
+                    for (pendingdocs in pendingit){
+                        // This will get the user id, status and date request
+                           val userid= pendingdocs.data["UserID"].toString()
+                           val status = pendingdocs.data["Status"].toString()
+                           val dateRequest = pendingdocs.data["Date Requested"].toString()
+
+                        // This will get the username
+                        db.collection("User").whereEqualTo("UserID",userid).get().addOnSuccessListener { userit ->
+                            for (userdocs in userit){
+
+                                // This will get the username
+                                val username = userdocs.data["username"].toString()
+
+                                // add the member to the list
+                                val member = MembersPending(username,groupNameIntent,status,dateRequest)
+                                memberList.add(member)
+                            }
+                            // notify the adapters
+                            adapters.notifyDataSetChanged()
+                        }
+
+                    }
+                }
+            }
+        }
     }
 
     // Method used to Replace the fragment
