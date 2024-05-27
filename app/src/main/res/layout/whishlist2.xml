@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_150sdp"
+    android:layout_height="@dimen/_90sdp"
+    android:background="@drawable/menu_customizer"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/home"
+        android:layout_width="@dimen/_150sdp"
+        android:padding="@dimen/_5sdp"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_height="@dimen/_40sdp"
+        android:textSize="@dimen/_15sdp"
+        android:text="Delete task"
+        android:textColor="@color/black" />
+
+
+
+    <TextView
+        android:id="@+id/close_menu"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:fontFamily="sans-serif-condensed"
+        android:padding="@dimen/_5sdp"
+        android:text="Cancel"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
+</LinearLayout>

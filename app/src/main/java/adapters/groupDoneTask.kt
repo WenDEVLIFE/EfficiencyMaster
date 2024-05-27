@@ -100,7 +100,7 @@ class groupDoneTask(private var memberList: List<MembersPending>) : RecyclerView
             val inflater = LayoutInflater.from(view.context)
 
             // This will inflate the menu
-            val popupView = inflater.inflate(R.layout.whistlist_layout1, null)
+            val popupView = inflater.inflate(R.layout.whishlist2, null)
 
             // This will create a popup window
             val popupWindow = PopupWindow(
@@ -117,14 +117,6 @@ class groupDoneTask(private var memberList: List<MembersPending>) : RecyclerView
                 popupWindow.dismiss()
             }
 
-            // This will show the popup menu
-            val acceptBtn = popupView.findViewById<TextView>(R.id.change_to_admin)
-            acceptBtn.setText("Accept Membership")
-            acceptBtn.visibility = View.GONE
-            acceptBtn.setOnClickListener {
-               // editListener?.invoke(adapterPosition)
-                popupWindow.dismiss()
-            }
 
             val cancel_menu = popupView.findViewById<TextView>(R.id.close_menu)
             cancel_menu.setOnClickListener {
