@@ -197,10 +197,15 @@ class GroupDoneTask : Fragment() {
         return view
     }
 
+    // Load the stats of the group
     private fun loadStats(){
+
+        // Find the group name on the group collection
       db.collection("Group").whereEqualTo("GroupName",groupNameIntent).get().addOnSuccessListener { groupit->
           for (group in groupit){
 
+
+              // Get the group id
               val groupid = group.data["GroupID"].toString()
 
               db.collection("Task").whereEqualTo("GroupID",groupid).get().addOnSuccessListener { taskit->
