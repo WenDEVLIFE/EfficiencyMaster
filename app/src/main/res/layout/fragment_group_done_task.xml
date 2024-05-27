@@ -22,8 +22,9 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="@dimen/_305sdp"
                 android:layout_height="@dimen/_220sdp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.571"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_group" />
 
@@ -170,6 +171,15 @@
                 app:searchIcon="@drawable/find">
 
             </androidx.appcompat.widget.SearchView>
+
+            <Space
+                android:layout_width="@dimen/_310sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.625"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
