@@ -1,6 +1,6 @@
 package com.example.efficiencymaster
 
-import adapters.GroupTaskAdapter
+import adapters.groupDoneTaskAdapter
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
-import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -29,14 +29,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [GroupDoneTask.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GroupDoneTask : Fragment() {
+class GroupDoneTask : Fragment(),groupDoneTaskAdapter.OnDeleteListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var recycleView:RecyclerView
+    private lateinit var recycleView:RecyclerView
     private lateinit var circularProgressBar : CircularProgressBar
     private lateinit var circularProgressBar2 : CircularProgressBar
-    private lateinit var adapter:GroupTaskAdapter
+    private lateinit var adapter:groupDoneTaskAdapter
     private lateinit var percentage : TextView
     private lateinit var taskDone : TextView
     private var retriveCount1:Double = 0.00
@@ -81,17 +81,18 @@ class GroupDoneTask : Fragment() {
             activity.openDrawer()
 
         }
-
+        taskDone = view.findViewById(R.id.done_task_count)
+        percentage = view.findViewById(R.id.textView5)
 
         // This is for search functions
         val searchView = view.findViewById<SearchView>(R.id.search_group)
-        /* searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val search: String = query?.lowercase(Locale.getDefault()) ?: return false
                 val temp = ArrayList<GroupTaskInfo>() // filtered list
 
                 // This will filter the task list
-                for (task in grouptaskList) {
+                for (task in groupTaskList) {
 
                     // get the lowercase and uppercase
                     if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
@@ -99,7 +100,7 @@ class GroupDoneTask : Fragment() {
                         temp.add(task)
                     }
                 }
-                adapters.updateList(temp)
+                adapter.updateList(temp)
                 // Add your search logic here
                 return true
             }
@@ -109,7 +110,7 @@ class GroupDoneTask : Fragment() {
                 val temp = ArrayList<GroupTaskInfo>() //  filter  list
 
                 // This will filter the task list
-                for (task in grouptaskList){
+                for (task in groupTaskList){
 
                     // get the lowercase and uppercase
                     if (task.taskname.lowercase(Locale.getDefault()).contains(search) || task.taskname.uppercase(
@@ -118,16 +119,10 @@ class GroupDoneTask : Fragment() {
                     }
                 }
                 // Add your search logic here
-                adapters.updateList(temp)
+                adapter.updateList(temp)
                 return true
             }
-        }) */
-
-
-
-
-        taskDone = view.findViewById(R.id.done_task_count)
-        percentage = view.findViewById(R.id.textView5)
+        })
 
         circularProgressBar = view.findViewById(R.id.circularProgressBar)
         circularProgressBar.apply {
@@ -200,11 +195,63 @@ class GroupDoneTask : Fragment() {
         recycleView = view.findViewById(R.id.recycler_view)
         recycleView.setLayoutManager(LinearLayoutManager(context))
         groupTaskList = ArrayList()
-        adapter = GroupTaskAdapter(groupTaskList)
+        adapter = groupDoneTaskAdapter(groupTaskList)
         recycleView.adapter = adapter
+        adapter.setOnDeleteListener(::onDelete)
+        loadTask()
 
 
         return view
+    }
+
+    private fun loadTask(){
+        // Find the  group name on the group collection
+        db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { grouptaskit ->
+            if (grouptaskit.isEmpty) {
+                Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+            }else{
+                //  Then if found it  will load the group id
+                for (groupdocument in grouptaskit){
+
+                    // get the group id from the database
+                    val groupid =  groupdocument.data["GroupID"].toString()
+
+                    // Find the task group where equals to group id
+                    db.collection("Task").whereEqualTo("GroupID", groupid).get().addOnSuccessListener { taskit ->
+                        if (taskit.isEmpty) {
+                            Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT).show()
+                        }else{
+
+                            // Then load the task details
+                            for (taskdocument in taskit){
+                                val taskname = taskdocument.data["TaskName"].toString()
+                                val details = taskdocument.data["TaskDescription"].toString()
+                                val status = taskdocument.data["Status"].toString()
+                                val assigned = taskdocument.data["AssignedTo"].toString()
+                                val createdBy = taskdocument.data["CreatedBy"].toString()
+
+                                // Check if the status is done
+                                if  (status == "Done"){
+
+                                    // Load the task and add on the list
+                                    val groupTaskInfo = GroupTaskInfo(
+                                        "Task:$taskname",
+                                        "Details:$details", "Status:$status", "Assigned to:$assigned", "Created by:$createdBy")
+                                    groupTaskList.add(groupTaskInfo)
+                                }
+                            }
+
+                            // Notify the adapter
+                            adapter.notifyDataSetChanged()
+                        }
+                    }
+
+
+
+                }
+
+            }
+        }
     }
 
     // Load the stats of the group
@@ -278,7 +325,7 @@ class GroupDoneTask : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment groupDoneTask.
+         * @return A new instance of fragment groupDoneTaskAdapter.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
@@ -289,5 +336,9 @@ class GroupDoneTask : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onDelete(position: Int) {
+        TODO("Not yet implemented")
     }
 }

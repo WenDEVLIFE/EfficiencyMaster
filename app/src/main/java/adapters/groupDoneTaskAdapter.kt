@@ -8,11 +8,11 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import classes.MembersPending
+import classes.GroupTaskInfo
 import com.example.efficiencymaster.R
 
 
-class groupDoneTask(private var memberList: List<MembersPending>) : RecyclerView.Adapter<groupDoneTask.TaskViewHolder>() {
+class groupDoneTaskAdapter(private var memberList: List<GroupTaskInfo>) : RecyclerView.Adapter<groupDoneTaskAdapter.TaskViewHolder>() {
 
     private var cancelListener: ((Int) -> Unit)? = null // This is the listener
 
@@ -57,7 +57,7 @@ class groupDoneTask(private var memberList: List<MembersPending>) : RecyclerView
     }
 
     override fun getItemCount() = memberList.size
-    fun updateList(temp: ArrayList<MembersPending>) {
+    fun updateList(temp: ArrayList<GroupTaskInfo>) {
         memberList = temp
         notifyDataSetChanged()
 
@@ -65,11 +65,11 @@ class groupDoneTask(private var memberList: List<MembersPending>) : RecyclerView
 
     // This is the inner class
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val username: TextView = itemView.findViewById(R.id.textView241)
-        private val groupNames: EditText = itemView.findViewById(R.id.textView2411)
-        private val status:EditText = itemView.findViewById(R.id.textView2)
-        private val dateRequest:EditText = itemView.findViewById(R.id.textView13)
-
+        private val taskName: TextView = itemView.findViewById(R.id.textView241)
+        private val details: EditText = itemView.findViewById(R.id.textView2411)
+        private val statusText: EditText = itemView.findViewById(R.id.textView2)
+        private val assignedText: EditText = itemView.findViewById(R.id.textView3)
+        private val CreatedBy:EditText = itemView.findViewById(R.id.textView11)
 
         // This is the init block
         init {
@@ -80,15 +80,16 @@ class groupDoneTask(private var memberList: List<MembersPending>) : RecyclerView
         }
 
         // This function will bind the data
-        fun bind(info: MembersPending) {
-            username.text = info.username
-            groupNames.setText(info.groupName)
-            groupNames.isEnabled = false
-            status.setText(info.status)
-            status.isEnabled = false
-            dateRequest.setText(info.dateRequest)
-            dateRequest.isEnabled = false
-
+        fun bind(info: GroupTaskInfo) {
+            taskName.text = info.taskname
+            details.setText(info.taskdescription)
+            details.isEnabled = false
+            statusText.setText(info.status)
+            statusText.isEnabled = false
+            assignedText.setText(info.assigned)
+            assignedText.isEnabled = false
+            CreatedBy.setText(info.createdby)
+            CreatedBy.isEnabled = false
 
 
         }
