@@ -141,18 +141,32 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         fabOption1.setOnClickListener {
             // Handle option 1 click
             fabMenu.close(true)
+
+            // This will go to add group task
             Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
+
+            // Find the group name on the group collections
             db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
+
+                // If the group is empty it will show the toast message
                 if (groupit.isEmpty) {
                     Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
                 } else {
+
+                    // else it will load the group id
                     for (groupdoc in groupit) {
+
+                        // Get the group id from the database
                         val groupid = groupdoc.data["GroupID"].toString()
-                        val groupids = Integer.parseInt(groupid)
+                        val groupids = Integer.parseInt(groupid) // convert the group id to integer
+
+                        // Find the group member where equals to group id and user id
                         db.collection("GroupMembers")
                             .whereEqualTo("GroupID", groupids)
                             .whereEqualTo("UserID", username).get()
                             .addOnSuccessListener { groupmemberit ->
+
+                                // If the group member is empty it will show the toast message
                                 if (groupmemberit.isEmpty) {
                                     Toast.makeText(
                                         context,
@@ -160,16 +174,27 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else {
+
+                                    // else it will load the group documents info
                                     for (groupmemberdoc in groupmemberit) {
+
+                                        // Get the role from the database
                                         val groupRole = groupmemberdoc.data["Role"].toString()
+
+                                        // This will check if the role is group admin or not
                                         if (groupRole == "Group_Admin") {
+
+                                            // This will go to CreateGroupTask.kt 👾
                                             fragment = CreateGroupTask()
                                             bundle = Bundle()
                                             bundle.putString("username", username)
                                             bundle.putString("groupName", groupNameIntent)
                                             fragment.arguments = bundle
                                             replaceFragment(fragment)
-                                        } else {
+                                        }
+
+                                        // Else it will show the toast message
+                                        else {
                                             Toast.makeText(
                                                 context,
                                                 "You are not allowed to edit the group",
@@ -190,26 +215,47 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             // Handle option 2 click
             fabMenu.close(true)
 
+            // This will go to Members.kt 👾
           db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
               if (groupit.isEmpty) {
                   Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
-              } else {
+              }
+
+              // else it will load the group id
+              else {
+
+                  // Find the group id from the database
                   for (groupdoc in groupit) {
+
+                      // Get the group id
                       val groupid = groupdoc.data["GroupID"].toString()
-                      val groupids = Integer.parseInt(groupid)
+                      val groupids = Integer.parseInt(groupid) // convert the group id to integer
+
+                      // Find the group member where equals to group id and user id
                       db.collection("GroupMembers")
                           .whereEqualTo("GroupID", groupids)
                           .whereEqualTo("UserID", username).get()
                           .addOnSuccessListener { groupmemberit ->
+
+                              // If the group member is empty it will show the toast message
                               if (groupmemberit.isEmpty) {
                                   Toast.makeText(
                                       context,
                                       "User is not a member of the group",
                                       Toast.LENGTH_SHORT
                                   ).show()
-                              } else {
+                              }
+
+                              // else it will load the group documents info
+                              else {
+
+                                  // Get the role from the database
                                   for (groupmemberdoc in groupmemberit) {
+
+                                      // Get the role from the database
                                       val groupRole = groupmemberdoc.data["Role"].toString()
+
+                                      // This will check if the role is group admin or not
                                       if (groupRole == "Group_Admin") {
                                           fragment = Members()
                                           bundle = Bundle()
@@ -217,7 +263,8 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                                           bundle.putString("groupName", groupNameIntent)
                                           fragment.arguments = bundle
                                           replaceFragment(fragment)
-                                      } else {
+                                      }
+                                      else {
                                           Toast.makeText(
                                               context,
                                               "You are not allowed to edit the group",
@@ -244,13 +291,21 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                 if (groupit.isEmpty) {
                     Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
                 } else {
+
+                    // else it will load the group id
                     for (groupdoc in groupit) {
+
+                        // Get the group id from the database
                         val groupid = groupdoc.data["GroupID"].toString()
-                        val groupids = Integer.parseInt(groupid)
+                        val groupids = Integer.parseInt(groupid) // convert the group id to integer
+
+                        // Find the group member where equals to group id and user id
                         db.collection("GroupMembers")
                             .whereEqualTo("GroupID", groupids)
                             .whereEqualTo("UserID", username).get()
                             .addOnSuccessListener { groupmemberit ->
+
+                                // If the group member is empty it will show the toast message
                                 if (groupmemberit.isEmpty) {
                                     Toast.makeText(
                                         context,
@@ -258,8 +313,14 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else {
+
+                                    // else it will load the group documents info
                                     for (groupmemberdoc in groupmemberit) {
+
+                                        // Get the role from the database
                                         val groupRole = groupmemberdoc.data["Role"].toString()
+
+                                        // This will check if the role is group admin or not
                                         if (groupRole == "Group_Admin") {
                                             fragment = PendingMembers()
                                             bundle = Bundle()
@@ -267,7 +328,10 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                                             bundle.putString("groupName", groupNameIntent)
                                             fragment.arguments = bundle
                                             replaceFragment(fragment)
-                                        } else {
+                                        }
+
+                                        // else it will show the toast message
+                                        else {
                                             Toast.makeText(
                                                 context,
                                                 "You are not allowed to edit the group",
