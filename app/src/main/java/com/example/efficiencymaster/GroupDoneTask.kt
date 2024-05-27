@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import adapters.GroupTaskAdapter
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import classes.GroupTaskInfo
 import com.google.firebase.firestore.firestore
@@ -34,6 +36,7 @@ class GroupDoneTask : Fragment() {
     lateinit var recycleView:RecyclerView
     private lateinit var circularProgressBar : CircularProgressBar
     private lateinit var circularProgressBar2 : CircularProgressBar
+    private lateinit var adapter:GroupTaskAdapter
     private lateinit var percentage : TextView
     private lateinit var taskDone : TextView
     private var retriveCount1:Double = 0.00
@@ -43,7 +46,7 @@ class GroupDoneTask : Fragment() {
 
     var groupNameIntent = ""
     var username =""
-    var groupTaskList = mutableListOf<GroupTask>()
+    var groupTaskList = mutableListOf<GroupTaskInfo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -194,6 +197,13 @@ class GroupDoneTask : Fragment() {
         loadStats()
 
 
+        recycleView = view.findViewById(R.id.recycler_view)
+        recycleView.setLayoutManager(LinearLayoutManager(context))
+        groupTaskList = ArrayList()
+        adapter = GroupTaskAdapter(groupTaskList)
+        recycleView.adapter = adapter
+
+
         return view
     }
 
@@ -268,7 +278,7 @@ class GroupDoneTask : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment GroupDoneTask.
+         * @return A new instance of fragment groupDoneTask.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
