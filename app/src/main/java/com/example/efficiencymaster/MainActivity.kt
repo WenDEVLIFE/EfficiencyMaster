@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var nametext: TextView
 
+    private lateinit var leveltext: TextView
+
     private lateinit var progresstext: TextView
 
     private lateinit var userImage: ImageView
@@ -61,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         nametext = navigationView.getHeaderView(0).findViewById(R.id.name)
         userImage = navigationView.getHeaderView(0).findViewById(R.id.user_icon)
         progresstext = navigationView.getHeaderView(0).findViewById(R.id.progress_id)
+        leveltext = navigationView.getHeaderView(0).findViewById(R.id.levelid)
         loadUserStats()
 
         // This is the navigation view listener.
@@ -191,11 +194,6 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-        // get the id of username text and name text from the navheader
-        usernametext = navigationView.getHeaderView(0).findViewById(R.id.username)
-        nametext = navigationView.getHeaderView(0).findViewById(R.id.name)
-
-
         loadHome()
     }
 
@@ -224,6 +222,7 @@ class MainActivity : AppCompatActivity() {
          drawerLayout.openDrawer(GravityCompat.START)
      }
 
+    //  This will close the drawer menu
     fun closeDrawer(){
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -273,6 +272,10 @@ class MainActivity : AppCompatActivity() {
                         if (progressit.isEmpty){
                             progresstext.text = buildString {
                             append("Progress:0%")
+
+                                leveltext.text = buildString {
+                                    append("Level: unknown")
+                                }
                         }
                             AlertDialog.Builder(this)
                                 .setTitle("Progress")
@@ -280,8 +283,13 @@ class MainActivity : AppCompatActivity() {
                                 .setPositiveButton("OK"){_, _ ->}
                                 .show()
                         }else{
+
+                            // Retrieve the progress of the user
                             for (document in progressit){
+
+                                //  get the progress xp
                                 val progress = document.getLong("ProgressXp") // Retrieve as Long
+                                levels(progress)
                                 progresstext.text = buildString {
                                 append("Progress: ")
                                 append(progress.toString())
@@ -293,5 +301,141 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    // This will load a levels
+    private fun levels(progress: Long?) {
+
+        // Check if the progress is not null
+        if (progress != null) {
+
+            // This will check the progress of the user and assign a level to the user
+            if (progress in 0..10000){
+                leveltext.text = buildString {
+                    append("Level: 1")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 10000..25000){
+                leveltext.text = buildString {
+                    append("Level: 2")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 26000..35000){
+                leveltext.text = buildString {
+                    append("Level: 3")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 36000..45000){
+                leveltext.text = buildString {
+                    append("Level: 4")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 46000..55000){
+                leveltext.text = buildString {
+                    append("Level: 5")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 56000..65000){
+                leveltext.text = buildString {
+                    append("Level: 6")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 66000..75000){
+                leveltext.text = buildString {
+                    append("Level: 7")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 76000..85000){
+                leveltext.text = buildString {
+                    append("Level: 8")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 86000..95000){
+                leveltext.text = buildString {
+                    append("Level: 9")
+                }
+
+                // This will check the progress of the user and assign a level to the user
+            }else if (progress in 96000..100000){
+                leveltext.text = buildString {
+                    append("Level: 10")
+                }
+            }
+            else if (progress in 100000..110000){
+                leveltext.text = buildString {
+                    append("Level: 11")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 110000..120000){
+                leveltext.text = buildString {
+                    append("Level: 12")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 120000..130000){
+                leveltext.text = buildString {
+                    append("Level: 13")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 130000..140000){
+                leveltext.text = buildString {
+                    append("Level: 14")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 140000..150000){
+                leveltext.text = buildString {
+                    append("Level: 15")
+                }
+            }
+            else if (progress in 150000..160000){
+                leveltext.text = buildString {
+                    append("Level: 16")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 160000..170000){
+                leveltext.text = buildString {
+                    append("Level: 17")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 170000..180000){
+                leveltext.text = buildString {
+                    append("Level: 18")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 180000..190000){
+                leveltext.text = buildString {
+                    append("Level: 19")
+                }
+            }
+
+            // This will check the progress of the user and assign a level to the user
+            else if (progress in 190000..200000){
+                leveltext.text = buildString {
+                    append("Level: 20")
+                }
+            }
+        }
+
     }
 }
