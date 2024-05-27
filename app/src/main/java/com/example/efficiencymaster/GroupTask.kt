@@ -351,6 +351,12 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         fabOption4.setOnClickListener {
             // Handle option 4 click
             fabMenu.close(true)
+            val fragment = GroupDoneTask()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            bundle.putString("groupName", groupNameIntent)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
             Toast.makeText(context, "View Done Task", Toast.LENGTH_SHORT).show()
         }
 
