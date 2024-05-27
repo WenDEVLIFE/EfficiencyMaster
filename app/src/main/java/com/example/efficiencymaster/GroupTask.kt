@@ -142,12 +142,47 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             // Handle option 1 click
             fabMenu.close(true)
             Toast.makeText(context, "Add Group Task", Toast.LENGTH_SHORT).show()
-            fragment = CreateGroupTask()
-            bundle = Bundle()
-            bundle.putString("username", username)
-            bundle.putString("groupName", groupNameIntent)
-            fragment.arguments = bundle
-            replaceFragment(fragment)
+            db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
+                if (groupit.isEmpty) {
+                    Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+                } else {
+                    for (groupdoc in groupit) {
+                        val groupid = groupdoc.data["GroupID"].toString()
+                        val groupids = Integer.parseInt(groupid)
+                        db.collection("GroupMembers")
+                            .whereEqualTo("GroupID", groupids)
+                            .whereEqualTo("UserID", username).get()
+                            .addOnSuccessListener { groupmemberit ->
+                                if (groupmemberit.isEmpty) {
+                                    Toast.makeText(
+                                        context,
+                                        "User is not a member of the group",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    for (groupmemberdoc in groupmemberit) {
+                                        val groupRole = groupmemberdoc.data["Role"].toString()
+                                        if (groupRole == "Group_Admin") {
+                                            fragment = CreateGroupTask()
+                                            bundle = Bundle()
+                                            bundle.putString("username", username)
+                                            bundle.putString("groupName", groupNameIntent)
+                                            fragment.arguments = bundle
+                                            replaceFragment(fragment)
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "You are not allowed to edit the group",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                }
+
+            }
 
         }
 
@@ -155,54 +190,97 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
             // Handle option 2 click
             fabMenu.close(true)
 
-            // Find the username  from the user collection
-           db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit->
+          db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
+              if (groupit.isEmpty) {
+                  Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+              } else {
+                  for (groupdoc in groupit) {
+                      val groupid = groupdoc.data["GroupID"].toString()
+                      val groupids = Integer.parseInt(groupid)
+                      db.collection("GroupMembers")
+                          .whereEqualTo("GroupID", groupids)
+                          .whereEqualTo("UserID", username).get()
+                          .addOnSuccessListener { groupmemberit ->
+                              if (groupmemberit.isEmpty) {
+                                  Toast.makeText(
+                                      context,
+                                      "User is not a member of the group",
+                                      Toast.LENGTH_SHORT
+                                  ).show()
+                              } else {
+                                  for (groupmemberdoc in groupmemberit) {
+                                      val groupRole = groupmemberdoc.data["Role"].toString()
+                                      if (groupRole == "Group_Admin") {
+                                          fragment = Members()
+                                          bundle = Bundle()
+                                          bundle.putString("username", username)
+                                          bundle.putString("groupName", groupNameIntent)
+                                          fragment.arguments = bundle
+                                          replaceFragment(fragment)
+                                      } else {
+                                          Toast.makeText(
+                                              context,
+                                              "You are not allowed to edit the group",
+                                              Toast.LENGTH_SHORT
+                                          ).show()
+                                      }
+                                  }
+                              }
+                          }
+                  }
+              }
 
-               // This will error if the user is empty
-               for (userdoc in userit){
+          }
 
-                   // Get the user id
-                   val userid = userdoc.data["UserID"].toString()
-
-                   // Find the group member where equals to user id
-                   db.collection("GroupMembers").whereEqualTo("UserID",userid).get().addOnSuccessListener { groupmemberit->
-
-                       //   This will error if the group member is empty
-                       for (groupmemberdoc in groupmemberit){
-
-                           // Get the role
-                           val role = groupmemberdoc.data["Role"].toString()
-                           
-                           
-                           // this will check if the role is group admin
-                           if (role == "Group_Admin") {
-
-                               // This will go to Members.kt
-                               fragment = Members()
-                               bundle = Bundle()
-                               bundle.putString("username", username)
-                               bundle.putString("groupName", groupNameIntent)
-                               fragment.arguments = bundle
-                               replaceFragment(fragment)
-                           }else{
-                                 Toast.makeText(context, "You are not allowed to view the members", Toast.LENGTH_SHORT).show()
-                           }
-                       }
-                   }
-               }
-           }
+            Toast.makeText(context, "View Group Members", Toast.LENGTH_SHORT).show()
         }
+
 
         fabOption3.setOnClickListener {
             // Handle option 3 click
             fabMenu.close(true)
             // This will go to MembersPending.kt 👾
-            fragment = PendingMembers()
-            bundle = Bundle()
-            bundle.putString("username", username)
-            bundle.putString("groupName", groupNameIntent)
-            fragment.arguments = bundle
-            replaceFragment(fragment)
+            db.collection("Group").whereEqualTo("GroupName", groupNameIntent).get().addOnSuccessListener { groupit ->
+                if (groupit.isEmpty) {
+                    Toast.makeText(context, "Group does not exist", Toast.LENGTH_SHORT).show()
+                } else {
+                    for (groupdoc in groupit) {
+                        val groupid = groupdoc.data["GroupID"].toString()
+                        val groupids = Integer.parseInt(groupid)
+                        db.collection("GroupMembers")
+                            .whereEqualTo("GroupID", groupids)
+                            .whereEqualTo("UserID", username).get()
+                            .addOnSuccessListener { groupmemberit ->
+                                if (groupmemberit.isEmpty) {
+                                    Toast.makeText(
+                                        context,
+                                        "User is not a member of the group",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    for (groupmemberdoc in groupmemberit) {
+                                        val groupRole = groupmemberdoc.data["Role"].toString()
+                                        if (groupRole == "Group_Admin") {
+                                            fragment = PendingMembers()
+                                            bundle = Bundle()
+                                            bundle.putString("username", username)
+                                            bundle.putString("groupName", groupNameIntent)
+                                            fragment.arguments = bundle
+                                            replaceFragment(fragment)
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "You are not allowed to edit the group",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                }
+
+            }
             Toast.makeText(context, "View Pending Members", Toast.LENGTH_SHORT).show()
         }
 
