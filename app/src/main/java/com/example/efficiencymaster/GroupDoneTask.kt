@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -64,6 +65,18 @@ class GroupDoneTask : Fragment(),groupDoneTaskAdapter.OnDeleteListener {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_group_done_task, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                val fragment = GroupTask()
+                val bundle = Bundle()
+                bundle.putString("username", username)
+                bundle.putString("groupName", groupNameIntent)
+                fragment.arguments = bundle
+                replaceFragment((fragment))
+            }
+        })
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -317,6 +330,16 @@ class GroupDoneTask : Fragment(),groupDoneTaskAdapter.OnDeleteListener {
     // Limit the word from 0 to 5 letters only.
     private fun subString (string: String): String {
         return if (string.length <= 5) string else string.substring(0, 5)
+    }
+
+    // Method used to Replae the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
     companion object {
         /**

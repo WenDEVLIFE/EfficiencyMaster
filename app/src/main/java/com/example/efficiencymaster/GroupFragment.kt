@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,6 +64,16 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
         savedInstanceState: Bundle?
     ): View? {
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                val fragment = HomeFragmentation()
+                val bundle = Bundle()
+                bundle.putString("username", username)
+                fragment.arguments = bundle
+                replaceFragment((fragment))
+            }
+        })
         // This will check if user is connected to the internet.
         networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
 

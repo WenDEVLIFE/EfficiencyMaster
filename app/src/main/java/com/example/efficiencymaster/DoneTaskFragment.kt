@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,6 +57,17 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                val fragment = HomeFragmentation()
+                val bundle = Bundle()
+                bundle.putString("username", username)
+                fragment.arguments = bundle
+                replaceFragment((fragment))
+            }
+        })
 
         // This will check if user is connected to the internet.
         networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
@@ -173,7 +185,15 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
 
 
     }
+    // Method used to Replae the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
 
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

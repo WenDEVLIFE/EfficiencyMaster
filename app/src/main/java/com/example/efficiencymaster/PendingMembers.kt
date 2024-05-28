@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -64,6 +65,18 @@ class PendingMembers : Fragment(), PendingAdapter.OnDeleteListener, PendingAdapt
 
         // This will check if user is connected to the internet.
         networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                val fragment = GroupTask()
+                val bundle = Bundle()
+                bundle.putString("username", username)
+                bundle.putString("groupName", groupNameIntent)
+                fragment.arguments = bundle
+                replaceFragment((fragment))
+            }
+        })
 
         // Inflate the layout for this fragment
         val view  = inflater.inflate(R.layout.fragment_pending_members, container, false)

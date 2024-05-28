@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -64,6 +65,17 @@ class Registration : AppCompatActivity() {
 
         // This will check if user is connected to the internet.
         networkManager.checkNetworkAndExitIfNotAvailable(this)
+
+        // This will go back to login page
+        this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Create an Intent to start your target activity
+                val intent = Intent(this@Registration, LoginActivity::class.java)
+                // Start the target activity
+                startActivity(intent)
+            }
+        })
+
 
         // For our timer text
         timertext = findViewById(R.id.timertext)

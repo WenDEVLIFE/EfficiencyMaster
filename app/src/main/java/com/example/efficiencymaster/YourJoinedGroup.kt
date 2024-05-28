@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -58,6 +59,18 @@ class YourJoinedGroup : Fragment(), JoinedGroupAdapter.OnCancelListener {
 
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_your__joined__group, container, false)
+
+        // Handle back button press
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                val fragment = GroupFragment()
+                val bundle = Bundle()
+                bundle.putString("username", username)
+                fragment.arguments = bundle
+                replaceFragment((fragment))
+            }
+        })
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)

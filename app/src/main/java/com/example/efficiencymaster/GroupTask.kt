@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -65,6 +66,18 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // Handle back button press
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                val fragment = YourJoinedGroup()
+                bundle = Bundle()
+                bundle.putString("username", username)
+                fragment.arguments = bundle
+                replaceFragment((fragment))
+            }
+        })
 
         // This will check if user is connected to the internet.
         networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
@@ -129,6 +142,8 @@ class GroupTask : Fragment(), GroupTaskAdapter.OnCancelListener {
                 return true
             }
         })
+
+
 
         // This is for floating action button
         val fabMenu = view.findViewById<FloatingActionMenu>(R.id.fab_menu)

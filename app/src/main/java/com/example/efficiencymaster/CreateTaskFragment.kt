@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.random.Random
@@ -57,6 +58,17 @@ class CreateTaskFragment : Fragment() {
 
         // This will check if user is connected to the internet.
         networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                val fragment = InvidividualTask()
+                val bundle = Bundle()
+                bundle.putString("username", username)
+                fragment.arguments = bundle
+                replaceFragment((fragment))
+            }
+        })
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_create_task_, container, false)
@@ -261,8 +273,19 @@ class CreateTaskFragment : Fragment() {
             progressLoading.dismiss()
             Toast.makeText(context, "Task Inserted", Toast.LENGTH_SHORT).show()
         }
+
+
     }
 
+    // Method used to Replae the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+    }
 
 
     companion object {
