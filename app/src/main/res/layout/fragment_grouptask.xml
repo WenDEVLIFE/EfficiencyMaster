@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/writing"
                 app:backgroundTint="#e5e5e5"
-                app:fab_label="Add group Task"
+                app:fab_label="Add group task"
                 app:tint="@color/black" />
 
             <com.github.clans.fab.FloatingActionButton
