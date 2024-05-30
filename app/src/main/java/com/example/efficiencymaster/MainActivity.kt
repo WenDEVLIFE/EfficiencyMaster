@@ -125,6 +125,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.profile ->{
 
                     // This will go to profile fragment
+                    val profileFragment = ProfileFragment()
+                    val bundle = Bundle()
+                    bundle.putString("username", username)
+                    profileFragment.arguments = bundle
+                    replaceFragment(profileFragment)
                     closeDrawer()
 
                     true
