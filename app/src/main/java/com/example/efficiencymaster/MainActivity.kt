@@ -29,6 +29,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var userImage: ImageView
 
+    private lateinit var fragment:Fragment
+
+    private lateinit var bundle:Bundle
+
     var username = ""
 
     val db = Firebase.firestore
@@ -80,11 +84,11 @@ class MainActivity : AppCompatActivity() {
                     builder.show()
 
                     // This will go to home fragment
-                    val homeFragmentation = HomeFragmentation()
-                    val bundle = Bundle()
+                    fragment = HomeFragmentation()
+                    bundle = Bundle()
                     bundle.putString("username", username)
-                    homeFragmentation.arguments = bundle
-                    replaceFragment(homeFragmentation)
+                    fragment.arguments = bundle
+                    replaceFragment(fragment)
 
                     // This wil close the drawer of the navigation view
                     closeDrawer()
@@ -97,11 +101,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.create ->{
 
                     // This will go to create task
-                    val groupFragment = InvidividualTask()
-                    val bundle = Bundle()
+                    fragment = InvidividualTask()
+                    bundle = Bundle()
                     bundle.putString("username", username)
-                    groupFragment.arguments = bundle
-                    replaceFragment(groupFragment)
+                    fragment.arguments = bundle
+                    replaceFragment(fragment)
 
                     // This will close the drawer
                     closeDrawer()
@@ -111,11 +115,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.group ->{
 
                     // This will go to group fragment
-                    val groupFragment = GroupFragment()
-                    val bundle = Bundle()
+                    fragment = GroupFragment()
+                    bundle = Bundle()
                     bundle.putString("username", username)
-                    groupFragment.arguments = bundle
-                    replaceFragment(groupFragment)
+                    fragment.arguments = bundle
+                    replaceFragment(fragment)
 
                     // This will close the drawer
                     closeDrawer()
@@ -125,11 +129,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.profile ->{
 
                     // This will go to profile fragment
-                    val profileFragment = ProfileFragment()
-                    val bundle = Bundle()
+                    fragment = ProfileFragment()
+                    bundle = Bundle()
                     bundle.putString("username", username)
-                    profileFragment.arguments = bundle
-                    replaceFragment(profileFragment)
+                    fragment.arguments = bundle
+                    replaceFragment(fragment)
                     closeDrawer()
 
                     true
