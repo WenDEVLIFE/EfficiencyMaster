@@ -45,32 +45,22 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="@dimen/_305sdp"
                 android:layout_height="@dimen/_150sdp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/pane_layout"
                 android:clipToPadding="false"
                 android:paddingBottom="80dp"
-                android:background="@drawable/pane_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="367dp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="616dp"
-                android:clickable="true"
-                android:src="@drawable/undo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.969"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/titlestext5" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout3"
                 android:layout_width="@dimen/_300sdp"
-                android:layout_height="@dimen/_150sdp"
-                android:layout_marginTop="52dp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_marginTop="56dp"
                 android:background="@drawable/pane_layout"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.476"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titlestext">
 
@@ -134,6 +124,32 @@
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+            <TextView
+                android:id="@+id/titlestext7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Your Created Feed"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view1"
+                android:layout_width="@dimen/_305sdp"
+                android:layout_height="@dimen/_500sdp"
+                android:layout_marginTop="20dp"
+                android:clipToPadding="false"
+                android:paddingBottom="80dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.571"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titlestext7" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
