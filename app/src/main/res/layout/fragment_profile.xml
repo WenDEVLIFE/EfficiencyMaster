@@ -47,10 +47,10 @@
                 android:layout_height="@dimen/_150sdp"
                 android:clipToPadding="false"
                 android:paddingBottom="80dp"
+                android:background="@drawable/pane_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="326dp" />
+                tools:layout_editor_absoluteY="367dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/floatingActionButton2"
@@ -65,8 +65,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="@dimen/_290sdp"
-                android:layout_height="@dimen/_100sdp"
+                android:id="@+id/constraintLayout3"
+                android:layout_width="@dimen/_300sdp"
+                android:layout_height="@dimen/_150sdp"
                 android:layout_marginTop="52dp"
                 android:background="@drawable/pane_layout"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -74,15 +75,32 @@
                 app:layout_constraintTop_toBottomOf="@+id/titlestext">
 
                 <TextView
+                    android:id="@+id/textview2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Full Name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.078"
+                    app:layout_constraintStart_toEndOf="@+id/user_icon"
+                    app:layout_constraintTop_toBottomOf="@+id/textview" />
+
+                <TextView
                     android:id="@+id/textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:fontFamily="sans-serif-condensed"
-                    android:text="Name"
+                    android:text="Username"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_20sdp"
-                    tools:layout_editor_absoluteX="126dp"
-                    tools:layout_editor_absoluteY="24dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.076"
+                    app:layout_constraintStart_toEndOf="@+id/user_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/user_icon"
@@ -100,7 +118,22 @@
                     app:shapeAppearanceOverlay="@style/circular"
                     app:strokeColor="@color/black"
                     app:strokeWidth="5dp" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/titlestext5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Achievements"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
