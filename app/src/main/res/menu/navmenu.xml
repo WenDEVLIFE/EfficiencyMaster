@@ -48,8 +48,8 @@
             android:textColor="@color/black"
             />
 
-    <item android:title="User settings"
-            android:icon="@drawable/setting"
+    <item android:title="Change password"
+            android:icon="@drawable/key"
             android:id="@+id/user"
             android:textColor="@color/black"
             />
