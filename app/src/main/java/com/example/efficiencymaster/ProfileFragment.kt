@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -34,6 +35,7 @@ class ProfileFragment : Fragment() {
     private lateinit var newsFeed:RecyclerView
     private lateinit var achievementViewer: RecyclerView
     private lateinit var profileView: ImageView
+    private val networkManager = NetworkManager()
 
     val db = Firebase.firestore
 
@@ -72,6 +74,8 @@ class ProfileFragment : Fragment() {
             username = it.getString("username").toString()
         }
 
+        // This will check if user is connected to the internet.
+        networkManager.checkNetworkAndExitIfNotAvailable(requireContext())
 
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_profile, container, false)
@@ -91,6 +95,11 @@ class ProfileFragment : Fragment() {
         userIDText = view.findViewById(R.id.textview3)
         profileView = view.findViewById(R.id.user_icon)
         loadProfile()
+
+        val editBtn = view.findViewById<ImageButton>(R.id.imageButton4)
+        editBtn.setOnClickListener {
+            Toast.makeText(context, "Edit Profile", Toast.LENGTH_SHORT).show()
+        }
 
 
         return view

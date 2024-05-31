@@ -66,35 +66,35 @@
 
                 <TextView
                     android:id="@+id/textview3"
-                    android:layout_width="@dimen/_200sdp"
+                    android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="UserID"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.086"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton4"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/user_icon"
                     app:layout_constraintTop_toBottomOf="@+id/textview2" />
 
                 <TextView
                     android:id="@+id/textview2"
-                    android:layout_width="@dimen/_200sdp"
+                    android:layout_width="@dimen/_150sdp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="Full Name"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_11sdp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.078"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton4"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/user_icon"
                     app:layout_constraintTop_toBottomOf="@+id/textview" />
 
                 <TextView
                     android:id="@+id/textview"
-                    android:layout_width="@dimen/_200sdp"
+                    android:layout_width="@dimen/_150sdp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:fontFamily="sans-serif-condensed"
@@ -122,6 +122,18 @@
                     app:shapeAppearanceOverlay="@style/circular"
                     app:strokeColor="@color/black"
                     app:strokeWidth="5dp" />
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="@dimen/_52sdp"
+                    android:layout_height="@dimen/_52sdp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/editprofile"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.38" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
