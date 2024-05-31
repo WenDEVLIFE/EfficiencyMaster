@@ -157,6 +157,7 @@ class ProfileFragment : Fragment() {
                       nameText.text =  "Name: $name"
                       userIDText.text = "UserID: $userID"
 
+
                         // Load the image
                         Glide.with(this)
                             .load(image)
