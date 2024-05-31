@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,6 +26,7 @@ class UserFragmentSetting : Fragment() {
     private var param2: String? = null
     private lateinit var nameText:EditText
     private lateinit var emailText:EditText
+    private lateinit var profileImage: ImageView
 
     var username =""
 
@@ -78,6 +80,7 @@ class UserFragmentSetting : Fragment() {
         // Get the EditText ids
         nameText = view.findViewById(R.id.editTextText2)
         emailText = view.findViewById(R.id.email)
+        profileImage = view.findViewById(R.id.user_icon2)
 
         val uploadBtn = view.findViewById<ImageButton>(R.id.button4)
         uploadBtn.setOnClickListener {

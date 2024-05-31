@@ -97,9 +97,15 @@ class ProfileFragment : Fragment() {
         profileView = view.findViewById(R.id.user_icon)
         loadProfile()
 
+        // This button will to edit profile fragment or user setting fragment
         val editBtn = view.findViewById<ImageButton>(R.id.imageButton4)
         editBtn.setOnClickListener {
             Toast.makeText(context, "Edit Profile", Toast.LENGTH_SHORT).show()
+            val userSetting = UserFragmentSetting()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            userSetting.arguments = bundle
+            replaceFragment(userSetting)
         }
 
 
