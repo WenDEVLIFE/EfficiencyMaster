@@ -90,6 +90,7 @@ class ProfileFragment : Fragment() {
 
         }
 
+        // get the textviews id
         usernameText = view.findViewById(R.id.textview)
         nameText = view.findViewById(R.id.textview2)
         userIDText = view.findViewById(R.id.textview3)
@@ -160,6 +161,7 @@ class ProfileFragment : Fragment() {
                         Glide.with(this)
                             .load(image)
                             .into(profileView)
+
 
                   }
 
