@@ -6,7 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +28,15 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var usernameText: TextView
+    private lateinit var nameText:TextView
+    private lateinit var userIDText:TextView
+    private lateinit var newsFeed:RecyclerView
+    private lateinit var achievementViewer: RecyclerView
+    private lateinit var profileView: ImageView
+
+    val db = Firebase.firestore
+
     var username =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +86,12 @@ class ProfileFragment : Fragment() {
 
         }
 
+        usernameText = view.findViewById(R.id.textview)
+        nameText = view.findViewById(R.id.textview2)
+        userIDText = view.findViewById(R.id.textview3)
+        profileView = view.findViewById(R.id.user_icon)
+        loadProfile()
+
 
         return view
     }
@@ -102,5 +123,39 @@ class ProfileFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    // This will load the profile of the user from the database
+    private fun loadProfile() {
+        // Load
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
+
+            for ( user in userit) {
+
+                val username = user.getString("username")
+                val userID = user.getString("UserID")
+
+              db.collection("UserDetails").whereEqualTo("UserID",userID).get().addOnSuccessListener { userDetailit ->
+
+                  for ( userDetail in userDetailit) {
+
+                      val name = userDetail.getString("name")
+                      val image = userDetail.data["imageurl"].toString()
+
+                      // display the details
+                      usernameText.text = "Username: $username"
+                      nameText.text =  "Name: $name"
+                      userIDText.text = "UserID: $userID"
+
+                        // Load the image
+                        Glide.with(this)
+                            .load(image)
+                            .into(profileView)
+
+                  }
+
+              }
+            }
+        }
     }
 }
