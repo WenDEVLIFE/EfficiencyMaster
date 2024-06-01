@@ -5,10 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,10 +29,10 @@ class UserFragmentSetting : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var nameText:EditText
-    private lateinit var emailText:EditText
     private lateinit var profileImage: ImageView
 
     var username =""
+    val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,25 +83,33 @@ class UserFragmentSetting : Fragment() {
 
         // Get the EditText ids
         nameText = view.findViewById(R.id.editTextText2)
-        emailText = view.findViewById(R.id.email)
         profileImage = view.findViewById(R.id.user_icon2)
+        LoadProfiles()
 
-        val uploadBtn = view.findViewById<ImageButton>(R.id.button4)
+        // This is for upload button
+        val uploadBtn = view.findViewById<Button>(R.id.button4)
         uploadBtn.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
 
         }
 
-        val updateBtn = view.findViewById<ImageButton>(R.id.button2)
+        // This is for update profile button
+        val updateBtn = view.findViewById<Button>(R.id.button2)
         updateBtn.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
 
         }
 
-        val backtoProfile = view.findViewById<ImageButton>(R.id.button5)
+        // This is for back button
+        val backtoProfile = view.findViewById<Button>(R.id.button5)
         backtoProfile.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
-
+            // This will go to home fragment
+            val profile = ProfileFragment()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            profile.arguments = bundle
+            replaceFragment(profile)
         }
         return view;
     }
@@ -110,6 +122,44 @@ class UserFragmentSetting : Fragment() {
         transaction.commit()
 
     }
+
+    // This will load the profile
+    private fun LoadProfiles() {
+        // Load
+        db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
+
+            for (user in userit) {
+
+                val username = user.getString("username")
+                val userID = user.getString("UserID")
+
+                db.collection("UserDetails").whereEqualTo("UserID", userID).get()
+                    .addOnSuccessListener { userDetailit ->
+
+                        for (userDetail in userDetailit) {
+
+                            val name = userDetail.getString("name")
+
+                            val image = userDetail.data["imageurl"].toString()
+
+
+                            // Check if the user has a name
+                            nameText.setText(name)
+
+                            // Load the image
+                            Glide.with(this)
+                                .load(image)
+                                .into(profileImage)
+
+
+                        }
+
+                    }
+            }
+        }
+    }
+
+
     companion object {
         /**
          * Use this factory method to create a new instance of

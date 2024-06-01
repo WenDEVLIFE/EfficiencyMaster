@@ -97,34 +97,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button4" />
 
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="@dimen/_235sdp"
-            android:layout_height="@dimen/_52sdp"
-            android:layout_marginTop="28dp"
-            android:background="@drawable/textfield"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textImeMultiLine"
-            android:padding="16dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
-
         <Button
             android:id="@+id/button2"
             android:layout_width="@dimen/_140sdp"
             android:layout_height="@dimen/_50sdp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="28dp"
             android:background="@drawable/button"
             android:text="Update Profile"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

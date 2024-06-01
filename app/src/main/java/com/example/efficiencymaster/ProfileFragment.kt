@@ -160,12 +160,16 @@ class ProfileFragment : Fragment() {
 
                       // display the details
                       usernameText.text = "Username: $username"
+
+                      // Check if the user has a name
                       nameText.text =  "Name: $name"
+
+                      // Check if the user has a userID
                       userIDText.text = "UserID: $userID"
 
 
                         // Load the image
-                        Glide.with(this)
+                      Glide.with(this)
                             .load(image)
                             .into(profileView)
 
