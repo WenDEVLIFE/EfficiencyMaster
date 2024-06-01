@@ -246,7 +246,7 @@ class Registration : AppCompatActivity() {
                             "UserID" to userID,
                             "name" to userdata[2],
                             "email" to userdata[3],
-                            "image" to fileName,
+                            "image" to "$fileName.png",
                             "imageurl" to imageUrl
                         )
 

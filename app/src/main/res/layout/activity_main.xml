@@ -114,17 +114,17 @@
             app:layout_constraintHorizontal_bias="0.495">
 
         <EditText
-                android:layout_width="@dimen/_235sdp"
-                android:layout_height="@dimen/_52sdp"
-                android:inputType="text"
-                android:padding="@dimen/_11sdp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:hint="Name"
-                android:fontFamily="sans-serif-condensed"
-                android:ems="10"
-                android:background="@null"
-                android:id="@+id/editTextText" />
+            android:id="@+id/editTextText"
+            android:layout_width="@dimen/_235sdp"
+            android:layout_height="@dimen/_52sdp"
+            android:background="@null"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Username"
+            android:inputType="text"
+            android:padding="@dimen/_11sdp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
