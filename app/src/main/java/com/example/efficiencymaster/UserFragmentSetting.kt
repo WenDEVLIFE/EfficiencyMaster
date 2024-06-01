@@ -1,19 +1,25 @@
 package com.example.efficiencymaster
 
+import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,9 +37,11 @@ class UserFragmentSetting : Fragment() {
     private var param2: String? = null
     private lateinit var nameText:EditText
     private lateinit var profileImage: ImageView
-
+    private lateinit var imageUri: Uri
     var username =""
     val db = Firebase.firestore
+
+    private val PICK_IMAGE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +99,7 @@ class UserFragmentSetting : Fragment() {
         val uploadBtn = view.findViewById<Button>(R.id.button4)
         uploadBtn.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
-
+            openFileChooser()
         }
 
         // This is for update profile button
@@ -167,8 +175,44 @@ class UserFragmentSetting : Fragment() {
             }
         }
     }
+    @SuppressLint("startActivityForResult")
+    private fun openFileChooser() {
+        // Create an intent to open the file chooser
+
+        val intent = Intent()
+
+        // Set the type of file to be selected
+        intent.setType("image/*")
+
+        // Set the action to get content
+        intent.setAction(Intent.ACTION_GET_CONTENT)
+
+        // Start the activity for result
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
 
 
+    // This method is called when the file chooser is closed
+    @SuppressLint("ActivityResult")  // This method is called when the file chooser is closed
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check if the data is not null and the data is not null
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            // Get the image uri
+
+            imageUri = data.data!!
+
+            // Set the image uri to the image view
+            profileImage.setImageURI(imageUri)
+            Toast.makeText(activity, "Image Imported", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun getFileExtension(uri: Uri): String? {
+        val cR = requireActivity().contentResolver
+        val mime = MimeTypeMap.getSingleton()
+        return mime.getExtensionFromMimeType(cR.getType(uri))
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
