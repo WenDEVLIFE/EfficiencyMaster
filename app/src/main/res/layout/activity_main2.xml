@@ -31,7 +31,7 @@
             android:background="@color/white"
             app:itemTextColor="@color/black"
             android:theme="@style/AppTheme.NavView"
-            app:headerLayout="@drawable/nav_userinfo"
+            app:headerLayout="@layout/nav_userinfo"
             app:menu="@menu/navmenu"
             app:itemIconTint="@color/black"
             />

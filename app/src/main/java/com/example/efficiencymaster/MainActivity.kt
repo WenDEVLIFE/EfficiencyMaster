@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         // get the intent
         val intent1 = intent
         username = intent1.getStringExtra("username").toString()
-
+        loadUserStats()
 
         // Find the id of naview
         val navigationView = findViewById<NavigationView>(R.id.navView)
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         userImage = navigationView.getHeaderView(0).findViewById(R.id.user_icon)
         progresstext = navigationView.getHeaderView(0).findViewById(R.id.progress_id)
         leveltext = navigationView.getHeaderView(0).findViewById(R.id.levelid)
-        loadUserStats()
+
 
         // This is the navigation view listener.
         navigationView.setNavigationItemSelectedListener { menuItem ->
