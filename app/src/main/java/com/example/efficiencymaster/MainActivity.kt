@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -251,7 +252,12 @@ class MainActivity : AppCompatActivity() {
 
                 // This will load the user details and check if the user has any progress
                 db.collection("UserDetails").whereEqualTo("UserID", userID).get().addOnSuccessListener { userDetailsDocuments ->
-                    val userDetailsDocument = userDetailsDocuments.documents.first()
+
+                    if (userDetailsDocuments.isEmpty) {
+                        Toast.makeText(this, "User details not found", Toast.LENGTH_SHORT).show()
+                    }
+                     else {
+                         val userDetailsDocument = userDetailsDocuments.documents.first()
                     val image = userDetailsDocument.getString("imageurl")
                     val name = userDetailsDocument.getString("name")
 
@@ -274,10 +280,12 @@ class MainActivity : AppCompatActivity() {
                                 .show()
                         } else {
                             val progressDocument = progressDocuments.documents.first()
-                            val progress = progressDocument.getLong("ProgressXp") // Retrieve as Long
+                            val progress =
+                                progressDocument.getLong("ProgressXp") // Retrieve as Long
                             levels(progress)
                             progresstext.text = "Progress: $progress xp"
                         }
+                    }
                     }
                 }
             }

@@ -2,6 +2,7 @@ package com.example.efficiencymaster
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,6 +20,10 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,6 +43,7 @@ class UserFragmentSetting : Fragment() {
     private lateinit var nameText:EditText
     private lateinit var profileImage: ImageView
     private lateinit var imageUri: Uri
+    private lateinit var progressLoading:ProgressDialog
     var username =""
     val db = Firebase.firestore
 
@@ -106,6 +112,14 @@ class UserFragmentSetting : Fragment() {
         val updateBtn = view.findViewById<Button>(R.id.button2)
         updateBtn.setOnClickListener {
             // Open the drawer when the ImageButton is clicked
+            val name = nameText.text.toString()
+            if (name.isEmpty()) {
+                nameText.error = "Name is required"
+                nameText.requestFocus()
+                return@setOnClickListener
+            }else{
+                updateProfile(username, name, imageUri)
+            }
 
         }
 
@@ -213,6 +227,80 @@ class UserFragmentSetting : Fragment() {
         val mime = MimeTypeMap.getSingleton()
         return mime.getExtensionFromMimeType(cR.getType(uri))
     }
+
+    // This method is used to update the profile
+    private fun updateProfile(username: String, name: String, imageUri: Uri) {
+
+        progressLoading = ProgressDialog(context)
+        progressLoading.setMessage("Updating Profile")
+        progressLoading.show()
+        progressLoading.setCanceledOnTouchOutside(false)
+
+        // Create a storage reference
+        val storageRef: StorageReference = FirebaseStorage.getInstance().getReference("uploads")
+
+        // Check if the image uri is not null
+        // Get the file extension
+        val fileExtension = getFileExtension(imageUri)
+
+        // Create a file reference
+        val fileReference = storageRef.child(System.currentTimeMillis().toString() + "." + fileExtension)
+
+        // Upload the file to the storage
+        fileReference.putFile(imageUri).addOnSuccessListener {
+            // Get the download url
+            fileReference.downloadUrl.addOnSuccessListener {
+                val newImageUrl = it.toString()
+                // Update the profile
+                db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userit ->
+                    if (userit.isEmpty) {
+                        // If the user is not found
+                        Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show()
+                        progressLoading.dismiss()
+                    } else {
+                        val user = userit.documents.first()
+                        val userID = user.getString("UserID")
+
+                        db.collection("UserDetails").whereEqualTo("UserID", userID).get()
+                            .addOnSuccessListener { userDetailit ->
+                                if (userDetailit.isEmpty) {
+                                    // If the user is not found
+                                    Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show()
+                                    progressLoading.dismiss()
+                                } else {
+                                    // Get the user details
+                                    val userDetail = userDetailit.documents.first()
+                                    val oldImageName = userDetail.getString("image")
+                                    val userDetailID = userDetail.id
+
+                                    // Delete the old image from Firebase Storage
+                                    if (oldImageName != null) {
+                                        val oldImageRef = FirebaseStorage.getInstance().getReference("uploads/$oldImageName")
+                                        oldImageRef.delete()
+                                        progressLoading.dismiss()
+                                    }
+
+                                    // Update the user details
+                                    db.collection("UserDetails").document(userDetailID).update("name", name, "imageurl", newImageUrl , "image", fileReference.name)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(context, "Profile Updated", Toast.LENGTH_SHORT).show()
+                                            progressLoading.dismiss()
+
+                                            (activity as MainActivity).loadUserStats()
+
+                                        }
+                                        .addOnFailureListener {
+                                            Toast.makeText(context, "Profile Update Failed", Toast.LENGTH_SHORT).show()
+                                            progressLoading.dismiss()
+                                        }
+                                }
+                            }
+                    }
+                }
+            }
+        }
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
