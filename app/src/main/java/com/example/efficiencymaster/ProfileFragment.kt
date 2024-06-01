@@ -145,36 +145,48 @@ class ProfileFragment : Fragment() {
     private fun loadProfile() {
         // Load
         db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
+             if (userit.isEmpty) {
+                 Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show()
+             }
+            else {
 
-            for ( user in userit) {
+                // Get the user details
+                val userdoc = userit.documents.first()
+                val username = userdoc.getString("username")
+                val userID = userdoc.getString("UserID")
 
-                val username = user.getString("username")
-                val userID = user.getString("UserID")
-
+                 // Load the user details
               db.collection("UserDetails").whereEqualTo("UserID",userID).get().addOnSuccessListener { userDetailit ->
-
-                  for ( userDetail in userDetailit) {
-
-                      val name = userDetail.getString("name")
-                      val image = userDetail.data["imageurl"].toString()
-
-                      // display the details
-                      usernameText.text = "Username: $username"
-
-                      // Check if the user has a name
-                      nameText.text =  "Name: $name"
-
-                      // Check if the user has a userID
-                      userIDText.text = "UserID: $userID"
-
-
-                        // Load the image
-                      Glide.with(this)
-                            .load(image)
-                            .into(profileView)
-
-
+              if (userDetailit.isEmpty){
+                  Toast.makeText(context, "User Details not found", Toast.LENGTH_SHORT).show()
                   }
+              else{
+
+                  // Get the user details
+                  val userDetailsDocument = userDetailit.documents.first()
+                  val name = userDetailsDocument.getString("name")
+                  val image = userDetailsDocument.data?.get("imageurl").toString()
+
+                  // display the details
+                  usernameText.text = "Username: $username"
+
+                  // Check if the user has a name
+                  nameText.text =  "Name: $name"
+
+                  // Check if the user has a userID
+                  userIDText.text = "UserID: $userID"
+
+
+                  // Load the image
+                  Glide.with(this)
+                      .load(image)
+                      .into(profileView)
+                }
+
+
+
+
+
 
               }
             }

@@ -2,6 +2,7 @@ package com.example.efficiencymaster
 
 import adapters.TaskAdapter
 import android.animation.AnimatorInflater
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -187,38 +188,48 @@ class InvidividualTask : Fragment(), TaskAdapter.OnCancelListener {
             }
     }
 
-    // This  will Load the task from the database
+    // This will Load the task from the database
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadTask() {
 
-        //  Find the  username in the database
+        // Find the username in the database
         db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userit ->
-            for (document in userit) {
-
+            if (userit.isEmpty) {
+                // If the user is not found
+                Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show()
+            } else {
                 // Get the user id
-                val userID = document.data["UserID"].toString()
+                val user = userit.documents.first()
+                val userID = user.data?.get("UserID").toString()
 
-                // Find the in task user task details
-                db.collection("Task").whereEqualTo("UserID", userID).get().addOnSuccessListener { taskit  ->
+                // Find the user task details in the Task collection
+                db.collection("Task").whereEqualTo("UserID", userID).get().addOnSuccessListener { taskit ->
+                    if (taskit.isEmpty) {
+                        // If the task is not found
+                        Toast.makeText(context, "Task not found", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Clear the taskList before adding new tasks
+                        taskList.clear()
 
-                    // Retrieve the task value from the database
-                    for (taskdocument in taskit) {
-                        val taskName = taskdocument.data["TaskName"].toString()
-                        val taskDescription = taskdocument.data["TaskDescription"].toString()
-                        val status = taskdocument.data["Status"].toString()
+                        // Iterate over all task documents
+                        for (taskdocument in taskit.documents) {
+                            val taskName = taskdocument.data?.get("TaskName").toString()
+                            val taskDescription = taskdocument.data?.get("TaskDescription").toString()
+                            val status = taskdocument.data?.get("Status").toString()
 
-                        //  This will check if the status is pending or not
-                        if (status == "Pending") {
-                            val task = Task(taskName, taskDescription)
-                            taskList.add(task)
+                            // This will check if the status is pending or not
+                            if (status == "Pending") {
+                                val task = Task(taskName, taskDescription)
+                                taskList.add(task)
+                            }
                         }
 
+                        // Notify the adapter about the changes in the taskList
+                        adapter.notifyDataSetChanged()
                     }
-                    adapter.notifyDataSetChanged()
                 }
             }
         }
-
-
     }
 
     override fun onCancel(position: Int) {

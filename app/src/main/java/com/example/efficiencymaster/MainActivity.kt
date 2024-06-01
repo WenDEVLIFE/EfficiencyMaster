@@ -241,70 +241,42 @@ class MainActivity : AppCompatActivity() {
     fun loadUserStats(){
 
         // Check if the user exists before load it
-        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener {
-            if (it.isEmpty) {
-                usernametext.text = buildString {
-                    append("User does not exist")
-                }
-            }else{
-                for (userdocument in it){
+        db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userDocuments ->
+            if (userDocuments.isEmpty) {
+                usernametext.text = "User does not exist"
+            } else {
+                val userDocument = userDocuments.documents.first()
+                val username = userDocument.getString("username")
+                val userID = userDocument.getString("UserID")
 
-                    // Retrieve the variables from the document
-                    val username = userdocument.data["username"].toString()
-                    val iD = userdocument.data["UserID"].toString()
+                // This will load the user details and check if the user has any progress
+                db.collection("UserDetails").whereEqualTo("UserID", userID).get().addOnSuccessListener { userDetailsDocuments ->
+                    val userDetailsDocument = userDetailsDocuments.documents.first()
+                    val image = userDetailsDocument.getString("imageurl")
+                    val name = userDetailsDocument.getString("name")
 
-                    // This will load the user details and check if the user has any progress
-                    db.collection("UserDetails").whereEqualTo("UserID", iD).get().addOnSuccessListener { userit->
-                        for (document in userit){
+                    // insert the retrieve value to the TextView.
+                    usernametext.text = "Username: $username"
+                    nametext.text = "Name: $name"
 
-                            // Retrieve the variables from the document
-                            val image = document.data["imageurl"].toString()
-                            val name = document.data["name"].toString()
+                    // Set the retrieve Imageurl to image
+                    Glide.with(this).load(image).into(userImage)
 
-                            // insert the retrieve value to the TextView.
-                            usernametext.text = buildString {
-                            append("Username:")
-                            append(username)
-                        }
-                            nametext.text = buildString {
-                            append("Name:")
-                            append(name)
-                        }
-
-                            // Set the retrieve Imageurl to image
-                            Glide.with(this).load(image).into(userImage)
-
-                        }
-                    }
                     // Check if user has any progress
-                    db.collection("ProgresssUser").whereEqualTo("UserID", iD).get().addOnSuccessListener { progressit ->
-                        if (progressit.isEmpty){
-                            progresstext.text = buildString {
-                            append("Progress:0%")
-
-                                leveltext.text = buildString {
-                                    append("Level: unknown")
-                                }
-                        }
+                    db.collection("ProgresssUser").whereEqualTo("UserID", userID).get().addOnSuccessListener { progressDocuments ->
+                        if (progressDocuments.isEmpty) {
+                            progresstext.text = "Progress:0%"
+                            leveltext.text = "Level: unknown"
                             AlertDialog.Builder(this)
                                 .setTitle("Progress")
                                 .setMessage("You have no progress")
-                                .setPositiveButton("OK"){_, _ ->}
+                                .setPositiveButton("OK") { _, _ -> }
                                 .show()
-                        }else{
-
-                            // Retrieve the progress of the user
-                            for (document in progressit){
-
-                                //  get the progress xp
-                                val progress = document.getLong("ProgressXp") // Retrieve as Long
-                                levels(progress)
-                                progresstext.text = buildString {
-                                append("Progress: ")
-                                append(progress.toString())
-                                append(" xp")
-                            }
-                            }
+                        } else {
+                            val progressDocument = progressDocuments.documents.first()
+                            val progress = progressDocument.getLong("ProgressXp") // Retrieve as Long
+                            levels(progress)
+                            progresstext.text = "Progress: $progress xp"
                         }
                     }
                 }

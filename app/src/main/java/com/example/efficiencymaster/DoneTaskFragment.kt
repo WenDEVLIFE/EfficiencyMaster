@@ -264,11 +264,17 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
                 else{
 
                     // Then load the UserID
-                    for (document in userit){
-
-                        val userID = document.data["UserID"].toString()
+                        val document = userit.documents.first()
+                        val userID = document.data?.get("UserID").toString()
                         db.collection("Task").whereEqualTo("TaskName", taskName).whereEqualTo("UserID" ,userID).get().addOnSuccessListener { taskit  ->
-                            for (taskdocument in taskit) {
+                           if (taskit.isEmpty) {
+                               Toast.makeText(context, "Task does not exist", Toast.LENGTH_SHORT)
+                                   .show()
+                               progressLoading.dismiss()
+                               return@addOnSuccessListener
+                           }
+                            else  {
+                                val taskdocument = taskit.documents.first()
                                 val documentid = taskdocument.id
                                 db.collection("Task").document(documentid).delete()
 
@@ -309,7 +315,7 @@ class DoneTaskFragment : Fragment(), DoneTaskAdapter.OnCancelListener {
                             adapter.notifyDataSetChanged()
                         }
                     }
-                }
+
             }
 
         }

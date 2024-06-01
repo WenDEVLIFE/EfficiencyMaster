@@ -310,12 +310,16 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
 
         button.setOnClickListener{
             db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
-                for (userdocument in userit){
-                    val userID = userdocument.data["UserID"].toString()
+                if (userit.isEmpty) {
+                    Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    val userdocument = userit.documents.first()
+                    val userID = userdocument.data?.get("UserID").toString()
                     db.collection("Group").whereEqualTo("GroupName", groupName).get().addOnSuccessListener { groupits1  ->
-                        for (document in groupits1){
 
-                            val groupID = document.data["GroupID"].toString()
+                            val document = groupits1.documents.first()
+                            val groupID = document.data?.get("GroupID").toString()
                             val groupids = Integer.parseInt(groupID)
 
                             // It will check if the user is already a member of the group
@@ -371,7 +375,7 @@ class GroupFragment : Fragment(), GroupAdapter.OnCancelListener {
                                         }
 
 
-                                }
+
                             }
                         }
                     }.addOnFailureListener {

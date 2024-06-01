@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.ktx.firestore
@@ -127,20 +128,28 @@ class UserFragmentSetting : Fragment() {
     private fun LoadProfiles() {
         // Load
         db.collection("User").whereEqualTo("username",username).get().addOnSuccessListener { userit ->
-
-            for (user in userit) {
-
-                val username = user.getString("username")
+            if (userit.isEmpty) {
+                // If the user is not found
+                Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show()
+            }
+            else  {
+               val user =userit.documents.first()
                 val userID = user.getString("UserID")
 
                 db.collection("UserDetails").whereEqualTo("UserID", userID).get()
                     .addOnSuccessListener { userDetailit ->
+                        if (userDetailit.isEmpty) {
+                            // If the user is not found
+                            Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show()
+                        }
 
-                        for (userDetail in userDetailit) {
+                        else {
 
+                            // Get the user details
+                            val userDetail = userDetailit.documents.first()
                             val name = userDetail.getString("name")
 
-                            val image = userDetail.data["imageurl"].toString()
+                            val image = userDetail.data?.get("imageurl").toString()
 
 
                             // Check if the user has a name
