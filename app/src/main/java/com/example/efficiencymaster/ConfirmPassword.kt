@@ -1,6 +1,8 @@
 package com.example.efficiencymaster
 
 import android.content.Intent
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,11 +11,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -67,10 +72,19 @@ class ConfirmPassword : Fragment() {
         // Inflate the layout for this fragment
         val view  = inflater.inflate(R.layout.fragment_password, container, false)
 
+        // Profile picture
         profilePicture = view.findViewById(R.id.user_icon2)
+
+        // Password field
         passwordField = view.findViewById(R.id.password)
+
+        // Our password layout
+        val passwordLayout = view.findViewById<TextInputLayout>(R.id.password_layout)
+        val color = ContextCompat.getColor(requireContext(), R.color.black)
+        passwordLayout.endIconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
             loadUserStats()
 
+        // Our submit button
         val submitBtn = view.findViewById<Button>(R.id.button)
         submitBtn.setOnClickListener{
             val password = passwordField.text.toString()
@@ -80,9 +94,12 @@ class ConfirmPassword : Fragment() {
                 if (userDocuments.isEmpty) {
                     Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
                 } else {
+
+                    // Get the user password
                     val userDocument = userDocuments.documents.first()
                     val userPassword = userDocument.getString("password")
 
+                    // use bycrypt to encrypt the password
                     val result = BCrypt.verifyer().verify(password.toCharArray(), userPassword)
 
 
@@ -95,8 +112,8 @@ class ConfirmPassword : Fragment() {
 
                         // Else it will show incorrect password
                     }else{
-                        Toast.makeText(requireContext(), "Incorrect Password", Toast.LENGTH_SHORT).show()
-
+                        passwordField.error = "Incorrect Password"
+                        warning()
                     }
                 }
             }
@@ -140,6 +157,47 @@ class ConfirmPassword : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+
+    // This method is used to pop up warning dialog
+    private  fun warning(){
+
+        // below are the customize alert dialgo components and etc.
+        val builder1 = android.app.AlertDialog.Builder(context)
+        val inflater1 = layoutInflater
+        val dialogLayout1 = inflater1.inflate(R.layout.message_layout, null)
+        val titleText1= dialogLayout1.findViewById<TextView>(R.id.dialog_title)
+        val messageText1 = dialogLayout1.findViewById<TextView>(R.id.dialog_message)
+        val button1 = dialogLayout1.findViewById<Button>(R.id.dialog_button)
+        button1.text = buildString {
+            append("Ok")
+        }
+        val imageView2 = dialogLayout1.findViewById<ImageView>(R.id.imageView2)
+
+        Glide.with(requireContext())
+            .asGif()
+            .load(R.drawable.alert)
+            .into(imageView2)
+        imageView2.scaleType = ImageView.ScaleType.FIT_CENTER
+        val params1 = imageView2.layoutParams
+        val scale1 = resources.displayMetrics.density
+        params1.width = (100 * scale1).toInt()
+        params1.height = (100 * scale1).toInt()
+        imageView2.layoutParams = params1
+        titleText1.text = buildString {
+            append("Password Alert")
+        }
+        messageText1.text = buildString {
+            append("Password is incorrect, please try again")
+        }
+
+        val dialog1 = builder1.setView(dialogLayout1).create()
+
+        dialog1.show()
+        button1.setOnClickListener{
+            dialog1.dismiss()
         }
     }
     companion object {
