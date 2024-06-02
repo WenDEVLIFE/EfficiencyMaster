@@ -166,14 +166,13 @@ class MainActivity : AppCompatActivity() {
 
                 // This will go to profile
                 R.id.user ->{
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle("User")
-                    builder.setMessage("Welcome to User")
-                    builder.setPositiveButton("OK"){ _, _ ->}
-                    builder.show()
-
 
                     // This will go to user fragment
+                    fragment = ConfirmPassword()
+                    bundle = Bundle()
+                    bundle.putString("username", username)
+                    fragment.arguments = bundle
+                    replaceFragment(fragment)
                     closeDrawer()
                     true
                 }
