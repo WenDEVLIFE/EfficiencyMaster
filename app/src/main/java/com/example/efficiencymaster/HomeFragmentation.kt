@@ -200,6 +200,16 @@ class HomeFragmentation : Fragment() {
             replaceFragment(fragment)
         }
 
+        val joinbuttonGroup = view.findViewById<ImageButton>(R.id.imageButton4)
+        joinbuttonGroup.setOnClickListener {
+            // This will go to join group
+            fragment = YourJoinedGroup()
+            bundle = Bundle()
+            bundle.putString("username", username)
+            fragment.arguments = bundle
+            replaceFragment(fragment)
+        }
+
 
         return view
     }
