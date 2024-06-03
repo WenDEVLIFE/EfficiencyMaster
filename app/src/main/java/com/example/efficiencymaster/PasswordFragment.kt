@@ -123,52 +123,76 @@ class PasswordFragment : Fragment() {
                 return@setOnClickListener
             }else{
 
-                // Progress dialog
-                progressLoading = ProgressDialog(requireContext())
-                progressLoading.setTitle("Loading")
-                progressLoading.setMessage("Updating password")
-                progressLoading.show()
-                progressLoading.setCanceledOnTouchOutside(false)
+                // for checking special character
+                val specialChar = hasSpecialChar(password)
 
-                // Check if the password is correct
-                db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userDocuments ->
-                    if (userDocuments.isEmpty) {
-                        Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
-                        progressLoading.dismiss()
-                    } else {
+                // for checking uppercase
+                val upperCase = hasUpperCase(password)
 
-                        // Get the user password
-                        val userDocument = userDocuments.documents.first()
-                        val userPassword = userDocument.getString("password")
+                // Check if the password has a special character
+                if (!specialChar) {
+                    passwordField.error = "Password must contain a special character"
+                    return@setOnClickListener
 
-                        // use bycrypt to encrypt the password
-                        val result = BCrypt.verifyer().verify(password.toCharArray(), userPassword)
+                    // Check if password has uppercase
+                }else if (!upperCase) {
+                    passwordField.error = "Password must contain an uppercase letter"
+                    return@setOnClickListener
+                }
+
+                // Check if the password is between 8 and 13 characters
+                else if (password2.length <=8 ||password2.length >13){
+                    passwordField.error = "Password must be between 8 and 13 characters"
+                    return@setOnClickListener
+                } else{
+                    // Progress dialog
+                    progressLoading = ProgressDialog(requireContext())
+                    progressLoading.setTitle("Loading")
+                    progressLoading.setMessage("Updating password")
+                    progressLoading.show()
+                    progressLoading.setCanceledOnTouchOutside(false)
+
+                    // Check if the password is correct
+                    db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userDocuments ->
+                        if (userDocuments.isEmpty) {
+                            Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
+                            progressLoading.dismiss()
+                        } else {
+
+                            // Get the user password
+                            val userDocument = userDocuments.documents.first()
+                            val userPassword = userDocument.getString("password")
+
+                            // use bycrypt to encrypt the password
+                            val result = BCrypt.verifyer().verify(password.toCharArray(), userPassword)
 
 
-                        // If the result is verified, it will proceed to the main activity
-                        if(result.verified){
+                            // If the result is verified, it will proceed to the main activity
+                            if(result.verified){
 
-                            val hashed = BCrypt.withDefaults().hashToString(12, password2.toCharArray())
+                                // hash the new password using bycrypt and update the password
+                                val hashed = BCrypt.withDefaults().hashToString(12, password2.toCharArray())
 
-                            // Update the password
-                            db.collection("User").document(userDocument.id).update("password", hashed).addOnSuccessListener {
-                                success()
-                                progressLoading.dismiss()
-                                passwordField.setText("")
-                                passwordField2.setText("")
-                            }.addOnFailureListener{
-                                Toast.makeText(requireContext(), "Failed to update password", Toast.LENGTH_SHORT).show()
+                                // Update the password
+                                db.collection("User").document(userDocument.id).update("password", hashed).addOnSuccessListener {
+                                    success()
+                                    progressLoading.dismiss()
+                                    passwordField.setText("")
+                                    passwordField2.setText("")
+                                }.addOnFailureListener{
+                                    Toast.makeText(requireContext(), "Failed to update password", Toast.LENGTH_SHORT).show()
+                                    progressLoading.dismiss()
+                                }
+
+
+
+
+                                // Else it will show incorrect password
+                            }else{
+                                passwordField.error = "Incorrect Password"
+                                warning()
                                 progressLoading.dismiss()
                             }
-
-
-
-
-                            // Else it will show incorrect password
-                        }else{
-                            passwordField.error = "Incorrect Password"
-                            warning()
-                            progressLoading.dismiss()
                         }
                     }
                 }
@@ -312,6 +336,21 @@ class PasswordFragment : Fragment() {
             dialog1.dismiss()
         }
     }
+
+
+    // This method is used for checking password has a special character
+    private fun hasSpecialChar(password: String): Boolean {
+        val regex = Regex("[^A-Za-z0-9 ]")
+        return regex.containsMatchIn(password)
+    }
+
+    // This method is used for checking if password has a UpperCase
+    private fun hasUpperCase(password: String): Boolean {
+        val regex = Regex("[A-Z]")
+        return regex.containsMatchIn(password)
+
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
