@@ -82,7 +82,9 @@ class ConfirmPassword : Fragment() {
         val passwordLayout = view.findViewById<TextInputLayout>(R.id.password_layout)
         val color = ContextCompat.getColor(requireContext(), R.color.black)
         passwordLayout.endIconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-            loadUserStats()
+
+        // Load the user stats
+        loadUserStats()
 
         // Our submit button
         val submitBtn = view.findViewById<Button>(R.id.button)
