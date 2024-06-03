@@ -1,5 +1,6 @@
 package com.example.efficiencymaster
 
+import android.app.ProgressDialog
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
@@ -39,6 +40,7 @@ class PasswordFragment : Fragment() {
     private lateinit var profilePicture: ImageView
     private lateinit var passwordField: EditText  // Password field
     private lateinit var passwordField2: EditText  // Password field
+    private lateinit var progressLoading:ProgressDialog
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,21 +109,32 @@ class PasswordFragment : Fragment() {
         val passwordLayout1 = view.findViewById<TextInputLayout>(R.id.password_layout1)
         passwordLayout1.endIconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
 
+        // Update button
         val updateBtn = view.findViewById<Button>(R.id.button2)
         updateBtn.setOnClickListener {
+            // Get the password
             val password = passwordField.text.toString()
             val password2 = passwordField2.text.toString()
 
+            // Check if the password is empty
             if (password.isEmpty() || password2.isEmpty()) {
                 passwordField.error = "Password is required"
                 passwordField2.error = "Password is required"
                 return@setOnClickListener
             }else{
 
+                // Progress dialog
+                progressLoading = ProgressDialog(requireContext())
+                progressLoading.setTitle("Loading")
+                progressLoading.setMessage("Updating password")
+                progressLoading.show()
+                progressLoading.setCanceledOnTouchOutside(false)
+
                 // Check if the password is correct
                 db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userDocuments ->
                     if (userDocuments.isEmpty) {
                         Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
+                        progressLoading.dismiss()
                     } else {
 
                         // Get the user password
@@ -139,9 +152,13 @@ class PasswordFragment : Fragment() {
 
                             // Update the password
                             db.collection("User").document(userDocument.id).update("password", hashed).addOnSuccessListener {
-
+                                success()
+                                progressLoading.dismiss()
+                                passwordField.setText("")
+                                passwordField2.setText("")
                             }.addOnFailureListener{
                                 Toast.makeText(requireContext(), "Failed to update password", Toast.LENGTH_SHORT).show()
+                                progressLoading.dismiss()
                             }
 
 
@@ -151,12 +168,25 @@ class PasswordFragment : Fragment() {
                         }else{
                             passwordField.error = "Incorrect Password"
                             warning()
+                            progressLoading.dismiss()
                         }
                     }
                 }
 
             }
 
+        }
+
+        // back button
+        val backBtn = view.findViewById<Button>(R.id.button4)
+        backBtn.setOnClickListener {
+            // Replace with your previous fragment here
+            // This will go to home fragment
+            val profile = HomeFragmentation()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            profile.arguments = bundle
+            replaceFragment(profile)
         }
 
 
