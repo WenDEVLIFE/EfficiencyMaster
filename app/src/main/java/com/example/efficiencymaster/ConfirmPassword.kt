@@ -109,6 +109,13 @@ class ConfirmPassword : Fragment() {
                     if(result.verified){
                         Toast.makeText(requireContext(), "Password Successful", Toast.LENGTH_SHORT).show()
 
+                        // This will go to change password
+                        val passwordFragment = PasswordFragment()
+                        val bundle = Bundle()
+                        bundle.putString("username", username)
+                        passwordFragment.arguments = bundle
+                        replaceFragment(passwordFragment)
+
 
 
 
@@ -122,6 +129,7 @@ class ConfirmPassword : Fragment() {
         }
         return view
     }
+
     // Method used to Replace the fragment
     private fun replaceFragment(fragment:Fragment){
         val fragmentManager = parentFragmentManager
