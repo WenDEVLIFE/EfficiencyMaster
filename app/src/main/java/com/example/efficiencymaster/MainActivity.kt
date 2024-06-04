@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                 // This will go to profile
                 R.id.user ->{
 
-                    // This will go to user fragment
+                    // This will go to confirm password fragment
                     fragment = ConfirmPassword()
                     bundle = Bundle()
                     bundle.putString("username", username)
@@ -179,6 +179,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.email ->{
 
+                    // This will go to confirm password fragment
+                    fragment = ConfirmPassword()
+                    bundle = Bundle()
+                    bundle.putString("username", username)
+                    bundle.putString("Send", "email")
+                    fragment.arguments = bundle
+                    replaceFragment(fragment)
                     closeDrawer()
                     true
                 }

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +22,8 @@ class Email : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    var username  = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,10 +36,35 @@ class Email : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        // Handle back button press
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Replace with your previous fragment here
+                // This will go to home fragment
+                val profile = HomeFragmentation()
+                val bundle = Bundle()
+                bundle.putString("username", username)
+                profile.arguments = bundle
+                replaceFragment(profile)
+            }
+        })
+
+
         // Inflate the layout for this fragment
         val view  =   inflater.inflate(R.layout.fragment_email, container, false)
 
         return view
+    }
+
+    // Method used to Replace the fragment
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = parentFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
 
     companion object {
@@ -58,4 +86,6 @@ class Email : Fragment() {
                 }
             }
     }
+
+
 }
