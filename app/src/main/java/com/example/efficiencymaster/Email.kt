@@ -1,6 +1,7 @@
 package com.example.efficiencymaster
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.AppCompatEditText
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore
@@ -32,10 +34,11 @@ class Email : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var oldEmailText :TextInputEditText
-    private lateinit var newEmailText :TextInputEditText
-    private lateinit var CodeText :TextInputEditText
+    private lateinit var oldEmailText : AppCompatEditText
+    private lateinit var newEmailText :AppCompatEditText
+    private lateinit var CodeText :AppCompatEditText
     private val networkManager = NetworkManager()
+    private lateinit var progressLoading:ProgressDialog
     private lateinit var profileImage : ImageView // This is used to display the profile image
     lateinit var timertext: TextView
 
@@ -94,19 +97,29 @@ class Email : Fragment() {
         newEmailText = view.findViewById(R.id.emailtext1)
         CodeText = view.findViewById(R.id.codetext)
         timertext = view.findViewById(R.id.titlestext2)
+        profileImage = view.findViewById(R.id.user_icon2)
+        timertext.text = ""
         loadUserStats() // load the profile
 
+
+        // Add the update button to the view
         val updateBtn = view.findViewById<Button>(R.id.button2)
         updateBtn.setOnClickListener {
+
+            // Get the email from the oldEmailText and newEmailText
             val oldEmail = oldEmailText.text.toString()
             val newEmail = newEmailText.text.toString()
             val code = CodeText.text.toString()
 
 
+
         }
 
+        //  Add the back button to the view
         val backtbn = view.findViewById<Button>(R.id.button4)
         backtbn.setOnClickListener {
+
+            // This will go to home fragment
             val profile = HomeFragmentation()
             val bundle = Bundle()
             bundle.putString("username", username)
@@ -114,13 +127,44 @@ class Email : Fragment() {
             replaceFragment(profile)
         }
 
+        // Add the send code button to the view
         val sendCodeBtn = view.findViewById<Button>(R.id.button7)
         sendCodeBtn.setOnClickListener {
+
+            // Get the email from the oldEmailText
             val email = oldEmailText.text.toString()
+
+            // Check if the email is valid
             if (!isValidEmail(email)) {
                 oldEmailText.error = "Invalid Email"
                 return@setOnClickListener
             }
+            else  {
+                db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userDocuments ->
+                    if (userDocuments.isEmpty) {
+                        Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val userDocument = userDocuments.documents.first()
+                        val userid = userDocument.getString("UserID")
+
+                        db.collection("UserDetails").whereEqualTo("UserID", userid).get().addOnSuccessListener { userDetailsDocuments ->
+                            if (userDetailsDocuments.isEmpty) {
+                                Toast.makeText(requireContext(), "User details not found", Toast.LENGTH_SHORT).show()
+                            } else {
+                                val userDetailsDocument = userDetailsDocuments.documents.first()
+                                val userEmail = userDetailsDocument.getString("email")
+
+                                if (email != userEmail) {
+                                    oldEmailText.error = "Email does not match"
+                                    return@addOnSuccessListener
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // it will send the code
             val code = generateCode()
             codeSend = code
             sendMail(email, code)
