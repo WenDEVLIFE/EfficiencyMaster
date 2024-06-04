@@ -1,14 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2b9348"
     tools:context=".Email">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/user_icon2"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_marginTop="52dp"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/logos"
+                app:layout_column="0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titlestext"
+                app:layout_row="0"
+                app:shapeAppearanceOverlay="@style/circular"
+                app:strokeColor="#fefae0"
+                app:strokeWidth="10dp" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="@dimen/_140sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/button"
+                android:text="Send the code"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+
+            <TextView
+                android:id="@+id/titlestext2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="00:00"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button7" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="@dimen/_140sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button"
+                android:text="Back"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button2" />
+
+            <TextView
+                android:id="@+id/titlestext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Change Email"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.328"
+                app:layout_constraintStart_toEndOf="@+id/imageButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/list"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="@dimen/_140sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/button"
+                android:text="Update the email"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout1"
+                android:layout_width="@dimen/_235sdp"
+                android:layout_height="@dimen/_52sdp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/textfield"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.504"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/user_icon2">
+
+                <EditText
+                    android:id="@+id/emailtext"
+                    android:layout_width="@dimen/_235sdp"
+                    android:layout_height="@dimen/_52sdp"
+                    android:background="@null"
+                    android:ems="10"
+                    android:fontFamily="sans-serif-condensed"
+                    android:hint="Enter your old email"
+                    android:inputType="text"
+                    android:padding="@dimen/_11sdp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    tools:layout_editor_absoluteX="52dp"
+                    tools:layout_editor_absoluteY="595dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                android:layout_width="@dimen/_235sdp"
+                android:layout_height="@dimen/_52sdp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/textfield"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
+
+                <EditText
+                    android:id="@+id/emailtext1"
+                    android:layout_width="@dimen/_235sdp"
+                    android:layout_height="@dimen/_52sdp"
+                    android:background="@null"
+                    android:ems="10"
+                    android:fontFamily="sans-serif-condensed"
+                    android:hint="Enter your new email"
+                    android:inputType="text"
+                    android:padding="@dimen/_11sdp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    tools:layout_editor_absoluteX="52dp"
+                    tools:layout_editor_absoluteY="595dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout3"
+                android:layout_width="@dimen/_235sdp"
+                android:layout_height="@dimen/_52sdp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/textfield"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titlestext2">
+
+                <EditText
+                    android:id="@+id/codetext"
+                    android:layout_width="@dimen/_235sdp"
+                    android:layout_height="@dimen/_52sdp"
+                    android:background="@null"
+                    android:ems="10"
+                    android:fontFamily="sans-serif-condensed"
+                    android:hint="Enter the code"
+                    android:inputType="text"
+                    android:padding="@dimen/_11sdp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    tools:layout_editor_absoluteX="52dp"
+                    tools:layout_editor_absoluteY="595dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </FrameLayout>
