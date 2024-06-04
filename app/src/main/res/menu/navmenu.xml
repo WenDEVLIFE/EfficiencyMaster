@@ -55,7 +55,7 @@
             />
 
     <item android:title="Change Email"
-        android:icon="@drawable/key"
+        android:icon="@drawable/mail"
         android:id="@+id/email"
         android:textColor="@color/black"
         />
