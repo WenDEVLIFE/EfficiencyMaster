@@ -171,8 +171,14 @@ class MainActivity : AppCompatActivity() {
                     fragment = ConfirmPassword()
                     bundle = Bundle()
                     bundle.putString("username", username)
+                    bundle.putString("Send", "password")
                     fragment.arguments = bundle
                     replaceFragment(fragment)
+                    closeDrawer()
+                    true
+                }
+                R.id.email ->{
+
                     closeDrawer()
                     true
                 }

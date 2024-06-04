@@ -54,6 +54,12 @@
             android:textColor="@color/black"
             />
 
+    <item android:title="Change Email"
+        android:icon="@drawable/key"
+        android:id="@+id/email"
+        android:textColor="@color/black"
+        />
+
     <item android:title="Logout"
             android:icon="@drawable/logout"
             android:id="@+id/logout"
