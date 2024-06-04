@@ -40,6 +40,7 @@ class ConfirmPassword : Fragment() {
     private lateinit var profilePicture: ImageView
     private lateinit var passwordField: EditText  // Password field
     var username =""
+    var send =""
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +49,7 @@ class ConfirmPassword : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
             username= it.getString("username").toString()
+            send = it.getString("Send").toString()
         }
     }
 
@@ -109,12 +111,22 @@ class ConfirmPassword : Fragment() {
                     if(result.verified){
                         Toast.makeText(requireContext(), "Password Successful", Toast.LENGTH_SHORT).show()
 
-                        // This will go to change password
-                        val passwordFragment = PasswordFragment()
-                        val bundle = Bundle()
-                        bundle.putString("username", username)
-                        passwordFragment.arguments = bundle
-                        replaceFragment(passwordFragment)
+                        if (send == "password") {
+                            // This will go to change password
+                            val passwordFragment = PasswordFragment()
+                            val bundle = Bundle()
+                            bundle.putString("username", username)
+                            passwordFragment.arguments = bundle
+                            replaceFragment(passwordFragment)
+                        }
+                        else if (send== "email"){
+                            // This will go to change email
+                            val emailFragment = Email()
+                            val bundle = Bundle()
+                            bundle.putString("username", username)
+                            emailFragment.arguments = bundle
+                            replaceFragment(emailFragment)
+                        }
 
 
 
