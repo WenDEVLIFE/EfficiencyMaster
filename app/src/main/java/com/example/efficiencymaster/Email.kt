@@ -111,6 +111,80 @@ class Email : Fragment() {
             val newEmail = newEmailText.text.toString()
             val code = CodeText.text.toString()
 
+            // Load the progress dialog
+            progressLoading = ProgressDialog(requireContext())
+            progressLoading.setTitle("Loading")
+            progressLoading.setMessage("Updating Email")
+            progressLoading.show()
+            progressLoading.setCanceledOnTouchOutside(false)
+
+            // Check if the email is valid
+            if (!isValidEmail(oldEmail)) {
+                oldEmailText.error = "Invalid Email"
+                progressLoading.dismiss()
+                return@setOnClickListener
+            }
+
+            // Check if the email is valid
+            else if (!isValidEmail(newEmail)) {
+                newEmailText.error = "Invalid Email"
+                progressLoading.dismiss()
+                return@setOnClickListener
+            }
+
+            // Check if the code is valid
+            else if (code != codeSend) {
+                CodeText.error = "Invalid Code"
+                progressLoading.dismiss()
+                return@setOnClickListener
+            }
+            else {
+
+                // Check if the user exists before updating the email
+                db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userDocuments ->
+                    if (userDocuments.isEmpty) {
+                        Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
+                        progressLoading.dismiss()
+                    } else {
+
+                        // find the user document and get the user id
+                        val userDocument = userDocuments.documents.first()
+                        val userid = userDocument.getString("UserID")
+
+                        // find the user details document
+                        db.collection("UserDetails").whereEqualTo("UserID", userid).get().addOnSuccessListener { userDetailsDocuments ->
+                            if (userDetailsDocuments.isEmpty) {
+                                Toast.makeText(requireContext(), "User details not found", Toast.LENGTH_SHORT).show()
+                                progressLoading.dismiss()
+                            } else {
+                                val userDetailsDocument = userDetailsDocuments.documents.first()
+                                val userEmail = userDetailsDocument.getString("email")
+
+                                // Check if the email is valid
+                                if (oldEmail != userEmail) {
+                                    oldEmailText.error = "Email does not match"
+                                    progressLoading.dismiss()
+                                    return@addOnSuccessListener
+                                }
+                                else {
+
+                                    // update the email
+                                    db.collection("UserDetails").document(userDetailsDocument.id).update("email", newEmail).addOnSuccessListener {
+                                        Toast.makeText(requireContext(), "Email updated successfully", Toast.LENGTH_SHORT).show()
+                                        progressLoading.dismiss()
+                                        oldEmailText.text?.clear()
+                                        newEmailText.text?.clear()
+                                        CodeText.text?.clear()
+                                        time = 0
+                                        timertext.text = ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
 
 
         }
@@ -140,35 +214,47 @@ class Email : Fragment() {
                 return@setOnClickListener
             }
             else  {
+
+                // Check if the user exists before sending the code
                 db.collection("User").whereEqualTo("username", username).get().addOnSuccessListener { userDocuments ->
                     if (userDocuments.isEmpty) {
                         Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
                     } else {
+
+                        // find the user document and get the user id
                         val userDocument = userDocuments.documents.first()
                         val userid = userDocument.getString("UserID")
 
+                        // find the user details document
                         db.collection("UserDetails").whereEqualTo("UserID", userid).get().addOnSuccessListener { userDetailsDocuments ->
                             if (userDetailsDocuments.isEmpty) {
                                 Toast.makeText(requireContext(), "User details not found", Toast.LENGTH_SHORT).show()
                             } else {
+
+                                // find the user details document and get the email
                                 val userDetailsDocument = userDetailsDocuments.documents.first()
                                 val userEmail = userDetailsDocument.getString("email")
 
+                                // Check if the email is valid
                                 if (email != userEmail) {
                                     oldEmailText.error = "Email does not match"
                                     return@addOnSuccessListener
+                                } else {
+
+                                    // Generate the code
+                                    codeSend = generateCode()
+
+                                    // Send the email
+                                    sendMail(email, codeSend)
+
+                                    // Start the timer
+                                    startTimer()
                                 }
                             }
                         }
                     }
                 }
             }
-
-            // it will send the code
-            val code = generateCode()
-            codeSend = code
-            sendMail(email, code)
-            startTimer()
 
         }
 
@@ -201,7 +287,7 @@ class Email : Fragment() {
     private fun sendMail(email: String, code: String) {
 
         // Set the subject of the email
-        val subject = "EfficiencyMaster Registration Verification Code"
+        val subject = "EfficiencyMaster Verification Code"
 
         // Set the message of the email together with the code
         val message = "Your verification code is: $code"
